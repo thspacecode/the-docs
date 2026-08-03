@@ -1,6 +1,7 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes"
+import { type RouteConfig, index } from "@react-router/dev/routes"
+import { createDocsRoutes } from "@workspace/docs/build"
 
 export default [
   index("routes/home.tsx"),
-  route("docs/p/:slug", "routes/docs-post.tsx"),
+  ...createDocsRoutes(),
 ] satisfies RouteConfig

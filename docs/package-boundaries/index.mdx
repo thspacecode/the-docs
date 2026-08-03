@@ -41,7 +41,7 @@ apps/web ───────────────────────�
 
 The web app is the deployment and framework host. It owns:
 
-- React Router route registration and the root document shell.
+- Composing package-provided React Router routes and the root document shell.
 - Vite and React Router configuration.
 - The documentation content-root selection.
 - App-level global stylesheet loading and deployment concerns.
@@ -56,6 +56,7 @@ The docs package owns the complete documentation domain:
 - Discovering `docs/<slug>/index.mdx` entries.
 - Reading and normalizing frontmatter.
 - Providing Vite's MDX and virtual content-module integration.
+- Defining documentation routes through `createDocsRoutes()`.
 - Generating prerender paths.
 - Resolving slugs and returning document-specific 404 responses.
 - Rendering document layouts and Markdown element styles.
@@ -66,9 +67,17 @@ Its public boundaries are explicit package exports:
 | ----------------------- | ------------------------------------------------------- | ----------- |
 | `@workspace/docs`       | Content registry, document components, and public types | App runtime |
 | `@workspace/docs/route` | Reusable docs-post route module                         | App runtime |
-| `@workspace/docs/build` | Vite plugins and prerender helpers                      | Build time  |
+| `@workspace/docs/build` | Route creation, Vite plugins, and prerender helpers     | Build time  |
 
-Build-only modules must stay behind `@workspace/docs/build`. The host app should not duplicate content scanning or MDX parsing.
+The host composes the package-owned routes without an app-local adapter:
+
+```ts
+import { createDocsRoutes } from "@workspace/docs/build"
+
+export default [index("routes/home.tsx"), ...createDocsRoutes()]
+```
+
+Build-only modules must stay behind `@workspace/docs/build`. The host app should not duplicate documentation route wiring, content scanning, or MDX parsing.
 
 ## `packages/ui`
 
