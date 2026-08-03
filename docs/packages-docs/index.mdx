@@ -1,0 +1,113 @@
+---
+title: The @workspace/docs package
+description: Responsibilities, public APIs, and boundaries of the documentation domain package.
+tags:
+  - architecture
+  - packages
+---
+
+## Purpose
+
+`@workspace/docs` turns MDX files into routable, prerendered documentation pages. It owns the documentation pipeline from content discovery through rendering, while the host app supplies configuration and deployment.
+
+## Responsibilities
+
+The package owns four areas:
+
+1. **Content discovery** — find valid `<slug>/index.mdx` entries below a configured content root.
+2. **Compilation** — configure MDX, frontmatter, and GitHub Flavored Markdown and expose compiled documents through `virtual:docs-content`.
+3. **Runtime behavior** — normalize frontmatter, resolve slugs, generate metadata, and return document-specific `404` responses.
+4. **Presentation** — render the docs shell and apply the shared `typeset typeset-docs` surface to MDX output.
+
+It also provides React Router entries and prerender paths so route registration and static generation use the same document convention.
+
+## Public API
+
+Use package exports rather than importing from `packages/docs/src`.
+
+| Export                  | Intended use                                                           |
+| ----------------------- | ---------------------------------------------------------------------- |
+| `@workspace/docs`       | Runtime registry, document components, and public types                |
+| `@workspace/docs/build` | Route creation, Vite integration, and prerender path generation        |
+| `@workspace/docs/route` | Low-level route module; normally consumed through `createDocsRoutes()` |
+
+The build entry point exports:
+
+```ts
+createDocsRoutes()
+createDocsVitePlugins({ contentRoot })
+getDocsPrerenderPaths(contentRoot)
+```
+
+Build exports use Node.js and belong in route, Vite, or React Router configuration. They must not be imported into browser components.
+
+## Package boundary
+
+`packages/docs` may depend on React, React Router, MDX tooling, and shared styling contracts. It must not:
+
+- Import from `apps/web` or depend on an app-specific filesystem location.
+- Own deployment, server startup, or the root HTML document.
+- Define global design tokens or domain-neutral UI primitives.
+- Contain authored product documentation.
+- Add backend storage or APIs.
+
+The host app chooses the content root and composes the package into its framework configuration. `packages/ui` owns global tokens and Typeset styles. The root `docs/` directory owns authored MDX and colocated assets.
+
+## Internal structure
+
+```text
+packages/docs/src/
+├── build/       # discovery, Vite plugins, routes, and prerender helpers
+├── components/  # docs-specific shell and document page
+├── content/     # registry, metadata normalization, and public types
+├── route/       # loader, metadata, route view, and error boundary
+└── index.ts     # runtime public API
+```
+
+Code belongs in this package when it understands documents, slugs, frontmatter, MDX compilation, docs routes, or docs-specific rendering.
+
+## Content contract
+
+A document currently uses this structure:
+
+```text
+docs/
+└── <slug>/
+    ├── index.mdx
+    └── assets/
+```
+
+Valid slugs contain lowercase letters or numbers with optional hyphens. The package currently discovers only `index.mdx`; localized variants and nested document slugs are not yet included.
+
+Supported frontmatter:
+
+```yaml
+---
+title: Document title
+description: Summary used for page metadata.
+tags:
+  - guide
+---
+```
+
+A missing title falls back to a title-cased slug. Description is optional, and tags are normalized to strings.
+
+## Integration
+
+The host composes package-owned routes:
+
+```ts
+export default [
+  index("routes/home.tsx"),
+  ...createDocsRoutes(),
+] satisfies RouteConfig
+```
+
+It passes the same content root to build integration:
+
+```ts
+createDocsVitePlugins({ contentRoot: docsContentRoot })
+getDocsPrerenderPaths(docsContentRoot)
+```
+
+This keeps discovery, runtime routing, and prerendering aligned without app-local documentation logic.
