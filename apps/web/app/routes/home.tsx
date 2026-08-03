@@ -27,13 +27,21 @@ export default function Home() {
           fast React application.
         </p>
 
-        <Link
-          to="/docs/p/getting-started"
-          className="mt-10 inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
-        >
-          Read the getting started guide
-          <ArrowRight className="size-4" aria-hidden="true" />
-        </Link>
+        <div className="mt-10 flex flex-wrap gap-3">
+          <Link
+            to="/docs/p/getting-started"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-opacity hover:opacity-90"
+          >
+            Read the getting started guide
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+          <Link
+            to="/docs/p/package-boundaries"
+            className="inline-flex items-center rounded-lg border bg-background px-5 py-3 text-sm font-medium transition-colors hover:bg-muted"
+          >
+            Explore package boundaries
+          </Link>
+        </div>
       </div>
     </main>
   )

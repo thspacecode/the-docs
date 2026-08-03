@@ -1,21 +1,30 @@
-# shadcn/ui monorepo template
+# The Docs
 
-This is a React Router monorepo template with shadcn/ui.
+A file-based documentation application built with React Router, MDX, Vite, and shadcn/ui in a pnpm monorepo.
 
-## Adding components
+## Workspace
 
-To add components to your app, run the following command at the root of your `web` app:
+| Path            | Responsibility                                                                  |
+| --------------- | ------------------------------------------------------------------------------- |
+| `apps/web`      | Thin React Router host, route registration, build configuration, and deployment |
+| `packages/docs` | MDX discovery, frontmatter, prerendering, docs routes, and document UI          |
+| `packages/ui`   | Shared design tokens, global styles, utilities, and domain-neutral components   |
+| `docs`          | Version-controlled documentation content organized by slug                      |
+
+Dependencies flow from `apps/web` into reusable packages. Packages must not import application code. See [Packages and boundaries](docs/package-boundaries/index.mdx) for ownership rules and examples.
+
+## Development
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+pnpm install --frozen-lockfile
+pnpm --filter web dev
 ```
 
-This will place the ui components in the `packages/ui/src/components` directory.
+The sample documentation is available at `/docs/p/getting-started`.
 
-## Using components
+## Validation
 
-To use the components in your app, import them from the `ui` package.
-
-```tsx
-import { Button } from "@workspace/ui/components/button";
+```bash
+pnpm typecheck
+pnpm build
 ```

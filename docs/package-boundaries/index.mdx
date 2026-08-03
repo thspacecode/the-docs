@@ -1,0 +1,108 @@
+---
+title: Packages and boundaries
+description: Understand what each workspace owns and where new code should live.
+tags:
+  - architecture
+  - monorepo
+---
+
+## Workspace map
+
+The repository separates application wiring, documentation behavior, shared UI, and authored content. Each area has one reason to change.
+
+```text
+apps/
+└── web/                 # React Router host application
+packages/
+├── docs/                # Documentation domain and MDX pipeline
+└── ui/                  # Shared visual foundation
+docs/                    # Version-controlled documentation content
+```
+
+## Dependency direction
+
+Dependencies flow toward reusable packages, never back into an application:
+
+```text
+docs content ──compiled by──▶ packages/docs
+                                  ▲
+                                  │
+apps/web ─────────────────────────┤
+   │                              │
+   └──────────────────────▶ packages/ui
+```
+
+- `apps/web` may import public exports from `packages/docs` and `packages/ui`.
+- `packages/docs` and `packages/ui` must not import from `apps/web`.
+- Authored files under `docs/` must not contain application configuration or runtime business logic.
+- Consumers should use package exports instead of reaching into another package's `src` directory.
+
+## `apps/web`
+
+The web app is the deployment and framework host. It owns:
+
+- React Router route registration and the root document shell.
+- Vite and React Router configuration.
+- The documentation content-root selection.
+- App-level global stylesheet loading and deployment concerns.
+- Host-specific landing pages and navigation.
+
+Keep this layer thin. Document discovery, frontmatter normalization, MDX rendering, and reusable document-page UI belong in `packages/docs`.
+
+## `packages/docs`
+
+The docs package owns the complete documentation domain:
+
+- Discovering `docs/<slug>/index.mdx` entries.
+- Reading and normalizing frontmatter.
+- Providing Vite's MDX and virtual content-module integration.
+- Generating prerender paths.
+- Resolving slugs and returning document-specific 404 responses.
+- Rendering document layouts and Markdown element styles.
+
+Its public boundaries are explicit package exports:
+
+| Export                  | Purpose                                                 | Runtime     |
+| ----------------------- | ------------------------------------------------------- | ----------- |
+| `@workspace/docs`       | Content registry, document components, and public types | App runtime |
+| `@workspace/docs/route` | Reusable docs-post route module                         | App runtime |
+| `@workspace/docs/build` | Vite plugins and prerender helpers                      | Build time  |
+
+Build-only modules must stay behind `@workspace/docs/build`. The host app should not duplicate content scanning or MDX parsing.
+
+## `packages/ui`
+
+The UI package is the visual foundation shared by applications and domain packages. It owns:
+
+- Design tokens and global theme variables.
+- Reusable, domain-neutral components.
+- Styling utilities such as `cn`.
+- Font and base-style configuration.
+
+A component belongs here only when it is useful outside documentation. A generic button belongs in `packages/ui`; a document article layout belongs in `packages/docs`.
+
+The web host currently loads `@workspace/ui/globals.css`. Documentation components consume those shared color and typography tokens through Tailwind classes.
+
+## `docs`
+
+The root `docs/` directory contains authored product content, not package source code. Every post uses a flat slug directory:
+
+```text
+docs/
+└── package-boundaries/
+    ├── index.mdx
+    └── assets/
+```
+
+Use frontmatter for the title, description, and tags. Keep post-specific images and editable source files in the post's `assets/` directory.
+
+## Deciding where code belongs
+
+Use these questions before adding a file:
+
+1. Is it React Router, Vite host, or deployment wiring? Put it in `apps/web`.
+2. Is it specific to discovering, building, or displaying documentation? Put it in `packages/docs`.
+3. Is it a domain-neutral visual primitive or design token? Put it in `packages/ui`.
+4. Is it authored documentation? Put it under `docs/<slug>`.
+
+This direction keeps applications replaceable and packages reusable without creating circular dependencies.
