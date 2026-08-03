@@ -10,6 +10,10 @@ node_modules
 build
 dist
 
+# Source files for the docs build integration
+!packages/docs/src/build/
+!packages/docs/src/build/**
+
 # typescript
 *.tsbuildinfo
 

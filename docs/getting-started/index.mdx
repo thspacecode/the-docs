@@ -1,0 +1,58 @@
+---
+title: Getting started
+description: Build and publish file-based documentation with The Docs.
+tags:
+  - guide
+  - setup
+---
+
+## Welcome to The Docs
+
+The Docs turns version-controlled MDX files into a fast, deployable documentation site. Content stays beside your project, so reviews and releases follow the same workflow as your code.
+
+> This guide is the first document discovered from the repository-level `docs` directory.
+
+## Add a document
+
+Create a folder for the document slug and add an `index.mdx` file:
+
+```text
+docs/
+└── your-document/
+    ├── index.mdx
+    └── assets/
+```
+
+Start the file with frontmatter, followed by Markdown or MDX content:
+
+```mdx
+---
+title: Your document
+description: A short summary for search and metadata.
+tags:
+  - guide
+---
+
+## First section
+
+Write your documentation here.
+```
+
+## Preview your changes
+
+Run the web app from the repository root:
+
+```bash
+pnpm --filter web dev
+```
+
+The folder name becomes the post URL. For example, `your-document` is available at `/docs/p/your-document`.
+
+## Content conventions
+
+| Item       | Convention                                               |
+| ---------- | -------------------------------------------------------- |
+| Slug       | Lowercase words separated by hyphens                     |
+| Entry file | `index.mdx`                                              |
+| Assets     | Store in the document's `assets` folder                  |
+| Metadata   | Define `title`, `description`, and `tags` in frontmatter |

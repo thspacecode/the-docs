@@ -11,10 +11,14 @@
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "@/*": ["./app/*"],
+      "@workspace/docs": ["../../packages/docs/src/index.ts"],
+      "@workspace/docs/build": ["../../packages/docs/src/build/index.ts"],
+      "@workspace/docs/route": ["../../packages/docs/src/route/docs-post.tsx"],
       "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "esModuleInterop": true,
