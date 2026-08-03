@@ -4,6 +4,7 @@ import { basename, dirname, resolve } from "node:path"
 import mdx from "@mdx-js/rollup"
 import matter from "gray-matter"
 import remarkFrontmatter from "remark-frontmatter"
+import remarkGfm from "remark-gfm"
 import type { Plugin, PluginOption } from "vite"
 
 import { discoverDocuments } from "./discovery.ts"
@@ -79,6 +80,6 @@ export function createDocsVitePlugins({
 
   return [
     docsContentPlugin(resolvedContentRoot),
-    mdx({ remarkPlugins: [remarkFrontmatter] }),
+    mdx({ remarkPlugins: [remarkFrontmatter, remarkGfm] }),
   ]
 }

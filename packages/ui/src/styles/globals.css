@@ -1,15 +1,33 @@
 @import "tailwindcss";
+@import "./typeset.css";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/outfit";
 @import "@fontsource-variable/noto-sans";
+@import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/montserrat";
+@import "@fontsource-variable/jetbrains-mono";
+
+.typeset-docs {
+    --typeset-font-body: var(--font-nunito-sans);
+    --typeset-font-heading: var(--font-montserrat);
+    --typeset-font-mono: var(--font-jetbrains-mono);
+    --typeset-size: 18px;
+    --typeset-leading: 1.6;
+    --typeset-flow: 1em;
+}
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx}";
+@source "../../../packages/docs/src/**/*.{ts,tsx}";
 @source "../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
+@source inline("max-w-[37em]");
 
 :root {
+    --font-nunito-sans: 'Nunito Sans Variable', sans-serif;
+    --font-montserrat: 'Montserrat Variable', sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono Variable', monospace;
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.148 0.004 228.8);
     --popover: oklch(1 0 0);

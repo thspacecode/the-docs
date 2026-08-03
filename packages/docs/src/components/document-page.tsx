@@ -2,7 +2,6 @@ import { ArrowLeft, BookOpen } from "lucide-react"
 import { Link } from "react-router"
 
 import type { DocumentEntry } from "../content/types"
-import { mdxComponents } from "./mdx-components"
 
 export function DocsShell({ children }: { children: React.ReactNode }) {
   return (
@@ -63,8 +62,8 @@ export function DocumentPage({ document }: { document: DocumentEntry }) {
             ) : null}
           </header>
 
-          <div className="min-w-0">
-            <Component components={mdxComponents} />
+          <div className="typeset typeset-docs max-w-[37em]">
+            <Component />
           </div>
         </article>
       </main>
