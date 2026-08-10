@@ -1,0 +1,73 @@
+---
+title: "Document Structures"
+importance: Medium
+---
+
+## Document Structures
+
+```
+docs/
+├── _types/
+│   ├── adr/
+│   │   ├── type.json
+│   │   └── type.th.json
+│   └── feat/
+│       ├── type.json
+│       └── type.th.json
+├── _tags/
+│   ├── software/
+│   │   ├── tag.json
+│   │   ├── tag.th.json
+│   │   └── erpnext/
+│   │       ├── tag.json
+│   │       └── tag.th.json
+│   └── others/
+│       ├── tag.json
+│       └── tag.th.json
+├── post-001/
+│   ├── index.mdx
+│   ├── index.th.mdx
+│   └── assets/
+│       ├── drawing-001.excalidraw
+│       └── process-001.bpmn
+└── post-002/
+    ├── index.mdx
+    └── index.th.mdx
+```
+
+## Documents
+
+* Documents using flat structure (document directories must be exactly one level below)
+* Use frontmatter for meta-data
+    - title: string
+    - description: string
+* Support plugin like excalidraw, bpmn
+* Assets stored within documents
+
+## Tags
+
+* Tags can be nested
+
+Interface:
+
+```typescript
+interface TagDefinition {
+  title: string;
+  description: string;
+  color?: string;
+}
+```
+
+## Types
+
+* Types won't be nested
+
+Interface:
+
+```typescript
+interface TypeDefinition {
+  title: string;
+  description: string;
+  color?: string;
+}
+```
