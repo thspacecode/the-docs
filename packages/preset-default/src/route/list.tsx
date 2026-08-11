@@ -1,4 +1,9 @@
-import { DocumentListPage, getDocuments } from "@workspace/core"
+import {
+  DocumentListPage,
+  getDocuments,
+  getTags,
+  getTypes,
+} from "@workspace/core"
 
 export function meta() {
   return [
@@ -11,5 +16,11 @@ export function meta() {
 }
 
 export default function ListPage() {
-  return <DocumentListPage documents={getDocuments()} />
+  return (
+    <DocumentListPage
+      documents={getDocuments()}
+      tags={getTags()}
+      types={getTypes()}
+    />
+  )
 }

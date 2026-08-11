@@ -100,25 +100,29 @@ export function MobileTableOfContents({
       ref={detailsRef}
       className="group sticky top-16 z-10 max-h-[calc(100svh-4rem)] overflow-y-auto border-b bg-background/95 backdrop-blur-xl xl:hidden"
     >
-      <summary className="flex cursor-pointer list-none items-center gap-2.5 px-6 py-3.5 text-sm font-medium sm:px-11 [&::-webkit-details-marker]:hidden">
-        <ListTree
-          className="size-4 shrink-0 text-muted-foreground"
-          aria-hidden="true"
-        />
-        <span>On this page</span>
-        <ChevronRight
-          className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90 motion-reduce:transition-none"
-          aria-hidden="true"
-        />
+      <summary className="cursor-pointer list-none px-6 py-3.5 text-sm font-medium sm:px-11 [&::-webkit-details-marker]:hidden">
+        <span className="mx-auto flex max-w-3xl items-center gap-2.5">
+          <ListTree
+            className="size-4 shrink-0 text-muted-foreground"
+            aria-hidden="true"
+          />
+          <span>On this page</span>
+          <ChevronRight
+            className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90 motion-reduce:transition-none"
+            aria-hidden="true"
+          />
+        </span>
       </summary>
       <nav aria-label="On this page" className="px-6 pb-5 sm:px-11">
-        <TableOfContentsLinks
-          activeId={activeId}
-          items={items}
-          onNavigate={() => {
-            if (detailsRef.current) detailsRef.current.open = false
-          }}
-        />
+        <div className="mx-auto max-w-3xl">
+          <TableOfContentsLinks
+            activeId={activeId}
+            items={items}
+            onNavigate={() => {
+              if (detailsRef.current) detailsRef.current.open = false
+            }}
+          />
+        </div>
       </nav>
     </details>
   )

@@ -1,6 +1,8 @@
+export { DocumentListFacet } from "./components/document-list-facet"
 export { DocumentListPage } from "./components/document-list-page"
 export { DocumentPage, DocsShell } from "./components/document-page"
 export { HomePage } from "./components/home-page"
+export { Importance } from "./components/importance"
 export { DocsSearchInput } from "./components/docs-search-input"
 export { ScopePage, ScopesPage } from "./components/scopes-page"
 export { TagsPage } from "./components/tags-page"

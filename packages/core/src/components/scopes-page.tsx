@@ -28,78 +28,81 @@ function documentCountLabel(count: number) {
 export function ScopesPage({ scopes }: { scopes: ScopeDefinition[] }) {
   return (
     <DocsShell>
-      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
-        <nav
-          className="mb-8 text-sm text-muted-foreground"
-          aria-label="Breadcrumb"
-        >
-          <Link to="/" className="transition-colors hover:text-foreground">
-            Docs
-          </Link>{" "}
-          <span aria-hidden="true">/</span>{" "}
-          <span className="text-foreground">Scopes</span>
-        </nav>
+      <main className="w-full px-6 py-8 sm:px-11 sm:py-12">
+        <div className="mx-auto w-full max-w-3xl">
+          <nav
+            className="mb-8 text-sm text-muted-foreground"
+            aria-label="Breadcrumb"
+          >
+            <Link to="/" className="transition-colors hover:text-foreground">
+              Docs
+            </Link>{" "}
+            <span aria-hidden="true">/</span>{" "}
+            <span className="text-foreground">Scopes</span>
+          </nav>
 
-        <section aria-labelledby="scopes-heading">
-          <div className="border-b pb-5">
-            <p className="text-sm font-medium text-primary">Browse by</p>
-            <h1 id="scopes-heading" className="mt-1 text-3xl font-semibold">
-              Scopes
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Follow curated document paths organized into sections and groups.
-            </p>
-          </div>
-
-          {scopes.length ? (
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {scopes.map((scope) => {
-                const documentCount = scopeDocumentSlugs(scope).length
-
-                return (
-                  <li key={scope.slug}>
-                    <Link
-                      to={`/scopes/${scope.slug}`}
-                      className="group flex h-full flex-col rounded-xl border bg-card p-5 shadow-xs transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
-                    >
-                      <span className="flex items-start justify-between gap-4">
-                        <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                          <ScopeIcon
-                            name={scope.icon}
-                            fallback={Layers3}
-                            className="size-4"
-                          />
-                        </span>
-                        <ArrowUpRight
-                          className="size-4 text-muted-foreground transition group-hover:text-primary"
-                          aria-hidden="true"
-                        />
-                      </span>
-                      <span className="mt-5 block text-lg font-semibold transition-colors group-hover:text-primary">
-                        {scope.title}
-                      </span>
-                      {scope.description ? (
-                        <span className="mt-1 block text-sm leading-6 text-muted-foreground">
-                          {scope.description}
-                        </span>
-                      ) : null}
-                      <span className="mt-4 block text-xs font-medium text-muted-foreground">
-                        {documentCountLabel(documentCount)}
-                      </span>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          ) : (
-            <div className="py-16 text-center">
-              <h2 className="font-semibold">No scopes found</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Add a scope.json file under docs/_scopes to create one.
+          <section aria-labelledby="scopes-heading">
+            <div className="border-b pb-5">
+              <p className="text-sm font-medium text-primary">Browse by</p>
+              <h1 id="scopes-heading" className="mt-1 text-3xl font-semibold">
+                Scopes
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+                Follow curated document paths organized into sections and
+                groups.
               </p>
             </div>
-          )}
-        </section>
+
+            {scopes.length ? (
+              <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                {scopes.map((scope) => {
+                  const documentCount = scopeDocumentSlugs(scope).length
+
+                  return (
+                    <li key={scope.slug}>
+                      <Link
+                        to={`/scopes/${scope.slug}`}
+                        className="group flex h-full flex-col rounded-xl border bg-card p-5 shadow-xs transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                      >
+                        <span className="flex items-start justify-between gap-4">
+                          <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                            <ScopeIcon
+                              name={scope.icon}
+                              fallback={Layers3}
+                              className="size-4"
+                            />
+                          </span>
+                          <ArrowUpRight
+                            className="size-4 text-muted-foreground transition group-hover:text-primary"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <span className="mt-5 block text-lg font-semibold transition-colors group-hover:text-primary">
+                          {scope.title}
+                        </span>
+                        {scope.description ? (
+                          <span className="mt-1 block text-sm leading-6 text-muted-foreground">
+                            {scope.description}
+                          </span>
+                        ) : null}
+                        <span className="mt-4 block text-xs font-medium text-muted-foreground">
+                          {documentCountLabel(documentCount)}
+                        </span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            ) : (
+              <div className="py-16 text-center">
+                <h2 className="font-semibold">No scopes found</h2>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Add a scope.json file under docs/_scopes to create one.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
       </main>
     </DocsShell>
   )
@@ -240,110 +243,112 @@ export function ScopePage({
 
   return (
     <DocsShell>
-      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
-        <nav
-          className="mb-8 text-sm text-muted-foreground"
-          aria-label="Breadcrumb"
-        >
-          <Link to="/" className="transition-colors hover:text-foreground">
-            Docs
-          </Link>{" "}
-          <span aria-hidden="true">/</span>{" "}
-          <Link
-            to="/scopes"
-            className="transition-colors hover:text-foreground"
+      <main className="w-full px-6 py-8 sm:px-11 sm:py-12">
+        <div className="mx-auto w-full max-w-3xl">
+          <nav
+            className="mb-8 text-sm text-muted-foreground"
+            aria-label="Breadcrumb"
           >
-            Scopes
-          </Link>{" "}
-          <span aria-hidden="true">/</span>{" "}
-          <span className="text-foreground">{scope.title}</span>
-        </nav>
+            <Link to="/" className="transition-colors hover:text-foreground">
+              Docs
+            </Link>{" "}
+            <span aria-hidden="true">/</span>{" "}
+            <Link
+              to="/scopes"
+              className="transition-colors hover:text-foreground"
+            >
+              Scopes
+            </Link>{" "}
+            <span aria-hidden="true">/</span>{" "}
+            <span className="text-foreground">{scope.title}</span>
+          </nav>
 
-        <header className="flex items-start gap-4 border-b pb-8">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-            <ScopeIcon
-              name={scope.icon}
-              fallback={Layers3}
-              className="size-5"
-            />
-          </span>
-          <div>
-            <p className="text-sm font-medium text-primary">Scope</p>
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
-              {scope.title}
-            </h1>
-            {scope.description ? (
-              <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
-                {scope.description}
+          <header className="flex items-start gap-4 border-b pb-8">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <ScopeIcon
+                name={scope.icon}
+                fallback={Layers3}
+                className="size-5"
+              />
+            </span>
+            <div>
+              <p className="text-sm font-medium text-primary">Scope</p>
+              <h1 className="mt-1 text-3xl font-semibold tracking-tight sm:text-4xl">
+                {scope.title}
+              </h1>
+              {scope.description ? (
+                <p className="mt-3 max-w-2xl leading-7 text-muted-foreground">
+                  {scope.description}
+                </p>
+              ) : null}
+              <p className="mt-3 text-sm text-muted-foreground">
+                {documentCountLabel(documentCount)}
               </p>
-            ) : null}
-            <p className="mt-3 text-sm text-muted-foreground">
-              {documentCountLabel(documentCount)}
-            </p>
-          </div>
-        </header>
+            </div>
+          </header>
 
-        {scope.sections.length ? (
-          <div className="mt-10 space-y-12">
-            {scope.sections.map((section) => (
-              <section
-                key={section.id}
-                id={section.id}
-                aria-labelledby={`${section.id}-heading`}
-              >
-                <div className="flex items-start gap-3 border-b pb-4">
-                  <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-                    <ScopeIcon name={section.icon} className="size-4" />
-                  </span>
-                  <div>
-                    <h2
-                      id={`${section.id}-heading`}
-                      className="text-xl font-semibold"
-                    >
-                      {section.title}
-                    </h2>
-                    {section.description ? (
-                      <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                        {section.description}
-                      </p>
-                    ) : null}
+          {scope.sections.length ? (
+            <div className="mt-10 space-y-12">
+              {scope.sections.map((section) => (
+                <section
+                  key={section.id}
+                  id={section.id}
+                  aria-labelledby={`${section.id}-heading`}
+                >
+                  <div className="flex items-start gap-3 border-b pb-4">
+                    <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+                      <ScopeIcon name={section.icon} className="size-4" />
+                    </span>
+                    <div>
+                      <h2
+                        id={`${section.id}-heading`}
+                        className="text-xl font-semibold"
+                      >
+                        {section.title}
+                      </h2>
+                      {section.description ? (
+                        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                          {section.description}
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
 
-                {section.documents.length ? (
-                  <ul className="mt-3 divide-y">
-                    {section.documents.map((reference) => (
-                      <li key={reference.slug}>
-                        <ScopeDocumentLink
-                          reference={reference}
+                  {section.documents.length ? (
+                    <ul className="mt-3 divide-y">
+                      {section.documents.map((reference) => (
+                        <li key={reference.slug}>
+                          <ScopeDocumentLink
+                            reference={reference}
+                            scope={scope}
+                            documentsBySlug={documentsBySlug}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  {section.groups.length ? (
+                    <div className="mt-5 grid gap-4 lg:grid-cols-2">
+                      {section.groups.map((group) => (
+                        <ScopeGroup
+                          key={group.id}
+                          group={group}
                           scope={scope}
                           documentsBySlug={documentsBySlug}
                         />
-                      </li>
-                    ))}
-                  </ul>
-                ) : null}
-
-                {section.groups.length ? (
-                  <div className="mt-5 grid gap-4 lg:grid-cols-2">
-                    {section.groups.map((group) => (
-                      <ScopeGroup
-                        key={group.id}
-                        group={group}
-                        scope={scope}
-                        documentsBySlug={documentsBySlug}
-                      />
-                    ))}
-                  </div>
-                ) : null}
-              </section>
-            ))}
-          </div>
-        ) : (
-          <p className="py-16 text-center text-sm text-muted-foreground">
-            This scope does not contain any sections yet.
-          </p>
-        )}
+                      ))}
+                    </div>
+                  ) : null}
+                </section>
+              ))}
+            </div>
+          ) : (
+            <p className="py-16 text-center text-sm text-muted-foreground">
+              This scope does not contain any sections yet.
+            </p>
+          )}
+        </div>
       </main>
     </DocsShell>
   )

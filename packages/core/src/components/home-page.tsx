@@ -44,6 +44,7 @@ export function HomePage({
 }) {
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
+  const [searchOpen, setSearchOpen] = useState(false)
   const latestDocuments = documents.slice(-latestDocumentCount).reverse()
   const featuredTags = tags
     .map((tag) => ({
@@ -68,7 +69,7 @@ export function HomePage({
   }
 
   return (
-    <DocsShell>
+    <DocsShell searchOpen={searchOpen} onSearchOpenChange={setSearchOpen}>
       <main className="mx-auto w-full px-6 py-10 sm:px-11 sm:py-16">
         <section aria-labelledby="home-heading">
           <p className="text-sm font-medium text-primary">Documentation</p>
@@ -86,6 +87,7 @@ export function HomePage({
               value={query}
               onValueChange={setQuery}
               onSubmit={submitSearch}
+              onActivate={() => setSearchOpen(true)}
               placeholder="Search guides, topics, and tags"
             />
           </div>

@@ -1,6 +1,13 @@
 import { useMemo } from "react"
-import { GitFork, ListTree, Tag } from "lucide-react"
-import { Link, NavLink, useSearchParams } from "react-router"
+import { GitFork, LayoutDashboard, ListTree, Tag } from "lucide-react"
+import { Link, useNavigate, useSearchParams } from "react-router"
+
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs"
 
 import type { DocumentEntry, TagDefinition } from "../content/types"
 import { DocsSearchInput } from "./docs-search-input"
@@ -314,6 +321,7 @@ export function TagsPage({
   view: "tree" | "graph"
 }) {
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
   const query = searchParams.get("q") ?? ""
   const countedTags = useMemo(
     () => tagsWithCounts(tags, documents),
@@ -336,66 +344,78 @@ export function TagsPage({
     return `/tags/${nextView}${serializedParams ? `?${serializedParams}` : ""}`
   }
 
-  const viewClass = ({ isActive }: { isActive: boolean }) =>
-    `inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-      isActive
-        ? "bg-background text-foreground shadow-xs"
-        : "text-muted-foreground hover:text-foreground"
-    }`
+  function updateView(nextView: unknown) {
+    if (nextView !== "tree" && nextView !== "graph") return
+    navigate(viewHref(nextView))
+  }
 
   return (
     <DocsShell>
-      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
-        <nav
-          className="mb-8 text-sm text-muted-foreground"
-          aria-label="Breadcrumb"
+      <main className="w-full py-8 sm:py-12">
+        <div className="px-6 sm:px-11">
+          <nav
+            className="mx-auto mb-8 w-full max-w-3xl text-sm text-muted-foreground"
+            aria-label="Breadcrumb"
+          >
+            <Link to="/" className="transition-colors hover:text-foreground">
+              Docs
+            </Link>{" "}
+            <span aria-hidden="true">/</span>{" "}
+            <span className="text-foreground">Tags</span>
+          </nav>
+        </div>
+
+        <Tabs
+          value={view}
+          onValueChange={updateView}
+          className="gap-0"
+          render={<section aria-label="Tags" />}
         >
-          <Link to="/" className="transition-colors hover:text-foreground">
-            Docs
-          </Link>{" "}
-          <span aria-hidden="true">/</span>{" "}
-          <span className="text-foreground">Tags</span>
-        </nav>
+          <div className="border-y bg-grey-3 px-6 sm:px-11">
+            <div className="mx-auto w-full max-w-3xl pt-8 pb-6">
+              <DocsSearchInput
+                value={query}
+                onValueChange={updateQuery}
+                onSubmit={() => undefined}
+                label="Search tags"
+                placeholder="Search tags"
+                showShortcut={false}
+              />
 
-        <section aria-label="Tags">
-          <div className="-mx-6 bg-muted px-6 py-5 sm:-mx-11 sm:px-11">
-            <DocsSearchInput
-              value={query}
-              onValueChange={updateQuery}
-              onSubmit={() => undefined}
-              label="Search tags"
-              placeholder="Search tags"
-            />
-
-            <div className="mt-2 flex items-center gap-3">
-              <span className="text-sm font-medium text-muted-foreground">
-                Views
-              </span>
-              <nav className="flex rounded-lg p-1" aria-label="Tag views">
-                <NavLink to={viewHref("tree")} className={viewClass}>
-                  <ListTree className="size-4" aria-hidden="true" />
-                  Tree
-                </NavLink>
-                <NavLink to={viewHref("graph")} className={viewClass}>
-                  <GitFork className="size-4" aria-hidden="true" />
-                  Graph
-                </NavLink>
-              </nav>
+              <div className="mt-3 flex items-center gap-3">
+                <LayoutDashboard
+                  className="size-4 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <TabsList aria-label="Tag views">
+                  <TabsTrigger value="tree" className="px-2.5">
+                    <ListTree aria-hidden="true" />
+                    Tree
+                  </TabsTrigger>
+                  <TabsTrigger value="graph" className="px-2.5">
+                    <GitFork aria-hidden="true" />
+                    Graph
+                  </TabsTrigger>
+                </TabsList>
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-end border-b pb-4">
-            <p className="text-sm text-muted-foreground">Documents</p>
-          </div>
+          <div className="px-6 sm:px-11">
+            <div className="mx-auto w-full max-w-3xl">
+              <div className="mt-8 flex items-center justify-end border-b pb-4">
+                <p className="text-sm text-muted-foreground">Documents</p>
+              </div>
 
-          <div className="mt-2">
-            {view === "tree" ? (
-              <TagsTree tags={visibleTags} />
-            ) : (
-              <TagsGraph tags={visibleTags} documents={documents} />
-            )}
+              <TabsContent value="tree" className="mt-2">
+                <TagsTree tags={visibleTags} />
+              </TabsContent>
+              <TabsContent value="graph" className="mt-2">
+                <TagsGraph tags={visibleTags} documents={documents} />
+              </TabsContent>
+            </div>
           </div>
-        </section>
+        </Tabs>
       </main>
     </DocsShell>
   )

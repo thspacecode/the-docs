@@ -8,12 +8,16 @@ export function DocsSearchInput({
   onSubmit,
   label = "Search documentation",
   placeholder = "Search documentation",
+  showShortcut = true,
+  onActivate,
 }: {
   value: string
   onValueChange: (value: string) => void
   onSubmit: () => void
   label?: string
   placeholder?: string
+  showShortcut?: boolean
+  onActivate?: () => void
 }) {
   return (
     <form
@@ -36,6 +40,7 @@ export function DocsSearchInput({
           type="search"
           value={value}
           onChange={(event) => onValueChange(event.target.value)}
+          onClick={onActivate}
           placeholder={placeholder}
           autoComplete="off"
           className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
@@ -49,11 +54,11 @@ export function DocsSearchInput({
           >
             <X className="size-4" aria-hidden="true" />
           </button>
-        ) : (
+        ) : showShortcut ? (
           <kbd className="hidden rounded border bg-muted px-1.5 py-0.5 font-sans text-[0.65rem] text-muted-foreground sm:inline">
-            ⌘ K
+            Ctrl K
           </kbd>
-        )}
+        ) : null}
       </div>
     </form>
   )

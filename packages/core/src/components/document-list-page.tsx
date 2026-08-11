@@ -12,7 +12,21 @@ import {
 } from "lucide-react"
 import { Link, useSearchParams } from "react-router"
 
-import type { DocumentEntry } from "../content/types"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@workspace/ui/components/dropdown-menu"
+
+import type {
+  DocumentEntry,
+  TagDefinition,
+  TypeDefinition,
+} from "../content/types"
 import {
   DocumentSearchIndex,
   parseSearchQuery,
@@ -20,10 +34,24 @@ import {
   type SearchQualifier,
 } from "../search/document-search"
 import { DocsSearchInput } from "./docs-search-input"
+import { DocumentListFacet } from "./document-list-facet"
 import { DocsShell } from "./document-page"
+import { Importance } from "./importance"
+import { RelativeModifiedTime } from "./relative-modified-time"
 
 const pageSize = 6
 const searchDelay = 150
+
+const importancePriorities: Record<string, number> = {
+  highest: 5,
+  high: 4,
+  medium: 3,
+  low: 2,
+  lowest: 1,
+}
+
+type SortBy = "updated" | "importance"
+type SortOrder = "ascending" | "descending"
 
 function pageFromSearchParams(searchParams: URLSearchParams) {
   const value = Number(searchParams.get("page"))
@@ -98,8 +126,8 @@ function FilterCombobox({
       isItemEqualToValue={(item, selected) => item.value === selected.value}
     >
       <Combobox.Trigger
-        className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40 data-[popup-open]:bg-muted ${
-          values.length ? "bg-primary/10 text-primary" : "text-muted-foreground"
+        className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 py-1 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40 data-[popup-open]:bg-muted ${
+          values.length ? "text-primary" : "text-muted-foreground"
         }`}
         aria-label={`Filter by ${label.toLocaleLowerCase()}`}
       >
@@ -138,7 +166,7 @@ function FilterCombobox({
                 <Combobox.Item
                   key={item.value || "all"}
                   value={item}
-                  className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-2 text-sm outline-none select-none data-[highlighted]:bg-muted data-[selected]:font-medium"
+                  className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-1.5 text-sm outline-none select-none data-[highlighted]:bg-muted data-[selected]:font-medium"
                 >
                   <span className="min-w-0 flex-1 truncate">{item.label}</span>
                   <Combobox.ItemIndicator className="text-primary">
@@ -154,32 +182,78 @@ function FilterCombobox({
   )
 }
 
-function SortSelect({
-  value,
-  onChange,
+function SortMenu({
+  sortBy,
+  order,
+  onSortByChange,
+  onOrderChange,
 }: {
-  value: "newest" | "oldest"
-  onChange: (value: "newest" | "oldest") => void
+  sortBy: SortBy
+  order: SortOrder
+  onSortByChange: (value: SortBy) => void
+  onOrderChange: (value: SortOrder) => void
 }) {
-  const SortIcon = value === "newest" ? ArrowDownWideNarrow : ArrowUpNarrowWide
+  const SortIcon =
+    order === "descending" ? ArrowDownWideNarrow : ArrowUpNarrowWide
+  const sortLabel = sortBy === "updated" ? "Last updated" : "Importance"
 
   return (
-    <label className="relative ml-auto inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors focus-within:ring-2 focus-within:ring-ring/40 hover:bg-muted hover:text-foreground">
-      <SortIcon className="size-4" aria-hidden="true" />
-      <span>{value === "newest" ? "Newest" : "Oldest"}</span>
-      <ChevronDown className="size-3.5" aria-hidden="true" />
-      <select
-        value={value}
-        onChange={(event) =>
-          onChange(event.target.value === "oldest" ? "oldest" : "newest")
-        }
-        aria-label="Sort by last updated"
-        className="absolute inset-0 size-full cursor-pointer appearance-none opacity-0"
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        className="ml-auto inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 data-[popup-open]:bg-muted"
+        aria-label={`Sort by ${sortLabel}, ${order}`}
       >
-        <option value="newest">Last updated: newest</option>
-        <option value="oldest">Last updated: oldest</option>
-      </select>
-    </label>
+        <SortIcon className="size-4" aria-hidden="true" />
+        <span>{sortLabel}</span>
+        <ChevronDown className="size-3.5" aria-hidden="true" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuRadioGroup
+          value={sortBy}
+          onValueChange={(nextValue) =>
+            onSortByChange(
+              nextValue === "importance" ? "importance" : "updated"
+            )
+          }
+        >
+          <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+          <DropdownMenuRadioItem value="updated" className="py-1.5 pr-8 pl-2.5">
+            Last updated
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem
+            value="importance"
+            className="py-1.5 pr-8 pl-2.5"
+          >
+            Importance
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          value={order}
+          onValueChange={(nextValue) =>
+            onOrderChange(
+              nextValue === "ascending" ? "ascending" : "descending"
+            )
+          }
+        >
+          <DropdownMenuLabel>Order</DropdownMenuLabel>
+          <DropdownMenuRadioItem
+            value="ascending"
+            className="py-1.5 pr-8 pl-2.5"
+          >
+            <ArrowUpNarrowWide aria-hidden="true" />
+            Ascending
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem
+            value="descending"
+            className="py-1.5 pr-8 pl-2.5"
+          >
+            <ArrowDownWideNarrow aria-hidden="true" />
+            Descending
+          </DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 
@@ -211,19 +285,25 @@ function ResultTags({
 
 export function DocumentListPage({
   documents,
+  tags = [],
+  types = [],
 }: {
   documents: DocumentEntry[]
+  tags?: TagDefinition[]
+  types?: TypeDefinition[]
 }) {
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get("q") ?? ""
   const [effectiveQuery, setEffectiveQuery] = useState(query)
-  const sortOrder = searchParams.get("sort") === "oldest" ? "oldest" : "newest"
+  const [now] = useState(() => Date.now())
+  const sortBy: SortBy =
+    searchParams.get("sort") === "importance" ? "importance" : "updated"
+  const sortOrder: SortOrder =
+    searchParams.get("order") === "asc" || searchParams.get("sort") === "oldest"
+      ? "ascending"
+      : "descending"
   const searchIndex = useMemo(
     () => new DocumentSearchIndex(documents),
-    [documents]
-  )
-  const documentOrder = useMemo(
-    () => new Map(documents.map((document, index) => [document.slug, index])),
     [documents]
   )
 
@@ -237,15 +317,23 @@ export function DocumentListPage({
 
   const results = useMemo(() => {
     const matches = searchIndex.search(effectiveQuery)
-    const direction = sortOrder === "newest" ? -1 : 1
+    const direction = sortOrder === "ascending" ? 1 : -1
+
+    function sortValue(document: DocumentEntry) {
+      if (sortBy === "updated") return document.modifiedAt
+
+      const importance = document.frontmatter.importance
+      return importance
+        ? (importancePriorities[importance.toLocaleLowerCase()] ?? 0)
+        : 0
+    }
 
     return matches.sort(
       (left, right) =>
-        direction *
-        ((documentOrder.get(left.slug) ?? 0) -
-          (documentOrder.get(right.slug) ?? 0))
+        direction * (sortValue(left) - sortValue(right)) ||
+        left.frontmatter.title.localeCompare(right.frontmatter.title)
     )
-  }, [documentOrder, effectiveQuery, searchIndex, sortOrder])
+  }, [effectiveQuery, searchIndex, sortBy, sortOrder])
   const requestedPage = pageFromSearchParams(searchParams)
   const pageCount = Math.max(1, Math.ceil(results.length / pageSize))
   const currentPage = Math.min(requestedPage, pageCount)
@@ -298,10 +386,12 @@ export function DocumentListPage({
     updateQuery(setSearchQualifiers(query, qualifier, values))
   }
 
-  function updateSortOrder(value: "newest" | "oldest") {
+  function updateSorting(nextSortBy: SortBy, nextOrder: SortOrder) {
     const nextParams = new URLSearchParams(searchParams)
-    if (value === "newest") nextParams.delete("sort")
-    else nextParams.set("sort", value)
+    if (nextSortBy === "updated") nextParams.delete("sort")
+    else nextParams.set("sort", nextSortBy)
+    if (nextOrder === "descending") nextParams.delete("order")
+    else nextParams.set("order", "asc")
     nextParams.delete("page")
     setSearchParams(nextParams, { preventScrollReset: true, replace: true })
   }
@@ -316,164 +406,203 @@ export function DocumentListPage({
 
   return (
     <DocsShell>
-      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
-        <nav
-          className="mb-8 text-sm text-muted-foreground"
-          aria-label="Breadcrumb"
-        >
-          <Link to="/" className="transition-colors hover:text-foreground">
-            Docs
-          </Link>{" "}
-          <span aria-hidden="true">/</span>{" "}
-          <span className="text-foreground">List</span>
-        </nav>
+      <main className="w-full flex-1">
+        <div className="grid min-h-full xl:grid-cols-[minmax(300px,1fr)_minmax(0,856px)_minmax(300px,1fr)]">
+          <DocumentListFacet
+            tags={tags}
+            types={types}
+            documentTags={tagOptions}
+            documentTypes={typeOptions}
+            qualifiers={parsedQuery.qualifiers}
+            onChange={updateQualifier}
+          />
 
-        <section aria-label="Documents">
-          <div className="-mx-6 bg-muted px-6 py-5 sm:-mx-11 sm:px-11">
-            <DocsSearchInput
-              value={query}
-              onValueChange={updateQuery}
-              onSubmit={() => setEffectiveQuery(query)}
-            />
+          <article className="min-w-0">
+            <header className="px-6 py-10 sm:px-11 sm:py-12">
+              <nav
+                className="mx-auto w-full max-w-3xl text-sm text-muted-foreground"
+                aria-label="Breadcrumb"
+              >
+                <Link
+                  to="/"
+                  className="transition-colors hover:text-foreground"
+                >
+                  Docs
+                </Link>{" "}
+                <span aria-hidden="true">/</span>{" "}
+                <span className="text-foreground">List</span>
+              </nav>
+            </header>
 
-            <div className="mt-2 flex flex-wrap items-center gap-1">
-              <FilterCombobox
-                label="Importance"
-                qualifier="importance"
-                values={parsedQuery.qualifiers.importance}
-                options={importanceOptions}
-                onChange={updateQualifier}
-              />
-              <FilterCombobox
-                label="Types"
-                qualifier="type"
-                values={parsedQuery.qualifiers.type}
-                options={typeOptions}
-                onChange={updateQualifier}
-              />
-              <FilterCombobox
-                label="Scopes"
-                qualifier="scope"
-                values={parsedQuery.qualifiers.scope}
-                options={scopeOptions}
-                onChange={updateQualifier}
-              />
-              <FilterCombobox
-                label="Tags"
-                qualifier="tag"
-                values={parsedQuery.qualifiers.tag}
-                options={tagOptions}
-                onChange={updateQualifier}
-              />
-              <SortSelect value={sortOrder} onChange={updateSortOrder} />
-            </div>
-          </div>
+            <section aria-label="Documents">
+              <div className="border-y bg-grey-3 px-6 sm:px-11">
+                <div className="mx-auto w-full max-w-3xl pt-8 pb-6">
+                  <DocsSearchInput
+                    value={query}
+                    onValueChange={updateQuery}
+                    onSubmit={() => setEffectiveQuery(query)}
+                    showShortcut={false}
+                  />
 
-          {visibleDocuments.length ? (
-            <ul className="mt-6">
-              {visibleDocuments.map((document) => (
-                <li key={document.slug} className="py-6">
-                  <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
-                    <div className="min-w-0">
-                      <Link
-                        to={`/p/${document.slug}`}
-                        className="group inline-flex items-center gap-2 text-lg font-semibold hover:text-primary"
-                      >
-                        {document.frontmatter.title}
-                        <ArrowUpRight
-                          className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
-                          aria-hidden="true"
-                        />
-                      </Link>
-                      {document.frontmatter.description ? (
-                        <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
-                          {document.frontmatter.description}
-                        </p>
-                      ) : null}
-                    </div>
-                    {document.frontmatter.importance ? (
-                      <span className="h-fit justify-self-start rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary sm:justify-self-end">
-                        {document.frontmatter.importance}
-                      </span>
-                    ) : null}
-                  </div>
-                  <div className="mt-4">
-                    <ResultTags
-                      tags={document.frontmatter.tags}
-                      onSelect={(tag) =>
-                        updateQualifier("tag", [
-                          ...parsedQuery.qualifiers.tag,
-                          tag,
-                        ])
+                  <div className="mt-2 flex flex-wrap items-center gap-1">
+                    <FilterCombobox
+                      label="Importance"
+                      qualifier="importance"
+                      values={parsedQuery.qualifiers.importance}
+                      options={importanceOptions}
+                      onChange={updateQualifier}
+                    />
+                    <FilterCombobox
+                      label="Types"
+                      qualifier="type"
+                      values={parsedQuery.qualifiers.type}
+                      options={typeOptions}
+                      onChange={updateQualifier}
+                    />
+                    <FilterCombobox
+                      label="Scopes"
+                      qualifier="scope"
+                      values={parsedQuery.qualifiers.scope}
+                      options={scopeOptions}
+                      onChange={updateQualifier}
+                    />
+                    <FilterCombobox
+                      label="Tags"
+                      qualifier="tag"
+                      values={parsedQuery.qualifiers.tag}
+                      options={tagOptions}
+                      onChange={updateQualifier}
+                    />
+                    <SortMenu
+                      sortBy={sortBy}
+                      order={sortOrder}
+                      onSortByChange={(value) =>
+                        updateSorting(value, sortOrder)
                       }
+                      onOrderChange={(value) => updateSorting(sortBy, value)}
                     />
                   </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="py-16 text-center">
-              <h2 className="font-semibold">No documents found</h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Try another term or remove one of the filters.
-              </p>
-              {query ? (
-                <button
-                  type="button"
-                  onClick={() => updateQuery("")}
-                  className="mt-5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted"
-                >
-                  Clear search
-                </button>
-              ) : null}
-            </div>
-          )}
+                </div>
+              </div>
 
-          {results.length > pageSize ? (
-            <nav
-              className="mt-8 flex items-center justify-end gap-4 pt-6"
-              aria-label="Search result pages"
-            >
-              {currentPage > 1 ? (
-                <Link
-                  to={pageHref(currentPage - 1)}
-                  preventScrollReset
-                  className="rounded-lg border p-2 transition-colors hover:bg-muted"
-                  aria-label="Previous page"
-                >
-                  <ArrowLeft className="size-4" aria-hidden="true" />
-                </Link>
-              ) : (
-                <span
-                  className="rounded-lg border p-2 opacity-40"
-                  aria-hidden="true"
-                >
-                  <ArrowLeft className="size-4" />
-                </span>
-              )}
-              <span className="min-w-28 text-center text-sm text-muted-foreground">
-                Page {currentPage} of {pageCount}
-              </span>
-              {currentPage < pageCount ? (
-                <Link
-                  to={pageHref(currentPage + 1)}
-                  preventScrollReset
-                  className="rounded-lg border p-2 transition-colors hover:bg-muted"
-                  aria-label="Next page"
-                >
-                  <ArrowRight className="size-4" aria-hidden="true" />
-                </Link>
-              ) : (
-                <span
-                  className="rounded-lg border p-2 opacity-40"
-                  aria-hidden="true"
-                >
-                  <ArrowRight className="size-4" />
-                </span>
-              )}
-            </nav>
-          ) : null}
-        </section>
+              <div className="px-6 sm:px-11">
+                <div className="mx-auto w-full max-w-3xl">
+                  {visibleDocuments.length ? (
+                    <ul className="mt-6">
+                      {visibleDocuments.map((document) => (
+                        <li key={document.slug} className="py-6">
+                          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+                            <div className="min-w-0">
+                              <Link
+                                to={`/p/${document.slug}`}
+                                className="group inline-flex items-center gap-2 text-lg font-medium text-secondary-11 transition-colors hover:text-secondary-12"
+                              >
+                                {document.frontmatter.title}
+                                <ArrowUpRight
+                                  className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
+                                  aria-hidden="true"
+                                />
+                              </Link>
+                              {document.frontmatter.description ? (
+                                <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+                                  {document.frontmatter.description}
+                                </p>
+                              ) : null}
+                            </div>
+                            {document.frontmatter.importance ? (
+                              <Importance
+                                value={document.frontmatter.importance}
+                                className="h-fit justify-self-start sm:justify-self-end"
+                              />
+                            ) : null}
+                          </div>
+                          <div className="mt-4 flex items-end gap-4">
+                            <ResultTags
+                              tags={document.frontmatter.tags}
+                              onSelect={(tag) =>
+                                updateQualifier("tag", [
+                                  ...parsedQuery.qualifiers.tag,
+                                  tag,
+                                ])
+                              }
+                            />
+                            <RelativeModifiedTime
+                              modifiedAt={document.modifiedAt}
+                              now={now}
+                            />
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="py-16 text-center">
+                      <h2 className="font-semibold">No documents found</h2>
+                      <p className="mt-2 text-sm text-muted-foreground">
+                        Try another term or remove one of the filters.
+                      </p>
+                      {query ? (
+                        <button
+                          type="button"
+                          onClick={() => updateQuery("")}
+                          className="mt-5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted"
+                        >
+                          Clear search
+                        </button>
+                      ) : null}
+                    </div>
+                  )}
+
+                  {results.length > pageSize ? (
+                    <nav
+                      className="mt-8 flex items-center justify-end gap-4 pt-6"
+                      aria-label="Search result pages"
+                    >
+                      {currentPage > 1 ? (
+                        <Link
+                          to={pageHref(currentPage - 1)}
+                          preventScrollReset
+                          className="rounded-lg border p-2 transition-colors hover:bg-muted"
+                          aria-label="Previous page"
+                        >
+                          <ArrowLeft className="size-4" aria-hidden="true" />
+                        </Link>
+                      ) : (
+                        <span
+                          className="rounded-lg border p-2 opacity-40"
+                          aria-hidden="true"
+                        >
+                          <ArrowLeft className="size-4" />
+                        </span>
+                      )}
+                      <span className="min-w-28 text-center text-sm text-muted-foreground">
+                        Page {currentPage} of {pageCount}
+                      </span>
+                      {currentPage < pageCount ? (
+                        <Link
+                          to={pageHref(currentPage + 1)}
+                          preventScrollReset
+                          className="rounded-lg border p-2 transition-colors hover:bg-muted"
+                          aria-label="Next page"
+                        >
+                          <ArrowRight className="size-4" aria-hidden="true" />
+                        </Link>
+                      ) : (
+                        <span
+                          className="rounded-lg border p-2 opacity-40"
+                          aria-hidden="true"
+                        >
+                          <ArrowRight className="size-4" />
+                        </span>
+                      )}
+                    </nav>
+                  ) : null}
+                </div>
+              </div>
+            </section>
+          </article>
+
+          <div className="hidden border-l xl:block" aria-hidden="true" />
+        </div>
       </main>
     </DocsShell>
   )

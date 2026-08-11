@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { Popover } from "@base-ui/react/popover"
 import {
-  ArrowLeft,
   BookOpen,
   Check,
   ChevronLeft,
@@ -12,16 +11,19 @@ import {
   Layers3,
   Search,
 } from "lucide-react"
-import { Link, NavLink, useLocation, useNavigate } from "react-router"
+import { Link, NavLink, useLocation } from "react-router"
 
+import { getDocuments, getScopes, getTags } from "../content/registry"
 import type {
   DocumentEntry,
   RelatedDocumentsSection,
   ScopeDefinition,
   ScopeDocumentReference,
 } from "../content/types"
-import { docsSearchInputId } from "./docs-search-input"
+import { GlobalSearch } from "./global-search"
+import { Importance } from "./importance"
 import { RelatedDocuments } from "./related-documents"
+import { RelativeModifiedTime } from "./relative-modified-time"
 import { ScopeIcon } from "./scope-icon"
 import {
   DesktopTableOfContents,
@@ -36,46 +38,48 @@ function isEditableTarget(target: EventTarget | null) {
   )
 }
 
-export function DocsShell({ children }: { children: React.ReactNode }) {
+export function DocsShell({
+  children,
+  searchOpen: controlledSearchOpen,
+  onSearchOpenChange,
+}: {
+  children: React.ReactNode
+  searchOpen?: boolean
+  onSearchOpenChange?: (open: boolean) => void
+}) {
   const location = useLocation()
-  const navigate = useNavigate()
-
-  const focusSearch = useCallback(() => {
-    const input = document.getElementById(docsSearchInputId)
-
-    if (input instanceof HTMLInputElement) {
-      input.focus()
-      input.select()
-      return
-    }
-
-    navigate("/list")
-    window.setTimeout(() => {
-      const listInput = document.getElementById(docsSearchInputId)
-      if (listInput instanceof HTMLInputElement) listInput.focus()
-    })
-  }, [navigate])
+  const [internalSearchOpen, setInternalSearchOpen] = useState(false)
+  const searchOpen = controlledSearchOpen ?? internalSearchOpen
+  const setSearchOpen = useCallback(
+    (open: boolean) => {
+      if (controlledSearchOpen === undefined) setInternalSearchOpen(open)
+      onSearchOpenChange?.(open)
+    },
+    [controlledSearchOpen, onSearchOpenChange]
+  )
 
   useEffect(() => {
     function handleShortcut(event: KeyboardEvent) {
-      const commandKey = (event.metaKey || event.ctrlKey) && event.key === "k"
+      const commandKey =
+        (event.metaKey || event.ctrlKey) &&
+        event.key.toLocaleLowerCase() === "k"
       const slashKey = event.key === "/" && !isEditableTarget(event.target)
 
       if (!commandKey && !slashKey) return
 
       event.preventDefault()
-      focusSearch()
+      setSearchOpen(true)
     }
 
     window.addEventListener("keydown", handleShortcut)
     return () => window.removeEventListener("keydown", handleShortcut)
-  }, [focusSearch])
+  }, [setSearchOpen])
 
   const navigationClass = ({ isActive }: { isActive: boolean }) =>
     `rounded-md px-2.5 py-1.5 text-sm font-medium transition-colors ${
       isActive
-        ? "bg-muted text-foreground"
-        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+        ? "bg-primary-2 text-primary-11 hover:bg-primary-3 active:bg-primary-4"
+        : "text-muted-foreground hover:bg-primary-3 hover:text-primary-11 active:bg-primary-4"
     }`
   const hasScopeContext =
     location.pathname.startsWith("/scopes") ||
@@ -83,9 +87,9 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
       new URLSearchParams(location.search).has("scope"))
 
   return (
-    <div className="min-h-svh bg-muted px-2">
+    <div className="min-h-svh bg-grey-2">
       <div className="mx-auto flex min-h-svh max-w-[1456px] flex-col border-x bg-background">
-        <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur-xl">
+        <header className="sticky top-0 z-20 border-b bg-grey-1 backdrop-blur-xl">
           <div className="mx-auto flex h-16 w-full items-center gap-3 px-6 sm:px-11">
             <Link
               to="/"
@@ -98,7 +102,7 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
               <span className="hidden sm:inline">The Docs</span>
             </Link>
 
-            <nav className="flex items-center" aria-label="Documentation">
+            <nav className="flex items-center gap-2" aria-label="Documentation">
               <NavLink to="/list" className={navigationClass}>
                 List
               </NavLink>
@@ -122,21 +126,21 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
 
             <button
               type="button"
-              onClick={focusSearch}
+              onClick={() => setSearchOpen(true)}
               className="ml-auto flex h-9 min-w-9 items-center gap-2 rounded-lg border px-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:min-w-48"
               aria-label="Search documentation"
             >
               <Search className="size-4" aria-hidden="true" />
               <span className="hidden sm:inline">Search</span>
               <kbd className="ml-auto hidden rounded border bg-muted px-1.5 py-0.5 font-sans text-[0.65rem] md:inline">
-                ⌘ K
+                Ctrl K
               </kbd>
             </button>
           </div>
         </header>
         {children}
         <footer className="mt-auto border-t">
-          <div className="flex min-h-16 items-center px-6 sm:px-11">
+          <div className="flex min-h-16 items-center bg-grey-1 px-6 sm:px-11">
             <a
               href="https://github.com/thspacecode/the-docs"
               target="_blank"
@@ -148,6 +152,13 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
           </div>
         </footer>
       </div>
+      <GlobalSearch
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        documents={getDocuments()}
+        scopes={getScopes()}
+        tags={getTags()}
+      />
     </div>
   )
 }
@@ -332,7 +343,7 @@ function ScopeDocumentNavigation({
       className="hidden border-r xl:block"
       aria-label={`${scope.title} scope`}
     >
-      <div className="sticky top-16 max-h-[calc(100svh-4rem)] overflow-y-auto p-4">
+      <div className="sticky top-16 max-h-[calc(100svh-4rem)] overflow-y-auto py-4 pr-5 pl-6 sm:pl-11">
         <ScopeSelector
           scope={scope}
           scopes={scopes}
@@ -492,12 +503,13 @@ export function DocumentPage({
   relatedDocumentSections?: RelatedDocumentsSection[]
 }) {
   const { Component, frontmatter, tableOfContents = [] } = document
+  const [now] = useState(() => Date.now())
   const hasTableOfContents = tableOfContents.length > 0
 
   return (
     <DocsShell>
       <main className="w-full flex-1">
-        <div className="grid min-h-full xl:grid-cols-[232px_minmax(0,1fr)_232px]">
+        <div className="grid min-h-full xl:grid-cols-[300px_minmax(0,1fr)_300px]">
           <ScopeDocumentNavigation
             scope={scope}
             scopes={scopes}
@@ -508,27 +520,42 @@ export function DocumentPage({
           <article className="min-w-0">
             <header className="border-b px-6 py-10 sm:px-11 sm:py-12">
               <div className="mx-auto max-w-3xl">
-                <Link
-                  to={scope ? `/scopes/${scope.slug}` : "/list"}
-                  className="mb-10 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                <nav
+                  className="mb-8 text-sm text-muted-foreground"
+                  aria-label="Breadcrumb"
                 >
-                  <ArrowLeft className="size-4" aria-hidden="true" />
-                  {scope ? scope.title : "All documentation"}
-                </Link>
+                  <Link
+                    to="/"
+                    className="transition-colors hover:text-foreground"
+                  >
+                    Docs
+                  </Link>{" "}
+                  <span aria-hidden="true">/</span>{" "}
+                  <span className="text-foreground">{frontmatter.title}</span>
+                </nav>
 
-                <p className="mb-3 text-sm font-medium text-primary">
-                  Documentation
-                </p>
-                <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-                  {frontmatter.title}
-                </h1>
+                <div className="flex items-start gap-4">
+                  <h1 className="min-w-0 flex-1 text-4xl font-semibold tracking-tight text-balance text-primary sm:text-5xl">
+                    {frontmatter.title}
+                  </h1>
+                  {frontmatter.importance ? (
+                    <Importance
+                      value={frontmatter.importance}
+                      className="mt-2 shrink-0 sm:mt-3"
+                    />
+                  ) : null}
+                </div>
                 {frontmatter.description ? (
                   <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
                     {frontmatter.description}
                   </p>
                 ) : null}
-                <div className="mt-6">
+                <div className="mt-6 flex items-end gap-4">
                   <Tags tags={frontmatter.tags} />
+                  <RelativeModifiedTime
+                    modifiedAt={document.modifiedAt}
+                    now={now}
+                  />
                 </div>
               </div>
             </header>

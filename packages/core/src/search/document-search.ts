@@ -66,10 +66,14 @@ function matchesQualifiers(
 
   const matchesAny = (values: string[], recordValue: string) =>
     !values.length || values.includes(normalize(recordValue))
+  const matchesTag = (tag: string) =>
+    tags.some(
+      (documentTag) => documentTag === tag || documentTag.startsWith(`${tag}/`)
+    )
   const normalizedScopes = record.scopes.map(normalize)
 
   return (
-    qualifiers.tag.every((tag) => tags.includes(tag)) &&
+    qualifiers.tag.every(matchesTag) &&
     matchesAny(qualifiers.type, record.type) &&
     (!qualifiers.scope.length ||
       qualifiers.scope.some((scope) => normalizedScopes.includes(scope))) &&
