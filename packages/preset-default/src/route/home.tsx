@@ -1,4 +1,4 @@
-import { DocumentListPage, getDocuments } from "@workspace/core"
+import { getDocuments, getTags, HomePage } from "@workspace/core"
 
 export function meta() {
   return [
@@ -11,5 +11,11 @@ export function meta() {
 }
 
 export default function Home() {
-  return <DocumentListPage documents={getDocuments()} />
+  return (
+    <HomePage
+      documents={getDocuments()}
+      tags={getTags()}
+      description="Architecture notes and guides for The Docs."
+    />
+  )
 }
