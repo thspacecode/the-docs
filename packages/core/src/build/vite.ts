@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs"
 import { basename, dirname, resolve } from "node:path"
 
 import mdx from "@mdx-js/rollup"
+import type { Options as MdxOptions } from "@mdx-js/rollup"
 import matter from "gray-matter"
 import remarkFrontmatter from "remark-frontmatter"
 import remarkGfm from "remark-gfm"
@@ -14,6 +15,8 @@ const resolvedVirtualModuleId = `\0${virtualModuleId}`
 
 export interface DocsViteOptions {
   contentRoot: string
+  /** Additional MDX compiler options, such as plugin-provided rehype plugins. */
+  mdx?: MdxOptions
 }
 
 function createContentModule(contentRoot: string) {
@@ -75,11 +78,19 @@ function docsContentPlugin(contentRoot: string): Plugin {
 
 export function createDocsVitePlugins({
   contentRoot,
+  mdx: mdxOptions = {},
 }: DocsViteOptions): PluginOption[] {
   const resolvedContentRoot = resolve(contentRoot)
 
   return [
     docsContentPlugin(resolvedContentRoot),
-    mdx({ remarkPlugins: [remarkFrontmatter, remarkGfm] }),
+    mdx({
+      ...mdxOptions,
+      remarkPlugins: [
+        remarkFrontmatter,
+        remarkGfm,
+        ...(mdxOptions.remarkPlugins ?? []),
+      ],
+    }),
   ]
 }

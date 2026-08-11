@@ -14,6 +14,7 @@
     "@react-router/node": "7.15.1",
     "@react-router/serve": "7.15.1",
     "@workspace/core": "workspace:*",
+    "@workspace/plugin-syntax-highlighter": "workspace:*",
     "@workspace/ui": "workspace:*",
     "isbot": "^5",
     "lucide-react": "^1.28.0",
