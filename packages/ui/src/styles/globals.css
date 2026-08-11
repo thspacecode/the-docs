@@ -8,6 +8,7 @@
 @source "../../../../apps/**/*.{ts,tsx}";
 @source "../../../core/src/**/*.{ts,tsx}";
 @source "../../../plugin-excalidraw/src/**/*.{ts,tsx}";
+@source "../../../plugin-mermaid/src/**/*.{ts,tsx}";
 @source "../../../preset-default/src/**/*.{ts,tsx}";
 @source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
@@ -183,6 +184,9 @@
   }
   .docs-content img {
     @apply max-w-full rounded-lg border;
+  }
+  .docs-content .mermaid-image {
+    @apply mx-auto block max-h-[42rem] w-auto bg-white object-contain;
   }
 
   .excalidraw-preview {

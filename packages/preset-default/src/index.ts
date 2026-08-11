@@ -2,11 +2,14 @@ import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 import type { ExcalidrawPluginOptions } from "@workspace/plugin-excalidraw"
+import type { MermaidPluginOptions } from "@workspace/plugin-mermaid"
 import type { SyntaxHighlighterOptions } from "@workspace/plugin-syntax-highlighter"
 
 export interface DefaultPresetPluginOptions {
   /** Set to false to leave fenced code blocks unhighlighted. */
   syntaxHighlighter?: SyntaxHighlighterOptions | false
+  /** Set to false to leave Mermaid code fences as code. */
+  mermaid?: MermaidPluginOptions | false
   /** Set to false to leave .excalidraw references unprocessed. */
   excalidraw?: ExcalidrawPluginOptions | false
 }
@@ -21,6 +24,7 @@ export interface DefaultPresetConfig {
   readonly contentRoot: string
   readonly plugins: Readonly<{
     syntaxHighlighter: SyntaxHighlighterOptions | false
+    mermaid: MermaidPluginOptions | false
     excalidraw: ExcalidrawPluginOptions | false
   }>
 }
@@ -39,6 +43,7 @@ export function defineConfig(
     contentRoot: resolveContentRoot(options.contentRoot),
     plugins: Object.freeze({
       syntaxHighlighter: options.plugins?.syntaxHighlighter ?? {},
+      mermaid: options.plugins?.mermaid ?? {},
       excalidraw: options.plugins?.excalidraw ?? {},
     }),
   })
