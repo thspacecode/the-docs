@@ -1,4 +1,4 @@
 .react-router
-build
+.build
 node_modules
 README.md
