@@ -16,14 +16,43 @@ The app reads documents from `docs/<slug>/index.mdx`. Each document supports fro
 title: Document title
 description: A short summary.
 tags:
-  - architecture
-  - guide
+  - docs/architecture
+type: doc
 ---
 
 ## Document content
 ```
 
-Document slugs must contain lowercase letters, numbers, and hyphens. The home page lists every discovered document and `/docs/p/<slug>` renders its MDX content.
+Document slugs must contain lowercase letters, numbers, and hyphens. Nested tags use their full slash-delimited slug, and document types are `adr` or `doc`. The home page lists every discovered document and `/p/<slug>` renders its MDX content.
+
+## Scopes
+
+Scopes are curated document hierarchies stored in `docs/_scopes/<scope-slug>/scope.json`. A scope contains ordered sections, optional groups, and document references. Groups can also link to a document themselves:
+
+```json
+{
+  "title": "Engineering",
+  "description": "Engineering documentation.",
+  "icon": "blocks",
+  "sections": [
+    {
+      "id": "architecture",
+      "title": "Architecture",
+      "groups": [
+        {
+          "id": "packages",
+          "title": "Packages",
+          "icon": "package",
+          "document": { "slug": "packages-boundaries" },
+          "documents": [{ "slug": "ui-packages" }]
+        }
+      ]
+    }
+  ]
+}
+```
+
+The optional `icon` fields accept kebab-case [Lucide](https://lucide.dev/icons/) icon names. Documents opened from a scope preserve that navigation context in the URL, for example `/p/packages-boundaries?scope=engineering`.
 
 The default preset renders relative BPMN 2.0 assets as SVG-backed images at build time:
 

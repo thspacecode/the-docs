@@ -18,7 +18,7 @@ interface SearchRecord {
   content: string
   tags: string[]
   type: string
-  scope: string
+  scopes: string[]
   importance: string
 }
 
@@ -66,11 +66,13 @@ function matchesQualifiers(
 
   const matchesAny = (values: string[], recordValue: string) =>
     !values.length || values.includes(normalize(recordValue))
+  const normalizedScopes = record.scopes.map(normalize)
 
   return (
     qualifiers.tag.every((tag) => tags.includes(tag)) &&
     matchesAny(qualifiers.type, record.type) &&
-    matchesAny(qualifiers.scope, record.scope) &&
+    (!qualifiers.scope.length ||
+      qualifiers.scope.some((scope) => normalizedScopes.includes(scope))) &&
     matchesAny(qualifiers.importance, record.importance)
   )
 }
@@ -87,7 +89,7 @@ export class DocumentSearchIndex {
       content: document.searchText,
       tags: document.frontmatter.tags,
       type: document.frontmatter.type ?? "",
-      scope: document.frontmatter.scope ?? "",
+      scopes: document.scopeSlugs,
       importance: document.frontmatter.importance ?? "",
     }))
 
@@ -104,7 +106,7 @@ export class DocumentSearchIndex {
         { name: "tags", weight: 0.15 },
         { name: "content", weight: 0.1 },
         { name: "type", weight: 0.04 },
-        { name: "scope", weight: 0.04 },
+        { name: "scopes", weight: 0.04 },
         { name: "importance", weight: 0.02 },
       ],
     })

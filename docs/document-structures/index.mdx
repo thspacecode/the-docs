@@ -2,9 +2,10 @@
 title: "Document Structures"
 description: "The file conventions and metadata contracts for documents, tags, and types."
 tags:
-  - content
-  - frontmatter
-  - tags
+  - docs/specs
+  - feature/tags
+  - feature/types
+type: doc
 importance: Medium
 ---
 
@@ -14,21 +15,25 @@ importance: Medium
 docs/
 ├── _types/
 │   ├── adr/
-│   │   ├── type.json
-│   │   └── type.th.json
-│   └── feat/
-│       ├── type.json
-│       └── type.th.json
+│   │   └── type.json
+│   └── doc/
+│       └── type.json
+├── _scopes/
+│   └── engineering/
+│       └── scope.json
 ├── _tags/
-│   ├── software/
+│   ├── docs/
 │   │   ├── tag.json
-│   │   ├── tag.th.json
-│   │   └── erpnext/
-│   │       ├── tag.json
-│   │       └── tag.th.json
-│   └── others/
+│   │   ├── ui-ux/tag.json
+│   │   ├── architecture/tag.json
+│   │   └── specs/tag.json
+│   └── feature/
 │       ├── tag.json
-│       └── tag.th.json
+│       ├── scope/tag.json
+│       ├── tags/tag.json
+│       ├── types/tag.json
+│       ├── plugin/tag.json
+│       └── search/tag.json
 ├── post-001/
 │   ├── index.mdx
 │   ├── index.th.mdx
@@ -42,38 +47,52 @@ docs/
 
 ## Documents
 
-* Documents using flat structure (document directories must be exactly one level below)
-* Use frontmatter for meta-data
-    - title: string
-    - description: string
-    - tags: string[]
-* Support plugin like excalidraw, bpmn
-* Assets stored within documents
+- Documents using flat structure (document directories must be exactly one level below)
+- Use frontmatter for metadata
+  - title: string
+  - description: string
+  - tags: string[]
+  - type: `adr` | `doc`
+  - priority: number (higher values appear first among related documents)
+  - related-docs: string[] (document slugs; relationships are resolved both ways)
+  - modified: date (optional; otherwise the file modification time is used)
+- Support plugin like excalidraw, bpmn
+- Assets stored within documents
 
 ## Tags
 
-* Tags can be nested
+- Tags can be nested
+- Nested tags use their full slash-delimited slug in frontmatter, such as `docs/ui-ux` or `feature/plugin`
 
 Interface:
 
 ```typescript
 interface TagDefinition {
-  title: string;
-  description: string;
-  color?: string;
+  title: string
+  description: string
+  color?: string
 }
 ```
 
+## Scopes
+
+Scopes are flat directories under `_scopes`. Each `scope.json` defines an ordered hierarchy of sections, groups, and document references. A group may provide a `document` reference, making the group heading itself a document link while retaining child documents. Optional `icon` fields use kebab-case Lucide icon names.
+
+Documents opened through a scope use `/p/<document-slug>?scope=<scope-slug>` so scope navigation remains selected.
+
 ## Types
 
-* Types won't be nested
+- Types won't be nested
+- Supported types are `adr` and `doc`
 
 Interface:
 
 ```typescript
 interface TypeDefinition {
-  title: string;
-  description: string;
-  color?: string;
+  title: string
+  description: string
+  color?: string
+  // Related documents of this type render in their own collapsed section.
+  "separate-related-docs-section"?: boolean
 }
 ```

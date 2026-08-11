@@ -1,15 +1,24 @@
+import { useEffect, useState } from "react"
 import {
   Link,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
+  useSearchParams,
 } from "react-router"
 import type { LoaderFunctionArgs, MetaFunction } from "react-router"
 
 import { DocsShell, DocumentPage } from "../components/document-page"
-import { getDocument } from "../content/registry"
+import {
+  getDocument,
+  getDocuments,
+  getRelatedDocumentSections,
+  getScope,
+  getScopes,
+  scopeContainsDocument,
+} from "../content/registry"
 
-export function loader({ params }: LoaderFunctionArgs) {
+export function loader({ params, request }: LoaderFunctionArgs) {
   const document = params.slug ? getDocument(params.slug) : undefined
 
   if (!document) {
@@ -19,8 +28,18 @@ export function loader({ params }: LoaderFunctionArgs) {
     })
   }
 
+  const requestedScopeSlug = new URL(request.url).searchParams.get("scope")
+  const requestedScope = requestedScopeSlug
+    ? getScope(requestedScopeSlug)
+    : undefined
+  const scopeSlug =
+    requestedScope && scopeContainsDocument(requestedScope, document.slug)
+      ? requestedScope.slug
+      : undefined
+
   return {
     slug: document.slug,
+    scopeSlug,
     title: document.frontmatter.title,
     description: document.frontmatter.description,
   }
@@ -34,14 +53,39 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 ]
 
 export default function DocsPostRoute() {
-  const { slug } = useLoaderData<typeof loader>()
+  const { slug, scopeSlug: loaderScopeSlug } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+  const [hasHydrated, setHasHydrated] = useState(false)
   const document = getDocument(slug)
+
+  useEffect(() => setHasHydrated(true), [])
+
+  const requestedScopeSlug = hasHydrated
+    ? searchParams.get("scope")
+    : loaderScopeSlug
+  const requestedScope = requestedScopeSlug
+    ? getScope(requestedScopeSlug)
+    : undefined
+  const scope =
+    document &&
+    requestedScope &&
+    scopeContainsDocument(requestedScope, document.slug)
+      ? requestedScope
+      : undefined
 
   if (!document) {
     return null
   }
 
-  return <DocumentPage document={document} />
+  return (
+    <DocumentPage
+      document={document}
+      scope={scope}
+      scopes={getScopes()}
+      documents={getDocuments()}
+      relatedDocumentSections={getRelatedDocumentSections(document.slug)}
+    />
+  )
 }
 
 export function ErrorBoundary() {

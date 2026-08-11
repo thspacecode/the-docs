@@ -14,6 +14,16 @@ export interface DiscoveredTag {
   slug: string
 }
 
+export interface DiscoveredScope {
+  filePath: string
+  slug: string
+}
+
+export interface DiscoveredType {
+  filePath: string
+  slug: string
+}
+
 export function discoverDocuments(contentRoot: string): DiscoveredDocument[] {
   let entries
 
@@ -35,6 +45,64 @@ export function discoverDocuments(contentRoot: string): DiscoveredDocument[] {
     .filter((entry) => entry.isDirectory() && slugPattern.test(entry.name))
     .map((entry) => ({
       filePath: join(contentRoot, entry.name, "index.mdx"),
+      slug: entry.name,
+    }))
+    .filter(({ filePath }) => existsSync(filePath))
+    .sort((left, right) => left.slug.localeCompare(right.slug))
+}
+
+export function discoverScopes(contentRoot: string): DiscoveredScope[] {
+  const scopesRoot = join(contentRoot, "_scopes")
+
+  let entries
+
+  try {
+    entries = readdirSync(scopesRoot, { withFileTypes: true })
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as NodeJS.ErrnoException).code === "ENOENT"
+    ) {
+      return []
+    }
+
+    throw error
+  }
+
+  return entries
+    .filter((entry) => entry.isDirectory() && slugPattern.test(entry.name))
+    .map((entry) => ({
+      filePath: join(scopesRoot, entry.name, "scope.json"),
+      slug: entry.name,
+    }))
+    .filter(({ filePath }) => existsSync(filePath))
+    .sort((left, right) => left.slug.localeCompare(right.slug))
+}
+
+export function discoverTypes(contentRoot: string): DiscoveredType[] {
+  const typesRoot = join(contentRoot, "_types")
+
+  let entries
+
+  try {
+    entries = readdirSync(typesRoot, { withFileTypes: true })
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      "code" in error &&
+      (error as NodeJS.ErrnoException).code === "ENOENT"
+    ) {
+      return []
+    }
+
+    throw error
+  }
+
+  return entries
+    .filter((entry) => entry.isDirectory() && slugPattern.test(entry.name))
+    .map((entry) => ({
+      filePath: join(typesRoot, entry.name, "type.json"),
       slug: entry.name,
     }))
     .filter(({ filePath }) => existsSync(filePath))

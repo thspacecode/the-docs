@@ -2,9 +2,14 @@ import { useState } from "react"
 import { ArrowRight, ArrowUpRight, Layers3, Tag } from "lucide-react"
 import { Link, useNavigate } from "react-router"
 
-import type { DocumentEntry, TagDefinition } from "../content/types"
+import type {
+  DocumentEntry,
+  ScopeDefinition,
+  TagDefinition,
+} from "../content/types"
 import { DocsSearchInput } from "./docs-search-input"
 import { DocsShell } from "./document-page"
+import { ScopeIcon } from "./scope-icon"
 
 const latestDocumentCount = 3
 const featuredTagCount = 8
@@ -26,24 +31,19 @@ function countDocumentsForTag(tag: TagDefinition, documents: DocumentEntry[]) {
 
 export function HomePage({
   documents,
+  scopes,
   tags,
   title = "The Docs",
   description = "Find architecture notes, product decisions, and practical guides.",
 }: {
   documents: DocumentEntry[]
+  scopes: ScopeDefinition[]
   tags: TagDefinition[]
   title?: string
   description?: string
 }) {
   const navigate = useNavigate()
   const [query, setQuery] = useState("")
-  const scopes = [
-    ...new Set(
-      documents
-        .map((document) => document.frontmatter.scope)
-        .filter((scope): scope is string => Boolean(scope))
-    ),
-  ].sort((left, right) => left.localeCompare(right))
   const latestDocuments = documents.slice(-latestDocumentCount).reverse()
   const featuredTags = tags
     .map((tag) => ({
@@ -106,19 +106,23 @@ export function HomePage({
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               {scopes.map((scope) => {
-                const scopeDocuments = documents.filter(
-                  (document) => document.frontmatter.scope === scope
+                const scopeDocuments = documents.filter((document) =>
+                  document.scopeSlugs.includes(scope.slug)
                 )
 
                 return (
                   <Link
-                    key={scope}
-                    to={qualifierHref("scope", scope)}
+                    key={scope.slug}
+                    to={`/scopes/${scope.slug}`}
                     className="group rounded-xl border bg-card p-5 shadow-xs transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
                   >
                     <span className="flex items-start justify-between gap-4">
                       <span className="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Layers3 className="size-4" aria-hidden="true" />
+                        <ScopeIcon
+                          name={scope.icon}
+                          fallback={Layers3}
+                          className="size-4"
+                        />
                       </span>
                       <ArrowUpRight
                         className="size-4 text-muted-foreground transition group-hover:text-primary"
@@ -126,14 +130,12 @@ export function HomePage({
                       />
                     </span>
                     <span className="mt-5 block text-lg font-semibold group-hover:text-primary">
-                      {scope}
+                      {scope.title}
                     </span>
                     <span className="mt-1 block text-sm leading-6 text-muted-foreground">
                       {scopeDocuments.length}{" "}
                       {scopeDocuments.length === 1 ? "document" : "documents"}
-                      {scopeDocuments[0]?.frontmatter.description
-                        ? ` · ${scopeDocuments[0].frontmatter.description}`
-                        : ""}
+                      {scope.description ? ` · ${scope.description}` : ""}
                     </span>
                   </Link>
                 )
@@ -170,7 +172,7 @@ export function HomePage({
               {latestDocuments.map((document) => (
                 <li key={document.slug}>
                   <Link
-                    to={`/docs/p/${document.slug}`}
+                    to={`/p/${document.slug}`}
                     className="group grid gap-4 py-6 sm:grid-cols-[minmax(0,1fr)_auto]"
                   >
                     <span className="min-w-0">

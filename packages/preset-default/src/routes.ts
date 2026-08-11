@@ -15,6 +15,12 @@ const tagsTreeRouteFile = fileURLToPath(
 const tagsGraphRouteFile = fileURLToPath(
   new URL("./route/tags-graph.tsx", import.meta.url)
 )
+const scopesRouteFile = fileURLToPath(
+  new URL("./route/scopes.tsx", import.meta.url)
+)
+const scopeRouteFile = fileURLToPath(
+  new URL("./route/scope.tsx", import.meta.url)
+)
 
 /** Returns the complete route table supplied by the default preset. */
 export function createRoutes(): RouteConfigEntry[] {
@@ -23,6 +29,8 @@ export function createRoutes(): RouteConfigEntry[] {
     { path: "list", file: listRouteFile },
     { path: "tags/tree", file: tagsTreeRouteFile },
     { path: "tags/graph", file: tagsGraphRouteFile },
+    { path: "scopes", file: scopesRouteFile },
+    { path: "scopes/:scopeSlug", file: scopeRouteFile },
     ...createDocsRoutes(),
   ]
 }

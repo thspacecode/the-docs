@@ -10,6 +10,11 @@ export function createDocsRoutes(): RouteConfigEntry[] {
   return [
     {
       id: "docs-post",
+      path: "p/:slug",
+      file: docsPostRouteFile,
+    },
+    {
+      id: "legacy-docs-post",
       path: "docs/p/:slug",
       file: docsPostRouteFile,
     },

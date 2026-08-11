@@ -1,0 +1,64 @@
+{
+  "title": "The Docs",
+  "description": "Understand the documentation platform, its architecture, UI, and plugins.",
+  "icon": "book-open",
+  "sections": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "description": "Start with the platform overview and content conventions.",
+      "icon": "landmark",
+      "documents": [
+        {
+          "slug": "the-docs-overview",
+          "icon": "book-open"
+        },
+        {
+          "slug": "document-structures"
+        }
+      ]
+    },
+    {
+      "id": "architecture",
+      "title": "Architecture",
+      "description": "Explore package boundaries, UI building blocks, and extensions.",
+      "icon": "blocks",
+      "groups": [
+        {
+          "id": "packages",
+          "title": "Packages",
+          "icon": "package",
+          "document": {
+            "slug": "packages-boundaries"
+          },
+          "documents": [
+            {
+              "slug": "ui-packages"
+            }
+          ]
+        },
+        {
+          "id": "interface",
+          "icon": "palette",
+          "document": {
+            "slug": "ui-overview"
+          }
+        },
+        {
+          "id": "plugins",
+          "title": "Plugins",
+          "icon": "plug",
+          "documents": [
+            {
+              "slug": "plugin-contract"
+            },
+            {
+              "slug": "plugin-data-table",
+              "icon": "table-2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

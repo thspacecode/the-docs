@@ -1,5 +1,8 @@
 import type { Config } from "@react-router/dev/config"
-import { getDocsPrerenderPaths } from "@workspace/core/build"
+import {
+  getDocsPrerenderPaths,
+  getScopePrerenderPaths,
+} from "@workspace/core/build"
 
 import type { DefaultPresetConfig } from "./index.ts"
 
@@ -13,6 +16,8 @@ export function createReactRouterConfig(config: DefaultPresetConfig): Config {
       "/list",
       "/tags/tree",
       "/tags/graph",
+      "/scopes",
+      ...getScopePrerenderPaths(config.contentRoot),
       ...getDocsPrerenderPaths(config.contentRoot),
     ],
   }

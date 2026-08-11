@@ -357,25 +357,21 @@ export function TagsPage({
           <span className="text-foreground">Tags</span>
         </nav>
 
-        <section aria-labelledby="tags-heading">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-medium text-primary">Browse</p>
-              <h1
-                id="tags-heading"
-                className="mt-1 text-3xl font-semibold tracking-tight"
-              >
-                Tags
-              </h1>
-            </div>
-            <div className="flex items-center gap-3">
+        <section aria-label="Tags">
+          <div className="-mx-6 bg-muted px-6 py-5 sm:-mx-11 sm:px-11">
+            <DocsSearchInput
+              value={query}
+              onValueChange={updateQuery}
+              onSubmit={() => undefined}
+              label="Search tags"
+              placeholder="Search tags"
+            />
+
+            <div className="mt-2 flex items-center gap-3">
               <span className="text-sm font-medium text-muted-foreground">
                 Views
               </span>
-              <nav
-                className="flex rounded-lg bg-muted p-1"
-                aria-label="Tag views"
-              >
+              <nav className="flex rounded-lg p-1" aria-label="Tag views">
                 <NavLink to={viewHref("tree")} className={viewClass}>
                   <ListTree className="size-4" aria-hidden="true" />
                   Tree
@@ -388,20 +384,7 @@ export function TagsPage({
             </div>
           </div>
 
-          <div className="mt-6 rounded-xl border bg-card p-4 shadow-xs">
-            <DocsSearchInput
-              value={query}
-              onValueChange={updateQuery}
-              onSubmit={() => undefined}
-              label="Search tags"
-              placeholder="Search tags"
-            />
-          </div>
-
-          <div className="mt-8 flex items-center justify-between border-b pb-4">
-            <p className="text-sm text-muted-foreground">
-              {visibleTags.length} {visibleTags.length === 1 ? "tag" : "tags"}
-            </p>
+          <div className="mt-8 flex items-center justify-end border-b pb-4">
             <p className="text-sm text-muted-foreground">Documents</p>
           </div>
 

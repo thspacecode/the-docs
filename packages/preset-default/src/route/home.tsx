@@ -1,4 +1,4 @@
-import { getDocuments, getTags, HomePage } from "@workspace/core"
+import { getDocuments, getScopes, getTags, HomePage } from "@workspace/core"
 
 export function meta() {
   return [
@@ -14,6 +14,7 @@ export default function Home() {
   return (
     <HomePage
       documents={getDocuments()}
+      scopes={getScopes()}
       tags={getTags()}
       description="Architecture notes and guides for The Docs."
     />

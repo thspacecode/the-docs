@@ -1,4 +1,5 @@
 {
   "title": "Architecture Decision Record",
-  "description": "A record of a decision and its rationale."
+  "description": "A record of a decision and its rationale.",
+  "separate-related-docs-section": true
 }

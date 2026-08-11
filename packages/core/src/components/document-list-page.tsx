@@ -262,6 +262,13 @@ export function DocumentListPage({
     () => uniqueMetadata(documents, "type"),
     [documents]
   )
+  const scopeOptions = useMemo(
+    () =>
+      [...new Set(documents.flatMap(({ scopeSlugs }) => scopeSlugs))].sort(
+        (left, right) => left.localeCompare(right)
+      ),
+    [documents]
+  )
   const tagOptions = useMemo(
     () =>
       [
@@ -321,8 +328,8 @@ export function DocumentListPage({
           <span className="text-foreground">List</span>
         </nav>
 
-        <section aria-labelledby="documents-heading">
-          <div className="rounded-xl border bg-card p-4 shadow-xs sm:p-5">
+        <section aria-label="Documents">
+          <div className="-mx-6 bg-muted px-6 py-5 sm:-mx-11 sm:px-11">
             <DocsSearchInput
               value={query}
               onValueChange={updateQuery}
@@ -345,6 +352,13 @@ export function DocumentListPage({
                 onChange={updateQualifier}
               />
               <FilterCombobox
+                label="Scopes"
+                qualifier="scope"
+                values={parsedQuery.qualifiers.scope}
+                options={scopeOptions}
+                onChange={updateQualifier}
+              />
+              <FilterCombobox
                 label="Tags"
                 qualifier="tag"
                 values={parsedQuery.qualifiers.tag}
@@ -355,33 +369,14 @@ export function DocumentListPage({
             </div>
           </div>
 
-          <div className="mt-8 flex items-end justify-between gap-4 border-b pb-4">
-            <div>
-              <p className="text-sm font-medium text-primary">Documentation</p>
-              <h1
-                id="documents-heading"
-                className="mt-1 text-2xl font-semibold"
-              >
-                {query ? "Search results" : "All documents"}
-              </h1>
-            </div>
-            <p
-              className="text-sm text-muted-foreground"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {results.length} {results.length === 1 ? "document" : "documents"}
-            </p>
-          </div>
-
           {visibleDocuments.length ? (
-            <ul className="divide-y">
+            <ul className="mt-6">
               {visibleDocuments.map((document) => (
                 <li key={document.slug} className="py-6">
                   <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
                     <div className="min-w-0">
                       <Link
-                        to={`/docs/p/${document.slug}`}
+                        to={`/p/${document.slug}`}
                         className="group inline-flex items-center gap-2 text-lg font-semibold hover:text-primary"
                       >
                         {document.frontmatter.title}
@@ -436,7 +431,7 @@ export function DocumentListPage({
 
           {results.length > pageSize ? (
             <nav
-              className="mt-8 flex items-center justify-center gap-4 border-t pt-6"
+              className="mt-8 flex items-center justify-end gap-4 pt-6"
               aria-label="Search result pages"
             >
               {currentPage > 1 ? (

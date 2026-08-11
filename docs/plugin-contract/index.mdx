@@ -2,8 +2,9 @@
 title: "Plugin Contract"
 description: "The build-time and runtime contract for MDX plugins."
 tags:
-  - plugins
-  - api
+  - docs/specs
+  - feature/plugin
+type: doc
 importance: Medium
 ---
 
@@ -12,7 +13,7 @@ importance: Medium
 Simplify Code:
 
 ```typescript
-import type { ComponentType } from "react";
+import type { ComponentType } from "react"
 
 export type JsonValue =
   | null
@@ -20,58 +21,55 @@ export type JsonValue =
   | number
   | string
   | JsonValue[]
-  | { [key: string]: JsonValue };
+  | { [key: string]: JsonValue }
 
 export type PluginTarget =
   | {
-      kind: "code-fence";
-      language: string;
+      kind: "code-fence"
+      language: string
     }
   | {
-      kind: "asset";
-      extensions: readonly string[];
-    };
+      kind: "asset"
+      extensions: readonly string[]
+    }
 
 export type PluginInput =
   | {
-      kind: "code-fence";
-      language: string;
-      content: string;
-      documentPath: string;
+      kind: "code-fence"
+      language: string
+      content: string
+      documentPath: string
     }
   | {
-      kind: "asset";
-      url: string;
-      extension: string;
-      content: Uint8Array;
-      documentPath: string;
-    };
+      kind: "asset"
+      url: string
+      extension: string
+      content: Uint8Array
+      documentPath: string
+    }
 
 export interface MdxPlugin<TModel extends JsonValue> {
-  id: string;
-  version: string;
+  id: string
+  version: string
 
   /**
    * MDX constructs handled by this plugin.
    */
-  targets: readonly PluginTarget[];
+  targets: readonly PluginTarget[]
 
   /**
    * Validate and convert source content into serializable data.
    */
-  parse(
-    input: PluginInput,
-    context: PluginParseContext,
-  ): Promise<TModel>;
+  parse(input: PluginInput, context: PluginParseContext): Promise<TModel>
 
   /**
    * Runtime React renderer, loaded lazily.
    */
   component: {
     load(): Promise<{
-      default: ComponentType<PluginComponentProps<TModel>>;
-    }>;
-  };
+      default: ComponentType<PluginComponentProps<TModel>>
+    }>
+  }
 
   /**
    * Optional build-time image generation.
@@ -79,17 +77,16 @@ export interface MdxPlugin<TModel extends JsonValue> {
   build?: {
     renderToImage(
       model: TModel,
-      options: ImageRenderOptions,
-    ): Promise<GeneratedImage>;
-  };
+      options: ImageRenderOptions
+    ): Promise<GeneratedImage>
+  }
 }
 
 export function defineMdxPlugin<TModel extends JsonValue>(
-  plugin: MdxPlugin<TModel>,
+  plugin: MdxPlugin<TModel>
 ): MdxPlugin<TModel> {
-  return plugin;
+  return plugin
 }
-
 ```
 
 Example Usage:

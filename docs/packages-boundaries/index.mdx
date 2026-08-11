@@ -2,8 +2,8 @@
 title: "Packages Boundaries"
 description: "Package responsibilities and dependency boundaries across the monorepo."
 tags:
-  - architecture
-  - packages
+  - docs/architecture
+type: doc
 importance: Medium
 ---
 
@@ -114,40 +114,40 @@ export default createViteConfig(docsConfig)
 
 - Create router
 - Combine source and ui (ui + url state)
-    - Search
-    - Breadcrumbs
+  - Search
+  - Breadcrumbs
 
 ### packages/builder
 
-* Plugin image generation
-* Vite integration
+- Plugin image generation
+- Vite integration
 
 ### packages/source-contract
 
-* Return html
-* Return meta-data
+- Return html
+- Return meta-data
 
 ### packages/source-\*
 
 - Utils to read from source (file-systems)
-    * Read content
-    * Read frontmatter
-    * Read tags
+  - Read content
+  - Read frontmatter
+  - Read tags
 
 ### packages/plugin-contract
 
-* Plugin interface and `defineMdxPlugin`
-* Separation between build-time and runtime
-    - plugin/build
-    - plugin/
+- Plugin interface and `defineMdxPlugin`
+- Separation between build-time and runtime
+  - plugin/build
+  - plugin/
 
 ### packages/plugin-\*
 
-* Implement plugin contact
-* Parser, component
+- Implement plugin contact
+- Parser, component
 
 ### packages/ui
 
 - Everything ui related
-    - Component
-    - Hooks
+  - Component
+  - Hooks
