@@ -1,9 +1,5 @@
-import { fileURLToPath } from "node:url"
+import { defineConfig } from "@workspace/preset-default"
 
-import { syntaxHighlighterPlugin } from "@workspace/plugin-syntax-highlighter"
-
-export const docsContentRoot = fileURLToPath(
-  new URL("../../docs", import.meta.url)
-)
-
-export const docsPlugins = [syntaxHighlighterPlugin()] as const
+export default defineConfig({
+  contentRoot: new URL("../../docs", import.meta.url),
+})

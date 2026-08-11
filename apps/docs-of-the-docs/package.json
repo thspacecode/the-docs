@@ -13,22 +13,17 @@
   "dependencies": {
     "@react-router/node": "7.15.1",
     "@react-router/serve": "7.15.1",
-    "@workspace/core": "workspace:*",
-    "@workspace/plugin-syntax-highlighter": "workspace:*",
-    "@workspace/ui": "workspace:*",
+    "@workspace/preset-default": "workspace:*",
     "isbot": "^5",
-    "lucide-react": "^1.28.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router": "7.15.1"
   },
   "devDependencies": {
     "@react-router/dev": "7.15.1",
-    "@tailwindcss/vite": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "tailwindcss": "^4",
     "typescript": "^6",
     "vite": "^8"
   }

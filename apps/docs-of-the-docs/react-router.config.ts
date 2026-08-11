@@ -1,10 +1,5 @@
-import type { Config } from "@react-router/dev/config"
-import { getDocsPrerenderPaths } from "@workspace/core/build"
+import { createReactRouterConfig } from "@workspace/preset-default/react-router"
 
-import { docsContentRoot } from "./docs.config"
+import docsConfig from "./docs.config"
 
-export default {
-  buildDirectory: ".build",
-  ssr: true,
-  prerender: ["/", "/list", ...getDocsPrerenderPaths(docsContentRoot)],
-} satisfies Config
+export default createReactRouterConfig(docsConfig)

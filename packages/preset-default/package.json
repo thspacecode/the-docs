@@ -1,0 +1,33 @@
+{
+  "name": "@workspace/preset-default",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-router/dev": "7.15.1",
+    "@tailwindcss/vite": "^4",
+    "@workspace/core": "workspace:*",
+    "@workspace/plugin-excalidraw": "workspace:*",
+    "@workspace/plugin-syntax-highlighter": "workspace:*",
+    "@workspace/ui": "workspace:*",
+    "react": "^19.2.6",
+    "react-router": "7.15.1",
+    "vite": "^8"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "typescript": "^6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./react-router": "./src/react-router.ts",
+    "./root": "./src/root.tsx",
+    "./routes": "./src/routes.ts",
+    "./vite": "./src/vite.ts"
+  }
+}

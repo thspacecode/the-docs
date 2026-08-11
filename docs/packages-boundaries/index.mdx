@@ -16,6 +16,7 @@ the-docs/
 │   └── docs-of-the-docs/
 └── packages/
     ├── core/
+    ├── preset-default/
     ├── source-contract/
     ├── source-*/
     ├── builder/
@@ -35,6 +36,7 @@ config:
 
 flowchart BT
     app("docs-of-the-docs")
+    preset("preset-default")
     core("core")
     builder("builder")
     ui("ui")
@@ -43,10 +45,12 @@ flowchart BT
     plugins("plugin-*")
     contract("plugin-contract")
 
-    core --> app
-    builder --> app
-    plugins --> app
-    source-* --> app
+    preset --> app
+    core --> preset
+    builder --> preset
+    plugins --> preset
+    source-* --> preset
+    ui --> preset
     source-* --> core
     source-contract --> source-*
     source-contract --> core
@@ -65,61 +69,46 @@ flowchart BT
 
 ### apps/docs-of-the-docs
 
-* Use create router
-* Assign plugin
-* Define sources
+- Define the content location and project-specific overrides
+- Forward the required Vite and React Router entry points to the default preset
+- Avoid assembling sources, routes, UI, and default plugins itself
 
-Simplify Usage:
+Simplified usage:
 
 ```typescript
 // docs.config.ts
 
-import { createConfig } from "@the-docs/core/config";
-import { createFilesystemSource } from "@the-docs/source-fs";
-import { mermaidPlugin } from "@the-docs/plugin-mermaid";
-
-export default createConfig({
-  source: createFilesystemSource({
-    root: "./docs",
-  }),
-  plugins: [mermaidPlugin()],
-});
-```
-
-```
-// app/routes.ts
-
-import { createRouter } from "@the-docs/core/router";
-import config from "../docs.config";
-
-export default createRouter(config);
-```
-
-```
-// vite.config.ts
-
-import { reactRouter } from "@react-router/dev/vite";
-import tailwindcss from "@tailwindcss/vite";
-import { defineConfig } from "vite";
-
-import { buildDocs } from "@the-docs/builder";
-import docsConfig from "./docs.config";
+import { defineConfig } from "@the-docs/preset-default"
 
 export default defineConfig({
-  resolve: {
-    tsconfigPaths: true,
-  },
-
-  plugins: [
-    buildDocs({
-      config: docsConfig,
-    }),
-
-    tailwindcss(),
-    reactRouter(),
-  ],
-});
+  contentRoot: new URL("../../docs", import.meta.url),
+})
 ```
+
+```typescript
+// app/routes.ts
+
+import { createRoutes } from "@the-docs/preset-default/routes"
+
+export default createRoutes()
+```
+
+```typescript
+// vite.config.ts
+
+import { createViteConfig } from "@the-docs/preset-default/vite"
+import docsConfig from "./docs.config"
+
+export default createViteConfig(docsConfig)
+```
+
+### packages/preset-default
+
+- Compose the default source, UI, routes, and plugins
+- Own the default root layout and route modules
+- Provide Vite and React Router configuration factories
+- Depend on lower-level packages without introducing dependencies back from them
+- Allow focused opt-outs and overrides without exposing the full assembly in the app
 
 ### packages/core
 

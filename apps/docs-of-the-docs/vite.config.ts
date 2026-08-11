@@ -1,21 +1,5 @@
-import { reactRouter } from "@react-router/dev/vite"
-import tailwindcss from "@tailwindcss/vite"
-import { createDocsVitePlugins } from "@workspace/core/build"
-import { syntaxHighlighterRehypePlugin } from "@workspace/plugin-syntax-highlighter/build"
-import { defineConfig } from "vite"
+import { createViteConfig } from "@workspace/preset-default/vite"
 
-import { docsContentRoot } from "./docs.config"
+import docsConfig from "./docs.config"
 
-export default defineConfig({
-  resolve: { tsconfigPaths: true },
-  plugins: [
-    tailwindcss(),
-    ...createDocsVitePlugins({
-      contentRoot: docsContentRoot,
-      mdx: {
-        rehypePlugins: [syntaxHighlighterRehypePlugin()],
-      },
-    }),
-    reactRouter(),
-  ],
-})
+export default createViteConfig(docsConfig)
