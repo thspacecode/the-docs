@@ -18,6 +18,20 @@ export interface DocumentEntry {
   searchText: string
 }
 
+export interface TagDefinition {
+  slug: string
+  parentSlug?: string
+  title: string
+  description: string
+  color?: string
+}
+
+export interface VirtualTagDefinition {
+  slug: string
+  parentSlug?: string
+  definition: Record<string, unknown>
+}
+
 export interface VirtualDocumentEntry {
   slug: string
   Component: MdxDocumentComponent

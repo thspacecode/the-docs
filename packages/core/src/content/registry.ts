@@ -1,11 +1,16 @@
 /// <reference path="../virtual-docs-content.d.ts" />
 
-import { documents as virtualDocuments } from "virtual:docs-content"
+import {
+  documents as virtualDocuments,
+  tags as virtualTags,
+} from "virtual:docs-content"
 
 import type {
   DocumentEntry,
   DocumentFrontmatter,
+  TagDefinition,
   VirtualDocumentEntry,
+  VirtualTagDefinition,
 } from "./types"
 
 function fallbackTitle(slug: string) {
@@ -57,10 +62,27 @@ const documentsBySlug = new Map(
   documents.map((document) => [document.slug, document])
 )
 
+const tags = (virtualTags as VirtualTagDefinition[]).map(
+  ({ slug, parentSlug, definition }): TagDefinition => ({
+    slug,
+    parentSlug,
+    title:
+      typeof definition.title === "string" && definition.title.trim()
+        ? definition.title.trim()
+        : fallbackTitle(slug.split("/").at(-1) ?? slug),
+    description: optionalString(definition.description) ?? "",
+    color: optionalString(definition.color),
+  })
+)
+
 export function getDocument(slug: string) {
   return documentsBySlug.get(slug)
 }
 
 export function getDocuments() {
   return documents
+}
+
+export function getTags() {
+  return tags
 }

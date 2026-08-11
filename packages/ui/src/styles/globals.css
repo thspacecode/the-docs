@@ -7,6 +7,7 @@
 @custom-variant dark (&:is(.dark *));
 @source "../../../../apps/**/*.{ts,tsx}";
 @source "../../../core/src/**/*.{ts,tsx}";
+@source "../../../plugin-excalidraw/src/**/*.{ts,tsx}";
 @source "../../../preset-default/src/**/*.{ts,tsx}";
 @source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
@@ -182,6 +183,41 @@
   }
   .docs-content img {
     @apply max-w-full rounded-lg border;
+  }
+
+  .excalidraw-preview {
+    @apply relative block w-full overflow-hidden rounded-lg border bg-white text-left shadow-sm transition hover:border-primary/50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  .excalidraw-preview img {
+    @apply mx-auto max-h-[36rem] w-auto border-0 object-contain;
+  }
+  .excalidraw-preview span {
+    @apply absolute right-3 bottom-3 rounded-md border bg-background/90 px-2.5 py-1 text-xs font-medium text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity;
+  }
+  .excalidraw-preview:hover span,
+  .excalidraw-preview:focus-visible span {
+    @apply opacity-100;
+  }
+  .excalidraw-modal {
+    @apply fixed inset-0 z-50 flex flex-col bg-background/95 text-foreground backdrop-blur-sm;
+  }
+  .excalidraw-modal-toolbar {
+    @apply relative z-10 flex min-h-16 flex-wrap items-center justify-between gap-3 border-b bg-background px-4 py-3 shadow-sm;
+  }
+  .excalidraw-modal-toolbar p {
+    @apply m-0 truncate font-medium;
+  }
+  .excalidraw-modal-toolbar button {
+    @apply flex h-9 items-center justify-center rounded-md border bg-background px-3 text-sm font-medium hover:bg-muted;
+  }
+  .excalidraw-modal-canvas {
+    @apply relative min-h-0 flex-1 overflow-hidden;
+  }
+  .excalidraw-modal-canvas .excalidraw {
+    @apply size-full;
+  }
+  .excalidraw-modal-loading {
+    @apply flex size-full items-center justify-center text-sm text-muted-foreground;
   }
 }
 

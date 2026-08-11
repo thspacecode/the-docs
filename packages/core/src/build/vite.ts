@@ -8,7 +8,7 @@ import remarkFrontmatter from "remark-frontmatter"
 import remarkGfm from "remark-gfm"
 import type { Plugin, PluginOption } from "vite"
 
-import { discoverDocuments } from "./discovery.ts"
+import { discoverDocuments, discoverTags } from "./discovery.ts"
 
 const virtualModuleId = "virtual:docs-content"
 const resolvedVirtualModuleId = `\0${virtualModuleId}`
@@ -30,15 +30,23 @@ function createContentModule(contentRoot: string) {
 
     return `{ slug: ${JSON.stringify(slug)}, Component: Document${index}, frontmatter: ${JSON.stringify(data)}, searchText: ${JSON.stringify(content)} }`
   })
+  const tags = discoverTags(contentRoot).map(
+    ({ filePath, parentSlug, slug }) =>
+      `{ slug: ${JSON.stringify(slug)}, parentSlug: ${JSON.stringify(parentSlug)}, definition: ${JSON.stringify(JSON.parse(readFileSync(filePath, "utf8")))} }`
+  )
 
-  return `${imports.join("\n")}\nexport const documents = [${entries.join(",\n")}];\n`
+  return `${imports.join("\n")}\nexport const documents = [${entries.join(",\n")}];\nexport const tags = [${tags.join(",\n")}];\n`
 }
 
-function isDocumentFile(filePath: string, contentRoot: string) {
-  return (
+function isContentFile(filePath: string, contentRoot: string) {
+  const isDocument =
     basename(filePath) === "index.mdx" &&
     resolve(dirname(dirname(filePath))) === contentRoot
-  )
+  const isTag =
+    basename(filePath) === "tag.json" &&
+    resolve(filePath).startsWith(resolve(contentRoot, "_tags") + "/")
+
+  return isDocument || isTag
 }
 
 function docsContentPlugin(contentRoot: string): Plugin {
@@ -58,7 +66,7 @@ function docsContentPlugin(contentRoot: string): Plugin {
       server.watcher.add(contentRoot)
     },
     handleHotUpdate(context) {
-      if (!isDocumentFile(context.file, contentRoot)) {
+      if (!isContentFile(context.file, contentRoot)) {
         return
       }
 

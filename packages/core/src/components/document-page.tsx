@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react"
 import { ArrowLeft, BookOpen, Search } from "lucide-react"
-import { Link, NavLink, useNavigate } from "react-router"
+import { Link, NavLink, useLocation, useNavigate } from "react-router"
 
 import type { DocumentEntry } from "../content/types"
 import { docsSearchInputId } from "./docs-search-input"
@@ -14,6 +14,7 @@ function isEditableTarget(target: EventTarget | null) {
 }
 
 export function DocsShell({ children }: { children: React.ReactNode }) {
+  const location = useLocation()
   const navigate = useNavigate()
 
   const focusSearch = useCallback(() => {
@@ -73,7 +74,14 @@ export function DocsShell({ children }: { children: React.ReactNode }) {
             <NavLink to="/list" className={navigationClass}>
               List
             </NavLink>
-            <NavLink to="/tags/tree" className={navigationClass}>
+            <NavLink
+              to="/tags/tree"
+              className={() =>
+                navigationClass({
+                  isActive: location.pathname.startsWith("/tags/"),
+                })
+              }
+            >
               Tags
             </NavLink>
             <NavLink to="/scopes" className={navigationClass}>

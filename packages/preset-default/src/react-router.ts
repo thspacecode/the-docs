@@ -8,6 +8,12 @@ export function createReactRouterConfig(config: DefaultPresetConfig): Config {
   return {
     buildDirectory: ".build",
     ssr: true,
-    prerender: ["/", "/list", ...getDocsPrerenderPaths(config.contentRoot)],
+    prerender: [
+      "/",
+      "/list",
+      "/tags/tree",
+      "/tags/graph",
+      ...getDocsPrerenderPaths(config.contentRoot),
+    ],
   }
 }

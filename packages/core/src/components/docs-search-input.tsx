@@ -6,10 +6,14 @@ export function DocsSearchInput({
   value,
   onValueChange,
   onSubmit,
+  label = "Search documentation",
+  placeholder = "Search documentation",
 }: {
   value: string
   onValueChange: (value: string) => void
   onSubmit: () => void
+  label?: string
+  placeholder?: string
 }) {
   return (
     <form
@@ -20,7 +24,7 @@ export function DocsSearchInput({
       }}
     >
       <label htmlFor={docsSearchInputId} className="sr-only">
-        Search documentation
+        {label}
       </label>
       <div className="flex h-11 items-center gap-3 rounded-lg border bg-background px-3 shadow-xs transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/20">
         <Search
@@ -32,7 +36,7 @@ export function DocsSearchInput({
           type="search"
           value={value}
           onChange={(event) => onValueChange(event.target.value)}
-          placeholder="Search documentation"
+          placeholder={placeholder}
           autoComplete="off"
           className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
