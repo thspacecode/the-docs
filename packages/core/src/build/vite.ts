@@ -26,9 +26,9 @@ function createContentModule(contentRoot: string) {
       `import Document${index} from ${JSON.stringify(filePath)}`
   )
   const entries = documents.map(({ filePath, slug }, index) => {
-    const { data } = matter(readFileSync(filePath, "utf8"))
+    const { content, data } = matter(readFileSync(filePath, "utf8"))
 
-    return `{ slug: ${JSON.stringify(slug)}, Component: Document${index}, frontmatter: ${JSON.stringify(data)} }`
+    return `{ slug: ${JSON.stringify(slug)}, Component: Document${index}, frontmatter: ${JSON.stringify(data)}, searchText: ${JSON.stringify(content)} }`
   })
 
   return `${imports.join("\n")}\nexport const documents = [${entries.join(",\n")}];\n`

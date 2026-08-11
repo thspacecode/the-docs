@@ -6,5 +6,5 @@ import { docsContentRoot } from "./docs.config"
 export default {
   buildDirectory: ".build",
   ssr: true,
-  prerender: ["/", ...getDocsPrerenderPaths(docsContentRoot)],
+  prerender: ["/", "/list", ...getDocsPrerenderPaths(docsContentRoot)],
 } satisfies Config

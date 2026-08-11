@@ -16,6 +16,10 @@ function fallbackTitle(slug: string) {
     .join(" ")
 }
 
+function optionalString(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : undefined
+}
+
 function normalizeFrontmatter(
   slug: string,
   value: Record<string, unknown>
@@ -25,10 +29,7 @@ function normalizeFrontmatter(
       typeof value.title === "string" && value.title.trim()
         ? value.title.trim()
         : fallbackTitle(slug),
-    description:
-      typeof value.description === "string" && value.description.trim()
-        ? value.description.trim()
-        : undefined,
+    description: optionalString(value.description),
     tags: Array.isArray(value.tags)
       ? [
           ...new Set(
@@ -39,6 +40,9 @@ function normalizeFrontmatter(
           ),
         ]
       : [],
+    type: optionalString(value.type),
+    scope: optionalString(value.scope),
+    importance: optionalString(value.importance),
   }
 }
 
