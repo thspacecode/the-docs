@@ -1,9 +1,14 @@
 import { useEffect, useMemo, useState } from "react"
+import { Combobox } from "@base-ui/react/combobox"
 import {
+  ArrowDownWideNarrow,
   ArrowLeft,
   ArrowRight,
+  ArrowUpNarrowWide,
   ArrowUpRight,
-  SlidersHorizontal,
+  Check,
+  ChevronDown,
+  Search,
 } from "lucide-react"
 import { Link, useSearchParams } from "react-router"
 
@@ -11,7 +16,7 @@ import type { DocumentEntry } from "../content/types"
 import {
   DocumentSearchIndex,
   parseSearchQuery,
-  setSearchQualifier,
+  setSearchQualifiers,
   type SearchQualifier,
 } from "../search/document-search"
 import { DocsSearchInput } from "./docs-search-input"
@@ -38,33 +43,141 @@ function uniqueMetadata(
   ].sort((left, right) => left.localeCompare(right))
 }
 
-function FilterSelect({
+interface FilterOption {
+  label: string
+  value: string
+}
+
+function FilterCombobox({
   label,
   qualifier,
-  value,
+  values,
   options,
   onChange,
 }: {
   label: string
   qualifier: SearchQualifier
-  value: string
+  values: string[]
   options: string[]
-  onChange: (qualifier: SearchQualifier, value: string) => void
+  onChange: (qualifier: SearchQualifier, values: string[]) => void
 }) {
+  const items: FilterOption[] = [
+    { label: `All ${label.toLocaleLowerCase()}`, value: "" },
+    ...options.map((option) => ({
+      label: option,
+      value: option.toLocaleLowerCase(),
+    })),
+  ]
+  const normalizedValues = new Set(
+    values.map((value) => value.toLocaleLowerCase())
+  )
+  const selectedItems = values.length
+    ? items.filter((item) => item.value && normalizedValues.has(item.value))
+    : [items[0]]
+
+  function updateValues(nextItems: FilterOption[]) {
+    const nextValues = nextItems.map((item) => item.value)
+
+    if (nextValues.includes("")) {
+      onChange(
+        qualifier,
+        values.length ? [] : nextValues.filter((value) => value)
+      )
+      return
+    }
+
+    onChange(qualifier, nextValues)
+  }
+
   return (
-    <label className="grid gap-1.5 text-xs font-medium text-muted-foreground">
-      {label}
+    <Combobox.Root
+      multiple
+      items={items}
+      value={selectedItems}
+      onValueChange={updateValues}
+      isItemEqualToValue={(item, selected) => item.value === selected.value}
+    >
+      <Combobox.Trigger
+        className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-sm font-medium transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/40 data-[popup-open]:bg-muted ${
+          values.length ? "bg-primary/10 text-primary" : "text-muted-foreground"
+        }`}
+        aria-label={`Filter by ${label.toLocaleLowerCase()}`}
+      >
+        <span>{label}</span>
+        {values.length ? (
+          <span className="flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[0.65rem] leading-4 text-primary-foreground">
+            {values.length}
+          </span>
+        ) : null}
+        <ChevronDown className="size-3.5" aria-hidden="true" />
+      </Combobox.Trigger>
+      <Combobox.Portal>
+        <Combobox.Positioner
+          sideOffset={6}
+          align="start"
+          className="z-50 outline-none"
+        >
+          <Combobox.Popup className="w-60 overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-lg outline-none">
+            <Combobox.InputGroup className="flex h-10 items-center gap-2 border-b px-3">
+              <Search
+                className="size-4 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Combobox.Input
+                placeholder={`Search ${label.toLocaleLowerCase()}`}
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </Combobox.InputGroup>
+            <Combobox.Empty>
+              <span className="block px-3 py-6 text-center text-sm text-muted-foreground">
+                No options found.
+              </span>
+            </Combobox.Empty>
+            <Combobox.List className="max-h-64 overflow-y-auto p-1">
+              {(item: FilterOption) => (
+                <Combobox.Item
+                  key={item.value || "all"}
+                  value={item}
+                  className="flex cursor-default items-center gap-2 rounded-md px-2.5 py-2 text-sm outline-none select-none data-[highlighted]:bg-muted data-[selected]:font-medium"
+                >
+                  <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                  <Combobox.ItemIndicator className="text-primary">
+                    <Check className="size-4" aria-hidden="true" />
+                  </Combobox.ItemIndicator>
+                </Combobox.Item>
+              )}
+            </Combobox.List>
+          </Combobox.Popup>
+        </Combobox.Positioner>
+      </Combobox.Portal>
+    </Combobox.Root>
+  )
+}
+
+function SortSelect({
+  value,
+  onChange,
+}: {
+  value: "newest" | "oldest"
+  onChange: (value: "newest" | "oldest") => void
+}) {
+  const SortIcon = value === "newest" ? ArrowDownWideNarrow : ArrowUpNarrowWide
+
+  return (
+    <label className="relative ml-auto inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-sm font-medium text-muted-foreground transition-colors focus-within:ring-2 focus-within:ring-ring/40 hover:bg-muted hover:text-foreground">
+      <SortIcon className="size-4" aria-hidden="true" />
+      <span>{value === "newest" ? "Newest" : "Oldest"}</span>
+      <ChevronDown className="size-3.5" aria-hidden="true" />
       <select
         value={value}
-        onChange={(event) => onChange(qualifier, event.target.value)}
-        className="h-9 min-w-32 rounded-lg border bg-background px-3 text-sm font-normal text-foreground outline-none focus:border-ring focus:ring-3 focus:ring-ring/20"
+        onChange={(event) =>
+          onChange(event.target.value === "oldest" ? "oldest" : "newest")
+        }
+        aria-label="Sort by last updated"
+        className="absolute inset-0 size-full cursor-pointer appearance-none opacity-0"
       >
-        <option value="">All</option>
-        {options.map((option) => (
-          <option key={option} value={option.toLocaleLowerCase()}>
-            {option}
-          </option>
-        ))}
+        <option value="newest">Last updated: newest</option>
+        <option value="oldest">Last updated: oldest</option>
       </select>
     </label>
   )
@@ -104,8 +217,13 @@ export function DocumentListPage({
   const [searchParams, setSearchParams] = useSearchParams()
   const query = searchParams.get("q") ?? ""
   const [effectiveQuery, setEffectiveQuery] = useState(query)
+  const sortOrder = searchParams.get("sort") === "oldest" ? "oldest" : "newest"
   const searchIndex = useMemo(
     () => new DocumentSearchIndex(documents),
+    [documents]
+  )
+  const documentOrder = useMemo(
+    () => new Map(documents.map((document, index) => [document.slug, index])),
     [documents]
   )
 
@@ -117,10 +235,17 @@ export function DocumentListPage({
     return () => window.clearTimeout(timeout)
   }, [query])
 
-  const results = useMemo(
-    () => searchIndex.search(effectiveQuery),
-    [effectiveQuery, searchIndex]
-  )
+  const results = useMemo(() => {
+    const matches = searchIndex.search(effectiveQuery)
+    const direction = sortOrder === "newest" ? -1 : 1
+
+    return matches.sort(
+      (left, right) =>
+        direction *
+        ((documentOrder.get(left.slug) ?? 0) -
+          (documentOrder.get(right.slug) ?? 0))
+    )
+  }, [documentOrder, effectiveQuery, searchIndex, sortOrder])
   const requestedPage = pageFromSearchParams(searchParams)
   const pageCount = Math.max(1, Math.ceil(results.length / pageSize))
   const currentPage = Math.min(requestedPage, pageCount)
@@ -162,8 +287,16 @@ export function DocumentListPage({
     setSearchParams(nextParams, { preventScrollReset: true, replace: true })
   }
 
-  function updateQualifier(qualifier: SearchQualifier, value: string) {
-    updateQuery(setSearchQualifier(query, qualifier, value))
+  function updateQualifier(qualifier: SearchQualifier, values: string[]) {
+    updateQuery(setSearchQualifiers(query, qualifier, values))
+  }
+
+  function updateSortOrder(value: "newest" | "oldest") {
+    const nextParams = new URLSearchParams(searchParams)
+    if (value === "newest") nextParams.delete("sort")
+    else nextParams.set("sort", value)
+    nextParams.delete("page")
+    setSearchParams(nextParams, { preventScrollReset: true, replace: true })
   }
 
   function pageHref(page: number) {
@@ -176,7 +309,7 @@ export function DocumentListPage({
 
   return (
     <DocsShell>
-      <main className="mx-auto max-w-5xl px-6 py-8 sm:py-12">
+      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
         <nav
           className="mb-8 text-sm text-muted-foreground"
           aria-label="Breadcrumb"
@@ -196,35 +329,29 @@ export function DocumentListPage({
               onSubmit={() => setEffectiveQuery(query)}
             />
 
-            <div className="mt-4 flex flex-wrap items-end gap-3 border-t pt-4">
-              <div className="mb-2 flex items-center gap-2 text-sm font-medium sm:mb-0">
-                <SlidersHorizontal
-                  className="size-4 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                Filters
-              </div>
-              <FilterSelect
+            <div className="mt-2 flex flex-wrap items-center gap-1">
+              <FilterCombobox
                 label="Importance"
                 qualifier="importance"
-                value={parsedQuery.qualifiers.importance[0] ?? ""}
+                values={parsedQuery.qualifiers.importance}
                 options={importanceOptions}
                 onChange={updateQualifier}
               />
-              <FilterSelect
+              <FilterCombobox
                 label="Types"
                 qualifier="type"
-                value={parsedQuery.qualifiers.type[0] ?? ""}
+                values={parsedQuery.qualifiers.type}
                 options={typeOptions}
                 onChange={updateQualifier}
               />
-              <FilterSelect
+              <FilterCombobox
                 label="Tags"
                 qualifier="tag"
-                value={parsedQuery.qualifiers.tag[0] ?? ""}
+                values={parsedQuery.qualifiers.tag}
                 options={tagOptions}
                 onChange={updateQualifier}
               />
+              <SortSelect value={sortOrder} onChange={updateSortOrder} />
             </div>
           </div>
 
@@ -278,7 +405,12 @@ export function DocumentListPage({
                   <div className="mt-4">
                     <ResultTags
                       tags={document.frontmatter.tags}
-                      onSelect={(tag) => updateQualifier("tag", tag)}
+                      onSelect={(tag) =>
+                        updateQualifier("tag", [
+                          ...parsedQuery.qualifiers.tag,
+                          tag,
+                        ])
+                      }
                     />
                   </div>
                 </li>

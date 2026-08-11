@@ -1,6 +1,8 @@
 import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import type { BpmnPluginOptions } from "@workspace/plugin-bpmn"
+import type { DataTablePluginOptions } from "@workspace/plugin-data-table"
 import type { ExcalidrawPluginOptions } from "@workspace/plugin-excalidraw"
 import type { MermaidPluginOptions } from "@workspace/plugin-mermaid"
 import type { SyntaxHighlighterOptions } from "@workspace/plugin-syntax-highlighter"
@@ -12,6 +14,10 @@ export interface DefaultPresetPluginOptions {
   mermaid?: MermaidPluginOptions | false
   /** Set to false to leave .excalidraw references unprocessed. */
   excalidraw?: ExcalidrawPluginOptions | false
+  /** Set to false to leave .bpmn references unprocessed. */
+  bpmn?: BpmnPluginOptions | false
+  /** Set to false to leave data-*.csv references as ordinary images. */
+  dataTable?: DataTablePluginOptions | false
 }
 
 export interface DefaultPresetOptions {
@@ -26,6 +32,8 @@ export interface DefaultPresetConfig {
     syntaxHighlighter: SyntaxHighlighterOptions | false
     mermaid: MermaidPluginOptions | false
     excalidraw: ExcalidrawPluginOptions | false
+    bpmn: BpmnPluginOptions | false
+    dataTable: DataTablePluginOptions | false
   }>
 }
 
@@ -45,6 +53,8 @@ export function defineConfig(
       syntaxHighlighter: options.plugins?.syntaxHighlighter ?? {},
       mermaid: options.plugins?.mermaid ?? {},
       excalidraw: options.plugins?.excalidraw ?? {},
+      bpmn: options.plugins?.bpmn ?? {},
+      dataTable: options.plugins?.dataTable ?? {},
     }),
   })
 }

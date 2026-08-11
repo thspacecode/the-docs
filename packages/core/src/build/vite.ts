@@ -8,6 +8,7 @@ import remarkFrontmatter from "remark-frontmatter"
 import remarkGfm from "remark-gfm"
 import type { Plugin, PluginOption } from "vite"
 
+import { extractTableOfContents, rehypeTableOfContentsHeadings } from "../content/table-of-contents.ts"
 import { discoverDocuments, discoverTags } from "./discovery.ts"
 
 const virtualModuleId = "virtual:docs-content"
@@ -28,7 +29,7 @@ function createContentModule(contentRoot: string) {
   const entries = documents.map(({ filePath, slug }, index) => {
     const { content, data } = matter(readFileSync(filePath, "utf8"))
 
-    return `{ slug: ${JSON.stringify(slug)}, Component: Document${index}, frontmatter: ${JSON.stringify(data)}, searchText: ${JSON.stringify(content)} }`
+    return `{ slug: ${JSON.stringify(slug)}, Component: Document${index}, frontmatter: ${JSON.stringify(data)}, searchText: ${JSON.stringify(content)}, tableOfContents: ${JSON.stringify(extractTableOfContents(content))} }`
   })
   const tags = discoverTags(contentRoot).map(
     ({ filePath, parentSlug, slug }) =>
@@ -98,6 +99,10 @@ export function createDocsVitePlugins({
         remarkFrontmatter,
         remarkGfm,
         ...(mdxOptions.remarkPlugins ?? []),
+      ],
+      rehypePlugins: [
+        rehypeTableOfContentsHeadings,
+        ...(mdxOptions.rehypePlugins ?? []),
       ],
     }),
   ]

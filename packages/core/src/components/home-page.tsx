@@ -69,7 +69,7 @@ export function HomePage({
 
   return (
     <DocsShell>
-      <main className="mx-auto max-w-5xl px-6 py-10 sm:py-16">
+      <main className="mx-auto w-full px-6 py-10 sm:px-11 sm:py-16">
         <section aria-labelledby="home-heading">
           <p className="text-sm font-medium text-primary">Documentation</p>
           <h1

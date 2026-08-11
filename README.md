@@ -25,6 +25,14 @@ tags:
 
 Document slugs must contain lowercase letters, numbers, and hyphens. The home page lists every discovered document and `/docs/p/<slug>` renders its MDX content.
 
+The default preset renders relative BPMN 2.0 assets as SVG-backed images at build time:
+
+```md
+![Order process](./assets/order-process.bpmn)
+```
+
+Set `plugins.bpmn` to `false` in `docs.config.ts` to disable BPMN processing, or pass `{ padding: 24 }` to control the generated image padding.
+
 ## Validation
 
 ```bash

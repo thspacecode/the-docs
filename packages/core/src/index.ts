@@ -10,3 +10,4 @@ export type {
   MdxDocumentComponent,
   TagDefinition,
 } from "./content/types"
+export type { TableOfContentsItem } from "./content/table-of-contents"

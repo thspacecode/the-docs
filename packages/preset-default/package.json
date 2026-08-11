@@ -11,6 +11,8 @@
     "@react-router/dev": "7.15.1",
     "@tailwindcss/vite": "^4",
     "@workspace/core": "workspace:*",
+    "@workspace/plugin-bpmn": "workspace:*",
+    "@workspace/plugin-data-table": "workspace:*",
     "@workspace/plugin-excalidraw": "workspace:*",
     "@workspace/plugin-mermaid": "workspace:*",
     "@workspace/plugin-syntax-highlighter": "workspace:*",

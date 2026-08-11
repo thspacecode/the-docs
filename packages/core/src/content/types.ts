@@ -1,5 +1,7 @@
 import type { MDXContent } from "mdx/types"
 
+import type { TableOfContentsItem } from "./table-of-contents"
+
 export type MdxDocumentComponent = MDXContent
 
 export interface DocumentFrontmatter {
@@ -16,6 +18,7 @@ export interface DocumentEntry {
   Component: MdxDocumentComponent
   frontmatter: DocumentFrontmatter
   searchText: string
+  tableOfContents: TableOfContentsItem[]
 }
 
 export interface TagDefinition {
@@ -37,4 +40,5 @@ export interface VirtualDocumentEntry {
   Component: MdxDocumentComponent
   frontmatter: Record<string, unknown>
   searchText: string
+  tableOfContents: TableOfContentsItem[]
 }

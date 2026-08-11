@@ -64,13 +64,14 @@ function matchesQualifiers(
 ) {
   const tags = record.tags.map(normalize)
 
+  const matchesAny = (values: string[], recordValue: string) =>
+    !values.length || values.includes(normalize(recordValue))
+
   return (
     qualifiers.tag.every((tag) => tags.includes(tag)) &&
-    qualifiers.type.every((type) => normalize(record.type) === type) &&
-    qualifiers.scope.every((scope) => normalize(record.scope) === scope) &&
-    qualifiers.importance.every(
-      (importance) => normalize(record.importance) === importance
-    )
+    matchesAny(qualifiers.type, record.type) &&
+    matchesAny(qualifiers.scope, record.scope) &&
+    matchesAny(qualifiers.importance, record.importance)
   )
 }
 
@@ -121,20 +122,22 @@ export class DocumentSearchIndex {
   }
 }
 
-export function setSearchQualifier(
+export function setSearchQualifiers(
   query: string,
   qualifier: SearchQualifier,
-  value: string
+  values: string[]
 ) {
   const pattern = new RegExp(`(?:^|\\s)${qualifier}:(?:"[^"]+"|\\S+)`, "gi")
   const text = query.replace(pattern, " ").replace(/\s+/g, " ").trim()
-  const normalizedValue = value.trim()
+  const serializedQualifiers = [
+    ...new Set(values.map((value) => value.trim()).filter(Boolean)),
+  ].map((value) => {
+    const serializedValue = /\s/.test(value)
+      ? `"${value.replaceAll('"', "")}"`
+      : value
 
-  if (!normalizedValue) return text
+    return `${qualifier}:${serializedValue}`
+  })
 
-  const serializedValue = /\s/.test(normalizedValue)
-    ? `"${normalizedValue.replaceAll('"', "")}"`
-    : normalizedValue
-
-  return `${text}${text ? " " : ""}${qualifier}:${serializedValue}`
+  return [text, ...serializedQualifiers].filter(Boolean).join(" ")
 }

@@ -7,6 +7,8 @@
 @custom-variant dark (&:is(.dark *));
 @source "../../../../apps/**/*.{ts,tsx}";
 @source "../../../core/src/**/*.{ts,tsx}";
+@source "../../../plugin-bpmn/src/**/*.{ts,tsx}";
+@source "../../../plugin-data-table/src/**/*.{ts,tsx}";
 @source "../../../plugin-excalidraw/src/**/*.{ts,tsx}";
 @source "../../../plugin-mermaid/src/**/*.{ts,tsx}";
 @source "../../../preset-default/src/**/*.{ts,tsx}";
@@ -133,7 +135,7 @@
     @apply mt-5;
   }
   .docs-content :is(h1, h2, h3, h4) {
-    @apply font-heading font-semibold tracking-tight;
+    @apply scroll-mt-32 font-heading font-semibold tracking-tight xl:scroll-mt-24;
   }
   .docs-content h1 {
     @apply mt-10 text-3xl;
@@ -185,8 +187,51 @@
   .docs-content img {
     @apply max-w-full rounded-lg border;
   }
-  .docs-content .mermaid-image {
+  .docs-content :is(.bpmn-image, .mermaid-image) {
     @apply mx-auto block max-h-[42rem] w-auto bg-white object-contain;
+  }
+
+  .docs-content .data-table {
+    @apply my-6;
+  }
+  .docs-content .data-table-scroll {
+    @apply overflow-x-auto rounded-lg border bg-background shadow-sm;
+  }
+  .docs-content .data-table table {
+    @apply min-w-max border-0 text-sm;
+  }
+  .docs-content .data-table thead {
+    @apply bg-muted/60;
+  }
+  .docs-content .data-table th {
+    @apply border-x-0 border-t-0 px-3 py-2.5 font-semibold whitespace-nowrap;
+  }
+  .docs-content .data-table td {
+    @apply border-x-0 border-t-0 px-3 py-2.5;
+  }
+  .docs-content .data-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .docs-content .data-table tbody tr:hover {
+    @apply bg-muted/30;
+  }
+  .docs-content .data-table-badge {
+    @apply inline-flex rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap;
+  }
+  .docs-content .data-table-unresolved {
+    @apply font-medium text-destructive;
+  }
+  .docs-content .data-table-unresolved::after {
+    content: " ⚠";
+  }
+  .docs-content .data-table-empty {
+    @apply py-8 text-center text-muted-foreground;
+  }
+  .docs-content .data-table figcaption {
+    @apply mt-2 flex flex-col items-center text-center text-sm text-muted-foreground;
+  }
+  .docs-content .data-table figcaption small {
+    @apply text-xs;
   }
 
   .excalidraw-preview {

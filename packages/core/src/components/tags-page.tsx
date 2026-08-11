@@ -345,7 +345,7 @@ export function TagsPage({
 
   return (
     <DocsShell>
-      <main className="mx-auto max-w-5xl px-6 py-8 sm:py-12">
+      <main className="mx-auto w-full px-6 py-8 sm:px-11 sm:py-12">
         <nav
           className="mb-8 text-sm text-muted-foreground"
           aria-label="Breadcrumb"
