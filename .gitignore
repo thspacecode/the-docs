@@ -8,6 +8,8 @@ node_modules
 # React Router
 .react-router
 build
+!packages/core/src/build/
+!packages/core/src/build/**
 dist
 
 # typescript

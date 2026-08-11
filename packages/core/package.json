@@ -1,0 +1,32 @@
+{
+  "name": "@workspace/core",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mdx-js/rollup": "^3.1.1",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^1.28.0",
+    "react": "^19.2.6",
+    "react-router": "7.15.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "vite": "^8.0.0"
+  },
+  "devDependencies": {
+    "@react-router/dev": "7.15.1",
+    "@types/mdx": "^2.0.13",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "typescript": "^6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./build": "./src/build/index.ts",
+    "./route": "./src/route/docs-post.tsx"
+  }
+}

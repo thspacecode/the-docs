@@ -5,8 +5,9 @@
 @import "@fontsource-variable/noto-sans";
 
 @custom-variant dark (&:is(.dark *));
-@source "../../../apps/**/*.{ts,tsx}";
-@source "../../../components/**/*.{ts,tsx}";
+@source "../../../../apps/**/*.{ts,tsx}";
+@source "../../../core/src/**/*.{ts,tsx}";
+@source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
 :root {
@@ -119,6 +120,57 @@
     --color-sidebar-ring: var(--sidebar-ring);
     --font-sans: 'Outfit', sans-serif;
     --font-heading: var(--font-sans);
+}
+
+@layer components {
+  .docs-content {
+    @apply text-base leading-7 text-foreground;
+  }
+  .docs-content > * + * {
+    @apply mt-5;
+  }
+  .docs-content :is(h1, h2, h3, h4) {
+    @apply font-heading font-semibold tracking-tight;
+  }
+  .docs-content h1 {
+    @apply mt-10 text-3xl;
+  }
+  .docs-content h2 {
+    @apply mt-10 border-b pb-2 text-2xl;
+  }
+  .docs-content h3 {
+    @apply mt-8 text-xl;
+  }
+  .docs-content :is(ul, ol) {
+    @apply ml-6 space-y-2;
+  }
+  .docs-content ul {
+    @apply list-disc;
+  }
+  .docs-content ol {
+    @apply list-decimal;
+  }
+  .docs-content a {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+  .docs-content :not(pre) > code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+  .docs-content pre {
+    @apply overflow-x-auto rounded-lg border bg-muted p-4 font-mono text-sm leading-6;
+  }
+  .docs-content blockquote {
+    @apply border-l-2 pl-4 text-muted-foreground;
+  }
+  .docs-content table {
+    @apply w-full border-collapse text-sm;
+  }
+  .docs-content :is(th, td) {
+    @apply border p-2 text-left align-top;
+  }
+  .docs-content img {
+    @apply max-w-full rounded-lg border;
+  }
 }
 
 @layer base {

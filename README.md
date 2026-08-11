@@ -1,21 +1,35 @@
-# shadcn/ui monorepo template
+# The Docs
 
-This is a React Router monorepo template with shadcn/ui.
+A file-based documentation site built with React Router, MDX, Tailwind CSS, and shadcn/ui.
 
-## Adding components
-
-To add components to your app, run the following command at the root of your `web` app:
+## Development
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+pnpm install
+pnpm --filter docs-of-the-docs dev
 ```
 
-This will place the ui components in the `packages/ui/src/components` directory.
+The app reads documents from `docs/<slug>/index.mdx`. Each document supports frontmatter for its list and detail views:
 
-## Using components
+```mdx
+---
+title: Document title
+description: A short summary.
+tags:
+  - architecture
+  - guide
+---
 
-To use the components in your app, import them from the `ui` package.
-
-```tsx
-import { Button } from "@workspace/ui/components/button";
+## Document content
 ```
+
+Document slugs must contain lowercase letters, numbers, and hyphens. The home page lists every discovered document and `/docs/p/<slug>` renders its MDX content.
+
+## Validation
+
+```bash
+pnpm typecheck
+pnpm --filter docs-of-the-docs build
+```
+
+The production build prerenders the document list and every discovered document route.
