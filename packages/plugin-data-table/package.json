@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@types/hast": "^3.0.4",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19",
     "typescript": "^6"
   },
