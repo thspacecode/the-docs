@@ -10,6 +10,9 @@ node_modules
 .build
 dist
 
+# Cloudflare
+.wrangler
+
 # typescript
 *.tsbuildinfo
 

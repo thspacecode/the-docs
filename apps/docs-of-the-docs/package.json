@@ -7,6 +7,8 @@
     "dev": "react-router dev",
     "build": "react-router build",
     "start": "react-router-serve ./.build/server/index.js",
+    "deploy": "pnpm build && wrangler deploy",
+    "preview:cloudflare": "pnpm build && wrangler dev",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "react-router typegen && tsc"
   },
@@ -25,6 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^6",
-    "vite": "^8"
+    "vite": "^8",
+    "wrangler": "^4.121.0"
   }
 }
