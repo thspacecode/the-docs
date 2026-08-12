@@ -1,6 +1,6 @@
-import type { PluginComponentProps } from "@workspace/plugin-contract"
+import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
-import type { BpmnModel } from "../types.ts"
+import type { BpmnModel } from "../types.js"
 
 interface BpmnImageProps extends PluginComponentProps<BpmnModel> {
   alt?: string

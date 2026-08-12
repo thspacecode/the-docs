@@ -1,13 +1,13 @@
-import { defineMdxPlugin } from "@workspace/plugin-contract"
+import { defineMdxPlugin } from "@the-docs/plugin-contract"
 
-import type { MermaidModel, MermaidPluginOptions } from "./types.ts"
-import { resolveMermaidPluginOptions } from "./types.ts"
+import type { MermaidModel, MermaidPluginOptions } from "./types.js"
+import { resolveMermaidPluginOptions } from "./types.js"
 
 export type {
   MermaidModel,
   MermaidPluginOptions,
   MermaidTheme,
-} from "./types.ts"
+} from "./types.js"
 
 function diagramAlt(source: string) {
   return (
@@ -38,7 +38,7 @@ export function mermaidPlugin(options: MermaidPluginOptions = {}) {
 
       context.signal?.throwIfAborted()
 
-      const { renderMermaidToSvg } = await import("./build/render.ts")
+      const { renderMermaidToSvg } = await import("./build/render.js")
       const image = await renderMermaidToSvg(input.content, {
         theme: resolvedOptions.theme,
         signal: context.signal,
@@ -52,7 +52,7 @@ export function mermaidPlugin(options: MermaidPluginOptions = {}) {
       }
     },
     component: {
-      load: () => import("./runtime/mermaid-image.tsx"),
+      load: () => import("./runtime/mermaid-image.js"),
     },
     build: {
       async renderToImage(model, renderOptions) {

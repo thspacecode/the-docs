@@ -1,14 +1,15 @@
 {
-  "name": "@workspace/plugin-data-table",
-  "version": "0.0.0",
+  "name": "@the-docs/plugin-data-table",
+  "version": "0.0.1-alpha.2",
   "type": "module",
-  "private": true,
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json --noEmit false --declaration --declarationMap --sourceMap --outDir dist --rootDir src --allowImportingTsExtensions false && node ../../scripts/copy-package-assets.mjs",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
   },
   "dependencies": {
-    "@workspace/plugin-contract": "workspace:*",
+    "@the-docs/plugin-contract": "workspace:^",
     "react": "^19.2.6"
   },
   "devDependencies": {
@@ -18,9 +19,22 @@
     "typescript": "^6"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./build": "./src/build/index.ts",
-    "./model": "./src/model.ts",
-    "./runtime": "./src/runtime/data-table.tsx"
-  }
+    ".": "./dist/index.js",
+    "./build": "./dist/build/index.js",
+    "./model": "./dist/model.js",
+    "./runtime": "./dist/runtime/data-table.js"
+  },
+  "description": "The Docs plugin data table",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thspacecode/the-docs.git",
+    "directory": "packages/plugin-data-table"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

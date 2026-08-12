@@ -1,0 +1,35 @@
+{
+  "name": "create-the-docs",
+  "version": "0.0.1-alpha.2",
+  "description": "Create a documentation site powered by The Docs",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "create-the-docs": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "template"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json --noEmit false --declaration --declarationMap --sourceMap --outDir dist --rootDir src --allowImportingTsExtensions false",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thspacecode/the-docs.git",
+    "directory": "packages/create-the-docs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "typescript": "^6"
+  }
+}

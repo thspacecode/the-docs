@@ -4,11 +4,11 @@ import { fileURLToPath } from "node:url"
 
 import type { Element, Root } from "hast"
 
-import { excalidrawPlugin } from "../index.ts"
-import type { ExcalidrawPluginOptions } from "../types.ts"
+import { excalidrawPlugin } from "../index.js"
+import type { ExcalidrawPluginOptions } from "../types.js"
 
 const runtimeModuleId = fileURLToPath(
-  new URL("../runtime/excalidraw-image.tsx", import.meta.url)
+  new URL("../runtime/excalidraw-image.js", import.meta.url)
 )
 const runtimeImport = `import ExcalidrawImage from ${JSON.stringify(runtimeModuleId)}`
 

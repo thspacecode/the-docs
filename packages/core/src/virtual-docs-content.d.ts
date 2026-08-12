@@ -6,7 +6,7 @@ declare module "virtual:docs-content" {
     VirtualScopeDefinition,
     VirtualTagDefinition,
     VirtualTypeDefinition,
-  } from "./content/types"
+  } from "./content/types.js"
 
   export const documents: VirtualDocumentEntry[]
   export const scopes: VirtualScopeDefinition[]

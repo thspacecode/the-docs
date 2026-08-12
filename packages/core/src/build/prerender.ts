@@ -1,6 +1,6 @@
 import { resolve } from "node:path"
 
-import { discoverDocuments, discoverScopes } from "./discovery.ts"
+import { discoverDocuments, discoverScopes } from "./discovery.js"
 
 export function getDocsPrerenderPaths(contentRoot: string) {
   return discoverDocuments(resolve(contentRoot)).map(({ slug }) => `/p/${slug}`)

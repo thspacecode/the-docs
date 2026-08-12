@@ -16,14 +16,14 @@
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../../apps/**/*.{ts,tsx}";
-@source "../../../core/src/**/*.{ts,tsx}";
-@source "../../../plugin-bpmn/src/**/*.{ts,tsx}";
-@source "../../../plugin-data-table/src/**/*.{ts,tsx}";
-@source "../../../plugin-excalidraw/src/**/*.{ts,tsx}";
-@source "../../../plugin-mermaid/src/**/*.{ts,tsx}";
-@source "../../../preset-default/src/**/*.{ts,tsx}";
+@source "../../../core/dist/**/*.js";
+@source "../../../plugin-bpmn/dist/**/*.js";
+@source "../../../plugin-data-table/dist/**/*.js";
+@source "../../../plugin-excalidraw/dist/**/*.js";
+@source "../../../plugin-mermaid/dist/**/*.js";
+@source "../../../preset-default/dist/**/*.js";
 @source "../../../../components/**/*.{ts,tsx}";
-@source "../**/*.{ts,tsx}";
+@source "../**/*.js";
 
 /*
  * Color scales follow Radix's 12-step usage model:

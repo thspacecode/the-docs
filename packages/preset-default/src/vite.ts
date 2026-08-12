@@ -1,14 +1,14 @@
 import { reactRouter } from "@react-router/dev/vite"
 import tailwindcss from "@tailwindcss/vite"
-import { createDocsVitePlugins } from "@workspace/core/build"
-import { bpmnRehypePlugin } from "@workspace/plugin-bpmn/build"
-import { dataTableRehypePlugin } from "@workspace/plugin-data-table/build"
-import { excalidrawRehypePlugin } from "@workspace/plugin-excalidraw/build"
-import { mermaidRehypePlugin } from "@workspace/plugin-mermaid/build"
-import { syntaxHighlighterRehypePlugin } from "@workspace/plugin-syntax-highlighter/build"
+import { createDocsVitePlugins } from "@the-docs/core/build"
+import { bpmnRehypePlugin } from "@the-docs/plugin-bpmn/build"
+import { dataTableRehypePlugin } from "@the-docs/plugin-data-table/build"
+import { excalidrawRehypePlugin } from "@the-docs/plugin-excalidraw/build"
+import { mermaidRehypePlugin } from "@the-docs/plugin-mermaid/build"
+import { syntaxHighlighterRehypePlugin } from "@the-docs/plugin-syntax-highlighter/build"
 import { defineConfig } from "vite"
 
-import type { DefaultPresetConfig } from "./index.ts"
+import type { DefaultPresetConfig } from "./index.js"
 
 /** Creates the complete Vite configuration for the default docs application. */
 export function createViteConfig(config: DefaultPresetConfig) {
@@ -20,6 +20,7 @@ export function createViteConfig(config: DefaultPresetConfig) {
 
   return defineConfig({
     resolve: { tsconfigPaths: true },
+    ssr: { noExternal: [/^@the-docs\//] },
     plugins: [
       tailwindcss(),
       ...createDocsVitePlugins({

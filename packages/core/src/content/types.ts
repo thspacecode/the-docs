@@ -1,6 +1,6 @@
 import type { MDXContent } from "mdx/types"
 
-import type { TableOfContentsItem } from "./table-of-contents"
+import type { TableOfContentsItem } from "./table-of-contents.js"
 
 export type MdxDocumentComponent = MDXContent
 

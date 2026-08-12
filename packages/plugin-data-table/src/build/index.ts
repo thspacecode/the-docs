@@ -1,1 +1,1 @@
-export { dataTableRehypePlugin } from "./rehype.ts"
+export { dataTableRehypePlugin } from "./rehype.js"

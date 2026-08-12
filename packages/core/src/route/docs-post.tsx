@@ -8,8 +8,8 @@ import {
 } from "react-router"
 import type { LoaderFunctionArgs, MetaFunction } from "react-router"
 
-import { DocsPageLayout } from "../components/docs-page-layout"
-import { DocsShell, DocumentPage } from "../components/document-page"
+import { DocsPageLayout } from "../components/docs-page-layout.js"
+import { DocsShell, DocumentPage } from "../components/document-page.js"
 import {
   getDocument,
   getDocuments,
@@ -17,7 +17,7 @@ import {
   getScope,
   getScopes,
   scopeContainsDocument,
-} from "../content/registry"
+} from "../content/registry.js"
 
 export function loader({ params, request }: LoaderFunctionArgs) {
   const document = params.slug ? getDocument(params.slug) : undefined

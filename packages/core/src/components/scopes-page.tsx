@@ -7,16 +7,16 @@ import {
 } from "lucide-react"
 import { Link } from "react-router"
 
-import { scopeDocumentSlugs } from "../content/registry"
+import { scopeDocumentSlugs } from "../content/registry.js"
 import type {
   DocumentEntry,
   ScopeDefinition,
   ScopeDocumentReference,
   ScopeGroupDefinition,
-} from "../content/types"
-import { DocsPageLayout } from "./docs-page-layout"
-import { DocsShell } from "./document-page"
-import { ScopeIcon } from "./scope-icon"
+} from "../content/types.js"
+import { DocsPageLayout } from "./docs-page-layout.js"
+import { DocsShell } from "./document-page.js"
+import { ScopeIcon } from "./scope-icon.js"
 
 function documentHref(documentSlug: string, scopeSlug: string) {
   return `/p/${documentSlug}?${new URLSearchParams({ scope: scopeSlug }).toString()}`

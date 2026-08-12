@@ -4,11 +4,11 @@ import { fileURLToPath } from "node:url"
 
 import type { Element, Root } from "hast"
 
-import { bpmnPlugin } from "../index.ts"
-import type { BpmnPluginOptions } from "../types.ts"
+import { bpmnPlugin } from "../index.js"
+import type { BpmnPluginOptions } from "../types.js"
 
 const runtimeModuleId = fileURLToPath(
-  new URL("../runtime/bpmn-image.tsx", import.meta.url)
+  new URL("../runtime/bpmn-image.js", import.meta.url)
 )
 const runtimeImport = `import BpmnImage from ${JSON.stringify(runtimeModuleId)}`
 

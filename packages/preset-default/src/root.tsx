@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { DocsPageLayout } from "@workspace/core"
+import { DocsPageLayout } from "@the-docs/core"
 import {
   Links,
   Meta,
@@ -9,7 +9,7 @@ import {
   isRouteErrorResponse,
 } from "react-router"
 
-import "@workspace/ui/globals.css"
+import "@the-docs/ui/globals.css"
 
 export function Layout({ children }: { children: ReactNode }) {
   return (

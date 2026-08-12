@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { ChevronRight, ListTree } from "lucide-react"
 
-import type { TableOfContentsItem } from "../content/table-of-contents"
+import type { TableOfContentsItem } from "../content/table-of-contents.js"
 
 function useActiveHeading(items: TableOfContentsItem[]) {
   const [activeId, setActiveId] = useState<string | undefined>(items[0]?.id)

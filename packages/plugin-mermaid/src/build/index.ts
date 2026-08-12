@@ -1,2 +1,2 @@
-export { mermaidRehypePlugin } from "./rehype.ts"
-export { renderMermaidToSvg } from "./render.ts"
+export { mermaidRehypePlugin } from "./rehype.js"
+export { renderMermaidToSvg } from "./render.js"

@@ -13,23 +13,23 @@ import {
 } from "lucide-react"
 import { Link, NavLink, useLocation } from "react-router"
 
-import { getDocuments, getScopes, getTags } from "../content/registry"
+import { getDocuments, getScopes, getTags } from "../content/registry.js"
 import type {
   DocumentEntry,
   RelatedDocumentsSection,
   ScopeDefinition,
   ScopeDocumentReference,
-} from "../content/types"
-import { DocsPageLayout } from "./docs-page-layout"
-import { GlobalSearch } from "./global-search"
-import { Importance } from "./importance"
-import { RelatedDocuments } from "./related-documents"
-import { RelativeModifiedTime } from "./relative-modified-time"
-import { ScopeIcon } from "./scope-icon"
+} from "../content/types.js"
+import { DocsPageLayout } from "./docs-page-layout.js"
+import { GlobalSearch } from "./global-search.js"
+import { Importance } from "./importance.js"
+import { RelatedDocuments } from "./related-documents.js"
+import { RelativeModifiedTime } from "./relative-modified-time.js"
+import { ScopeIcon } from "./scope-icon.js"
 import {
   DesktopTableOfContents,
   MobileTableOfContents,
-} from "./table-of-contents"
+} from "./table-of-contents.js"
 
 function isEditableTarget(target: EventTarget | null) {
   return (

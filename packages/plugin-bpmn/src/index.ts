@@ -1,11 +1,11 @@
 import { basename } from "node:path"
 
-import { defineMdxPlugin } from "@workspace/plugin-contract"
+import { defineMdxPlugin } from "@the-docs/plugin-contract"
 
-import type { BpmnModel, BpmnPluginOptions } from "./types.ts"
-import { resolveBpmnPluginOptions } from "./types.ts"
+import type { BpmnModel, BpmnPluginOptions } from "./types.js"
+import { resolveBpmnPluginOptions } from "./types.js"
 
-export type { BpmnModel, BpmnPluginOptions } from "./types.ts"
+export type { BpmnModel, BpmnPluginOptions } from "./types.js"
 
 /**
  * Turns BPMN 2.0 XML assets into SVG-backed images while MDX is compiled. The
@@ -25,7 +25,7 @@ export function bpmnPlugin(options: BpmnPluginOptions = {}) {
 
       context.signal?.throwIfAborted()
 
-      const { renderBpmnToSvg } = await import("./build/render.ts")
+      const { renderBpmnToSvg } = await import("./build/render.js")
       const image = await renderBpmnToSvg(input.content, {
         padding: resolvedOptions.padding,
         signal: context.signal,
@@ -39,7 +39,7 @@ export function bpmnPlugin(options: BpmnPluginOptions = {}) {
       }
     },
     component: {
-      load: () => import("./runtime/bpmn-image.tsx"),
+      load: () => import("./runtime/bpmn-image.js"),
     },
     build: {
       async renderToImage(model, renderOptions) {

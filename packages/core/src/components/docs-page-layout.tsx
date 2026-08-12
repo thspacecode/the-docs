@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react"
 
-import { cn } from "@workspace/ui/lib/utils"
+import { cn } from "@the-docs/ui/lib/utils"
 
 export function DocsPageLayout({
   variant = "centered",

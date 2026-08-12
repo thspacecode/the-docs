@@ -1,6 +1,6 @@
 import Fuse from "fuse.js"
 
-import type { DocumentEntry } from "../content/types"
+import type { DocumentEntry } from "../content/types.js"
 
 const qualifierNames = ["tag", "type", "scope", "importance"] as const
 

@@ -2,7 +2,22 @@
 
 A file-based documentation site built with React Router, MDX, Tailwind CSS, and shadcn/ui.
 
-## Development
+## Create a documentation site
+
+After the initial packages are published to npm, scaffold a standalone site with:
+
+```bash
+pnpm create the-docs@alpha my-docs
+cd my-docs
+pnpm install
+pnpm dev
+```
+
+The package family is published under `@the-docs/*`. Publishing requires membership
+in the `the-docs` npm organization and an `NPM_TOKEN` with permission to publish
+public packages.
+
+## Monorepo development
 
 ```bash
 pnpm install

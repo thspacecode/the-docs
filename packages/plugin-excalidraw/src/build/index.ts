@@ -1,2 +1,2 @@
-export { excalidrawRehypePlugin } from "./rehype.ts"
-export { renderExcalidrawToSvg } from "./render.ts"
+export { excalidrawRehypePlugin } from "./rehype.js"
+export { renderExcalidrawToSvg } from "./render.js"

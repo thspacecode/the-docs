@@ -1,6 +1,6 @@
 import { Shapes, type LucideIcon } from "lucide-react"
 
-import { getScopeIcon } from "../content/registry"
+import { getScopeIcon } from "../content/registry.js"
 
 export function ScopeIcon({
   name,
