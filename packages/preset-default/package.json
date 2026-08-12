@@ -23,7 +23,7 @@
     "vite": "^8"
   },
   "devDependencies": {
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19",
     "typescript": "^6"
   },
