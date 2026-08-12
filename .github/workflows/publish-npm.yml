@@ -42,11 +42,11 @@ jobs:
       - name: Validate package versions
         run: node scripts/validate-release-version.mjs
 
-      - name: Typecheck
-        run: pnpm typecheck
-
       - name: Build
         run: pnpm build
+
+      - name: Typecheck
+        run: pnpm typecheck
 
       - name: Pack public packages
         run: |
