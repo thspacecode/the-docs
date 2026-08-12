@@ -1,6 +1,6 @@
 {
   "name": "create-the-docs",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "description": "Create a documentation site powered by The Docs",
   "type": "module",
   "license": "MIT",
