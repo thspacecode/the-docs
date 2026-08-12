@@ -35,10 +35,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build packages
+        run: pnpm build --filter '!docs-of-the-docs'
+
       - name: Typecheck
         run: pnpm --filter docs-of-the-docs typecheck
 
-      - name: Build
+      - name: Build docs application
         run: pnpm --filter docs-of-the-docs build
 
       - name: Deploy with Wrangler
