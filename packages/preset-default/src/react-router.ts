@@ -10,6 +10,7 @@ import type { DefaultPresetConfig } from "./index.ts"
 export function createReactRouterConfig(config: DefaultPresetConfig): Config {
   return {
     buildDirectory: ".build",
+    routeDiscovery: { mode: "initial" },
     ssr: true,
     prerender: [
       "/",
