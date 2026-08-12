@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare
+name: Deploy Docs of The Docs to Cloudflare
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: cloudflare-production
+  group: docs-of-the-docs-cloudflare-production
   cancel-in-progress: true
 
 permissions:
