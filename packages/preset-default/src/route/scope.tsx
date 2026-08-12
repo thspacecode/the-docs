@@ -4,7 +4,7 @@ import {
   getDocuments,
   getScope,
   ScopePage,
-} from "@workspace/core"
+} from "@the-docs/core"
 import {
   Link,
   isRouteErrorResponse,

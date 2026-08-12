@@ -2,7 +2,24 @@
 
 A file-based documentation site built with React Router, MDX, Tailwind CSS, and shadcn/ui.
 
-## Development
+## Create a documentation site
+
+After the initial packages are published to npm, scaffold a standalone site with:
+
+```bash
+pnpm create the-docs@alpha my-docs
+cd my-docs
+pnpm install
+pnpm dev
+```
+
+The package family is published under `@the-docs/*`. Publishing requires membership
+in the `the-docs` npm organization. Configure each package's npm trusted publisher
+for GitHub repository `thspacecode/the-docs`, workflow `publish-npm.yml`, and the
+`npm publish` action; the workflow uses short-lived OIDC credentials instead of an
+`NPM_TOKEN` secret.
+
+## Monorepo development
 
 ```bash
 pnpm install

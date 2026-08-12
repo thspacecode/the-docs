@@ -3,8 +3,8 @@ import { codeToHtml } from "shiki"
 import type {
   SyntaxHighlighterModel,
   SyntaxHighlighterOptions,
-} from "../types.ts"
-import { resolveSyntaxHighlighterOptions } from "../types.ts"
+} from "../types.js"
+import { resolveSyntaxHighlighterOptions } from "../types.js"
 
 export async function highlightCode(
   code: string,

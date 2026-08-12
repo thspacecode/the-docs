@@ -2,11 +2,11 @@ import { fileURLToPath } from "node:url"
 
 import type { Element, Root, Text } from "hast"
 
-import { mermaidPlugin } from "../index.ts"
-import type { MermaidPluginOptions } from "../types.ts"
+import { mermaidPlugin } from "../index.js"
+import type { MermaidPluginOptions } from "../types.js"
 
 const runtimeModuleId = fileURLToPath(
-  new URL("../runtime/mermaid-image.tsx", import.meta.url)
+  new URL("../runtime/mermaid-image.js", import.meta.url)
 )
 const runtimeImport = `import MermaidImage from ${JSON.stringify(runtimeModuleId)}`
 

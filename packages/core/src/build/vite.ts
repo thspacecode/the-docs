@@ -13,13 +13,13 @@ import type { Plugin, PluginOption } from "vite"
 import {
   extractTableOfContents,
   rehypeTableOfContentsHeadings,
-} from "../content/table-of-contents.ts"
+} from "../content/table-of-contents.js"
 import {
   discoverDocuments,
   discoverScopes,
   discoverTags,
   discoverTypes,
-} from "./discovery.ts"
+} from "./discovery.js"
 
 const virtualModuleId = "virtual:docs-content"
 const resolvedVirtualModuleId = `\0${virtualModuleId}`
@@ -388,16 +388,23 @@ function isContentFile(filePath: string, contentRoot: string) {
 
 function docsContentPlugin(contentRoot: string): Plugin {
   return {
-    name: "workspace-docs-content",
-    resolveId(id) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId
-      }
+    name: "the-docs-content",
+    enforce: "pre",
+    resolveId: {
+      filter: { id: new RegExp(`^${virtualModuleId}$`) },
+      handler(id) {
+        if (id === virtualModuleId) {
+          return resolvedVirtualModuleId
+        }
+      },
     },
-    load(id) {
-      if (id === resolvedVirtualModuleId) {
-        return createContentModule(contentRoot)
-      }
+    load: {
+      filter: { id: new RegExp(`^${resolvedVirtualModuleId}$`) },
+      handler(id) {
+        if (id === resolvedVirtualModuleId) {
+          return createContentModule(contentRoot)
+        }
+      },
     },
     configureServer(server) {
       server.watcher.add(contentRoot)

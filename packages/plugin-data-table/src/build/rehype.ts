@@ -4,12 +4,12 @@ import { fileURLToPath } from "node:url"
 
 import type { Element, Root } from "hast"
 
-import { dataTablePlugin } from "../index.ts"
-import { isDataTableRef } from "../model.ts"
-import type { DataTablePluginOptions } from "../types.ts"
+import { dataTablePlugin } from "../index.js"
+import { isDataTableRef } from "../model.js"
+import type { DataTablePluginOptions } from "../types.js"
 
 const runtimeModuleId = fileURLToPath(
-  new URL("../runtime/data-table.tsx", import.meta.url)
+  new URL("../runtime/data-table.js", import.meta.url)
 )
 const runtimeImport = `import DataTable from ${JSON.stringify(runtimeModuleId)}`
 

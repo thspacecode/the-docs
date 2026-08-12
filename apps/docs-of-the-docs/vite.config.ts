@@ -1,4 +1,4 @@
-import { createViteConfig } from "@workspace/preset-default/vite"
+import { createViteConfig } from "@the-docs/preset-default/vite"
 
 import docsConfig from "./docs.config"
 

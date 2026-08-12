@@ -1,4 +1,4 @@
-import { getDocuments, getTags, TagsPage } from "@workspace/core"
+import { getDocuments, getTags, TagsPage } from "@the-docs/core"
 
 export function meta() {
   return [

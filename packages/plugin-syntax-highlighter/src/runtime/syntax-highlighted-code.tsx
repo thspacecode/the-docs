@@ -1,6 +1,6 @@
-import type { PluginComponentProps } from "@workspace/plugin-contract"
+import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
-import type { SyntaxHighlighterModel } from "../types.ts"
+import type { SyntaxHighlighterModel } from "../types.js"
 
 export default function SyntaxHighlightedCode({
   model,

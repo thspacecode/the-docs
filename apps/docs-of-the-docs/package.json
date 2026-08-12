@@ -15,7 +15,7 @@
   "dependencies": {
     "@react-router/node": "7.15.1",
     "@react-router/serve": "7.15.1",
-    "@workspace/preset-default": "workspace:*",
+    "@the-docs/preset-default": "workspace:*",
     "isbot": "^5",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",

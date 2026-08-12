@@ -6,9 +6,9 @@ import {
   type DataTableMeta,
   type DataTableRelationTarget,
   type ResolvedDataTable,
-} from "./types.ts"
+} from "./types.js"
 
-export * from "./types.ts"
+export * from "./types.js"
 
 export const DATA_TABLE_META_VERSION = 1
 

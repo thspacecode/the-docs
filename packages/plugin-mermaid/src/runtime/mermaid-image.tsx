@@ -1,6 +1,6 @@
-import type { PluginComponentProps } from "@workspace/plugin-contract"
+import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
-import type { MermaidModel } from "../types.ts"
+import type { MermaidModel } from "../types.js"
 
 interface MermaidImageProps extends PluginComponentProps<MermaidModel> {
   alt?: string

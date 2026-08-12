@@ -6,11 +6,11 @@ import type {
   DocumentEntry,
   ScopeDefinition,
   TagDefinition,
-} from "../content/types"
-import { DocsPageLayout } from "./docs-page-layout"
-import { DocsSearchInput } from "./docs-search-input"
-import { DocsShell } from "./document-page"
-import { ScopeIcon } from "./scope-icon"
+} from "../content/types.js"
+import { DocsPageLayout } from "./docs-page-layout.js"
+import { DocsSearchInput } from "./docs-search-input.js"
+import { DocsShell } from "./document-page.js"
+import { ScopeIcon } from "./scope-icon.js"
 
 const latestDocumentCount = 3
 const featuredTagCount = 8

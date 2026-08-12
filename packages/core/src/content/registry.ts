@@ -23,7 +23,7 @@ import type {
   VirtualScopeDefinition,
   VirtualTagDefinition,
   VirtualTypeDefinition,
-} from "./types"
+} from "./types.js"
 
 function fallbackTitle(slug: string) {
   return slug

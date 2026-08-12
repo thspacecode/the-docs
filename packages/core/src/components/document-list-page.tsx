@@ -20,25 +20,25 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu"
+} from "@the-docs/ui/components/dropdown-menu"
 
 import type {
   DocumentEntry,
   TagDefinition,
   TypeDefinition,
-} from "../content/types"
+} from "../content/types.js"
 import {
   DocumentSearchIndex,
   parseSearchQuery,
   setSearchQualifiers,
   type SearchQualifier,
-} from "../search/document-search"
-import { DocsPageLayout } from "./docs-page-layout"
-import { DocsSearchInput } from "./docs-search-input"
-import { DocumentListFacet } from "./document-list-facet"
-import { DocsShell } from "./document-page"
-import { Importance } from "./importance"
-import { RelativeModifiedTime } from "./relative-modified-time"
+} from "../search/document-search.js"
+import { DocsPageLayout } from "./docs-page-layout.js"
+import { DocsSearchInput } from "./docs-search-input.js"
+import { DocumentListFacet } from "./document-list-facet.js"
+import { DocsShell } from "./document-page.js"
+import { Importance } from "./importance.js"
+import { RelativeModifiedTime } from "./relative-modified-time.js"
 
 const pageSize = 6
 const searchDelay = 150

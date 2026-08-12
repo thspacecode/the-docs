@@ -7,7 +7,7 @@ import {
 } from "lucide-react"
 import { Link } from "react-router"
 
-import type { RelatedDocumentsSection } from "../content/types"
+import type { RelatedDocumentsSection } from "../content/types.js"
 
 const relatedDocumentsPageSize = 3
 const modifiedDateFormatter = new Intl.DateTimeFormat("en", {

@@ -1,2 +1,2 @@
-export { bpmnRehypePlugin } from "./rehype.ts"
-export { renderBpmnToSvg } from "./render.ts"
+export { bpmnRehypePlugin } from "./rehype.js"
+export { renderBpmnToSvg } from "./render.js"

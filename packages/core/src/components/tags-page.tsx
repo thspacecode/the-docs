@@ -7,12 +7,12 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@workspace/ui/components/tabs"
+} from "@the-docs/ui/components/tabs"
 
-import type { DocumentEntry, TagDefinition } from "../content/types"
-import { DocsPageLayout } from "./docs-page-layout"
-import { DocsSearchInput } from "./docs-search-input"
-import { DocsShell } from "./document-page"
+import type { DocumentEntry, TagDefinition } from "../content/types.js"
+import { DocsPageLayout } from "./docs-page-layout.js"
+import { DocsSearchInput } from "./docs-search-input.js"
+import { DocsShell } from "./document-page.js"
 
 interface TagWithCount extends TagDefinition {
   documentCount: number

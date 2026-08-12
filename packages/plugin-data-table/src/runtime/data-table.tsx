@@ -1,7 +1,7 @@
-import type { PluginComponentProps } from "@workspace/plugin-contract"
+import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
-import { badgeStyle } from "../presentation.ts"
-import type { DataTableModel } from "../types.ts"
+import { badgeStyle } from "../presentation.js"
+import type { DataTableModel } from "../types.js"
 
 interface DataTableProps extends PluginComponentProps<DataTableModel> {
   alt?: string

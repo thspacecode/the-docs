@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises"
 import { dirname, resolve } from "node:path"
 
-import { defineMdxPlugin, type PluginInput } from "@workspace/plugin-contract"
+import { defineMdxPlugin, type PluginInput } from "@the-docs/plugin-contract"
 
 import {
   dataRows,
@@ -14,14 +14,14 @@ import {
   parseDataTableMeta,
   resolveDataTable,
   validateDataTable,
-} from "./model.ts"
-import { badgeColors } from "./presentation.ts"
+} from "./model.js"
+import { badgeColors } from "./presentation.js"
 import type {
   DataTableMeta,
   DataTableModel,
   DataTablePluginOptions,
   DataTableRelationTarget,
-} from "./types.ts"
+} from "./types.js"
 
 export type {
   DataTableBadgeOption,
@@ -30,7 +30,7 @@ export type {
   DataTableMeta,
   DataTableModel,
   DataTablePluginOptions,
-} from "./types.ts"
+} from "./types.js"
 
 const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true })
 
@@ -245,7 +245,7 @@ export function dataTablePlugin(options: DataTablePluginOptions = {}) {
       return model
     },
     component: {
-      load: () => import("./runtime/data-table.tsx"),
+      load: () => import("./runtime/data-table.js"),
     },
     build: {
       async renderToImage(model, renderOptions) {

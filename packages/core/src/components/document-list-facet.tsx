@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 
-import type { TagDefinition, TypeDefinition } from "../content/types"
-import type { SearchQualifier } from "../search/document-search"
+import type { TagDefinition, TypeDefinition } from "../content/types.js"
+import type { SearchQualifier } from "../search/document-search.js"
 
 interface FacetOption {
   value: string

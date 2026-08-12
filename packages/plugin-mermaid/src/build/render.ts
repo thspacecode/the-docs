@@ -3,7 +3,7 @@ import { TextDecoder, TextEncoder } from "node:util"
 
 import { JSDOM, VirtualConsole } from "jsdom"
 
-import type { MermaidTheme } from "../types.ts"
+import type { MermaidTheme } from "../types.js"
 
 export interface RenderMermaidOptions {
   theme?: MermaidTheme

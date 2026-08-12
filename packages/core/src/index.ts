@@ -1,12 +1,12 @@
-export { DocumentListFacet } from "./components/document-list-facet"
-export { DocumentListPage } from "./components/document-list-page"
-export { DocsPageLayout } from "./components/docs-page-layout"
-export { DocumentPage, DocsShell } from "./components/document-page"
-export { HomePage } from "./components/home-page"
-export { Importance } from "./components/importance"
-export { DocsSearchInput } from "./components/docs-search-input"
-export { ScopePage, ScopesPage } from "./components/scopes-page"
-export { TagsPage } from "./components/tags-page"
+export { DocumentListFacet } from "./components/document-list-facet.js"
+export { DocumentListPage } from "./components/document-list-page.js"
+export { DocsPageLayout } from "./components/docs-page-layout.js"
+export { DocumentPage, DocsShell } from "./components/document-page.js"
+export { HomePage } from "./components/home-page.js"
+export { Importance } from "./components/importance.js"
+export { DocsSearchInput } from "./components/docs-search-input.js"
+export { ScopePage, ScopesPage } from "./components/scopes-page.js"
+export { TagsPage } from "./components/tags-page.js"
 export {
   getDocument,
   getDocuments,
@@ -17,7 +17,7 @@ export {
   getTypes,
   scopeContainsDocument,
   scopeDocumentSlugs,
-} from "./content/registry"
+} from "./content/registry.js"
 export type {
   DocumentEntry,
   DocumentFrontmatter,
@@ -30,5 +30,5 @@ export type {
   ScopeSectionDefinition,
   TagDefinition,
   TypeDefinition,
-} from "./content/types"
-export type { TableOfContentsItem } from "./content/table-of-contents"
+} from "./content/types.js"
+export type { TableOfContentsItem } from "./content/table-of-contents.js"

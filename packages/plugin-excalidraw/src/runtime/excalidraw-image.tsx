@@ -2,9 +2,9 @@ import { lazy, Suspense, useEffect, useMemo, useState } from "react"
 import { createPortal } from "react-dom"
 
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types"
-import type { PluginComponentProps } from "@workspace/plugin-contract"
+import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
-import type { ExcalidrawModel } from "../types.ts"
+import type { ExcalidrawModel } from "../types.js"
 
 import "@excalidraw/excalidraw/index.css"
 

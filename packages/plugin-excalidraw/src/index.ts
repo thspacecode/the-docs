@@ -1,11 +1,11 @@
 import { basename } from "node:path"
 
-import { defineMdxPlugin } from "@workspace/plugin-contract"
+import { defineMdxPlugin } from "@the-docs/plugin-contract"
 
-import type { ExcalidrawModel, ExcalidrawPluginOptions } from "./types.ts"
-import { resolveExcalidrawPluginOptions } from "./types.ts"
+import type { ExcalidrawModel, ExcalidrawPluginOptions } from "./types.js"
+import { resolveExcalidrawPluginOptions } from "./types.js"
 
-export type { ExcalidrawModel, ExcalidrawPluginOptions } from "./types.ts"
+export type { ExcalidrawModel, ExcalidrawPluginOptions } from "./types.js"
 
 /**
  * Renders .excalidraw assets to SVG while MDX is compiled. The browser only
@@ -28,7 +28,7 @@ export function excalidrawPlugin(options: ExcalidrawPluginOptions = {}) {
 
       context.signal?.throwIfAborted()
 
-      const { renderExcalidrawToSvg } = await import("./build/render.ts")
+      const { renderExcalidrawToSvg } = await import("./build/render.js")
       const image = await renderExcalidrawToSvg(input.content, {
         padding: resolvedOptions.padding,
         signal: context.signal,
@@ -45,7 +45,7 @@ export function excalidrawPlugin(options: ExcalidrawPluginOptions = {}) {
       }
     },
     component: {
-      load: () => import("./runtime/excalidraw-image.tsx"),
+      load: () => import("./runtime/excalidraw-image.js"),
     },
     build: {
       async renderToImage(model, renderOptions) {

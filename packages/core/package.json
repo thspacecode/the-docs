@@ -1,16 +1,17 @@
 {
-  "name": "@workspace/core",
-  "version": "0.0.0",
+  "name": "@the-docs/core",
+  "version": "0.0.1-alpha.2",
   "type": "module",
-  "private": true,
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json --noEmit false --declaration --declarationMap --sourceMap --outDir dist --rootDir src --allowImportingTsExtensions false && node ../../scripts/copy-package-assets.mjs",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@mdx-js/rollup": "^3.1.1",
-    "@workspace/ui": "workspace:*",
+    "@the-docs/ui": "workspace:^",
     "fuse.js": "^7.5.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^1.28.0",
@@ -28,8 +29,21 @@
     "typescript": "^6"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./build": "./src/build/index.ts",
-    "./route": "./src/route/docs-post.tsx"
-  }
+    ".": "./dist/index.js",
+    "./build": "./dist/build/index.js",
+    "./route": "./dist/route/docs-post.js"
+  },
+  "description": "The Docs core",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thspacecode/the-docs.git",
+    "directory": "packages/core"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

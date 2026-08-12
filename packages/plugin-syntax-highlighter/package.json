@@ -1,15 +1,16 @@
 {
-  "name": "@workspace/plugin-syntax-highlighter",
-  "version": "0.0.0",
+  "name": "@the-docs/plugin-syntax-highlighter",
+  "version": "0.0.1-alpha.2",
   "type": "module",
-  "private": true,
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json --noEmit false --declaration --declarationMap --sourceMap --outDir dist --rootDir src --allowImportingTsExtensions false && node ../../scripts/copy-package-assets.mjs",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@shikijs/rehype": "^3.12.2",
-    "@workspace/plugin-contract": "workspace:*",
+    "@the-docs/plugin-contract": "workspace:^",
     "react": "^19.2.6",
     "shiki": "^3.12.2"
   },
@@ -18,7 +19,20 @@
     "typescript": "^6"
   },
   "exports": {
-    ".": "./src/index.ts",
-    "./build": "./src/build/index.ts"
-  }
+    ".": "./dist/index.js",
+    "./build": "./dist/build/index.js"
+  },
+  "description": "The Docs plugin syntax highlighter",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thspacecode/the-docs.git",
+    "directory": "packages/plugin-syntax-highlighter"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

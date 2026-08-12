@@ -1,4 +1,4 @@
-import { getScopes, ScopesPage } from "@workspace/core"
+import { getScopes, ScopesPage } from "@the-docs/core"
 
 export function meta() {
   return [

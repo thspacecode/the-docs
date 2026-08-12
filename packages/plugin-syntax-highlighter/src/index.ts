@@ -1,12 +1,12 @@
-import { defineMdxPlugin } from "@workspace/plugin-contract"
+import { defineMdxPlugin } from "@the-docs/plugin-contract"
 
-import type { SyntaxHighlighterModel } from "./types.ts"
-import type { SyntaxHighlighterOptions } from "./types.ts"
+import type { SyntaxHighlighterModel } from "./types.js"
+import type { SyntaxHighlighterOptions } from "./types.js"
 
 export type {
   SyntaxHighlighterModel,
   SyntaxHighlighterOptions,
-} from "./types.ts"
+} from "./types.js"
 
 /**
  * Highlights every fenced code block at build time and renders Shiki's safe,
@@ -28,7 +28,7 @@ export function syntaxHighlighterPlugin(
 
       context.signal?.throwIfAborted()
 
-      const { highlightCode } = await import("./build/highlight.ts")
+      const { highlightCode } = await import("./build/highlight.js")
       return highlightCode(
         input.content,
         input.language,
@@ -37,7 +37,7 @@ export function syntaxHighlighterPlugin(
       )
     },
     component: {
-      load: () => import("./runtime/syntax-highlighted-code.tsx"),
+      load: () => import("./runtime/syntax-highlighted-code.js"),
     },
   })
 }

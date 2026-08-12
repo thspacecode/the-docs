@@ -3,7 +3,7 @@ import {
   getDocuments,
   getTags,
   getTypes,
-} from "@workspace/core"
+} from "@the-docs/core"
 
 export function meta() {
   return [

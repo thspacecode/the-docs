@@ -1,9 +1,9 @@
 import rehypeShiki from "@shikijs/rehype"
 
-import type { SyntaxHighlighterOptions } from "../types.ts"
-import { resolveSyntaxHighlighterOptions } from "../types.ts"
+import type { SyntaxHighlighterOptions } from "../types.js"
+import { resolveSyntaxHighlighterOptions } from "../types.js"
 
-export { highlightCode } from "./highlight.ts"
+export { highlightCode } from "./highlight.js"
 
 /**
  * MDX compiler adapter for the syntax highlighter plugin.

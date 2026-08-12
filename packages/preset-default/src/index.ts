@@ -1,11 +1,11 @@
 import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
-import type { BpmnPluginOptions } from "@workspace/plugin-bpmn"
-import type { DataTablePluginOptions } from "@workspace/plugin-data-table"
-import type { ExcalidrawPluginOptions } from "@workspace/plugin-excalidraw"
-import type { MermaidPluginOptions } from "@workspace/plugin-mermaid"
-import type { SyntaxHighlighterOptions } from "@workspace/plugin-syntax-highlighter"
+import type { BpmnPluginOptions } from "@the-docs/plugin-bpmn"
+import type { DataTablePluginOptions } from "@the-docs/plugin-data-table"
+import type { ExcalidrawPluginOptions } from "@the-docs/plugin-excalidraw"
+import type { MermaidPluginOptions } from "@the-docs/plugin-mermaid"
+import type { SyntaxHighlighterOptions } from "@the-docs/plugin-syntax-highlighter"
 
 export interface DefaultPresetPluginOptions {
   /** Set to false to leave fenced code blocks unhighlighted. */

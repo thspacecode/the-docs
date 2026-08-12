@@ -2,9 +2,9 @@ import type { Config } from "@react-router/dev/config"
 import {
   getDocsPrerenderPaths,
   getScopePrerenderPaths,
-} from "@workspace/core/build"
+} from "@the-docs/core/build"
 
-import type { DefaultPresetConfig } from "./index.ts"
+import type { DefaultPresetConfig } from "./index.js"
 
 /** Creates the React Router framework configuration and all prerender paths. */
 export function createReactRouterConfig(config: DefaultPresetConfig): Config {

@@ -17,7 +17,7 @@ import type {
   DocumentEntry,
   ScopeDefinition,
   TagDefinition,
-} from "../content/types"
+} from "../content/types.js"
 
 type SearchResultKind = "document" | "scope" | "tag"
 
