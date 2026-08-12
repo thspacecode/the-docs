@@ -14,6 +14,7 @@ import type {
   ScopeDocumentReference,
   ScopeGroupDefinition,
 } from "../content/types"
+import { DocsPageLayout } from "./docs-page-layout"
 import { DocsShell } from "./document-page"
 import { ScopeIcon } from "./scope-icon"
 
@@ -28,8 +29,8 @@ function documentCountLabel(count: number) {
 export function ScopesPage({ scopes }: { scopes: ScopeDefinition[] }) {
   return (
     <DocsShell>
-      <main className="w-full px-6 py-8 sm:px-11 sm:py-12">
-        <div className="mx-auto w-full max-w-3xl">
+      <DocsPageLayout className="py-8 sm:py-12">
+        <div className="w-full">
           <nav
             className="mb-8 text-sm text-muted-foreground"
             aria-label="Breadcrumb"
@@ -103,7 +104,7 @@ export function ScopesPage({ scopes }: { scopes: ScopeDefinition[] }) {
             )}
           </section>
         </div>
-      </main>
+      </DocsPageLayout>
     </DocsShell>
   )
 }
@@ -243,8 +244,8 @@ export function ScopePage({
 
   return (
     <DocsShell>
-      <main className="w-full px-6 py-8 sm:px-11 sm:py-12">
-        <div className="mx-auto w-full max-w-3xl">
+      <DocsPageLayout className="py-8 sm:py-12">
+        <div className="w-full">
           <nav
             className="mb-8 text-sm text-muted-foreground"
             aria-label="Breadcrumb"
@@ -349,7 +350,7 @@ export function ScopePage({
             </p>
           )}
         </div>
-      </main>
+      </DocsPageLayout>
     </DocsShell>
   )
 }

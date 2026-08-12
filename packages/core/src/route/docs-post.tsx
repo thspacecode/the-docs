@@ -8,6 +8,7 @@ import {
 } from "react-router"
 import type { LoaderFunctionArgs, MetaFunction } from "react-router"
 
+import { DocsPageLayout } from "../components/docs-page-layout"
 import { DocsShell, DocumentPage } from "../components/document-page"
 import {
   getDocument,
@@ -94,33 +95,39 @@ export function ErrorBoundary() {
   if (isRouteErrorResponse(error) && error.status === 404) {
     return (
       <DocsShell>
-        <main className="mx-auto flex max-w-3xl flex-col items-start px-6 py-24">
-          <p className="text-sm font-semibold text-primary">404</p>
-          <h1 className="mt-3 text-4xl font-semibold tracking-tight">
-            Document not found
-          </h1>
-          <p className="mt-4 text-muted-foreground">
-            The document may have moved or the address may be incorrect.
-          </p>
-          <Link
-            to="/"
-            className="mt-8 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-          >
-            Return home
-          </Link>
-        </main>
+        <DocsPageLayout className="py-24">
+          <div className="flex flex-col items-start">
+            <p className="text-sm font-semibold text-primary">404</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight">
+              Document not found
+            </h1>
+            <p className="mt-4 text-muted-foreground">
+              The document may have moved or the address may be incorrect.
+            </p>
+            <Link
+              to="/"
+              className="mt-8 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+            >
+              Return home
+            </Link>
+          </div>
+        </DocsPageLayout>
       </DocsShell>
     )
   }
 
   return (
     <DocsShell>
-      <main className="mx-auto max-w-3xl px-6 py-24">
-        <h1 className="text-3xl font-semibold">Unable to load this document</h1>
-        <p className="mt-4 text-muted-foreground">
-          An unexpected error occurred. Please try again.
-        </p>
-      </main>
+      <DocsPageLayout className="py-24">
+        <div>
+          <h1 className="text-3xl font-semibold">
+            Unable to load this document
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            An unexpected error occurred. Please try again.
+          </p>
+        </div>
+      </DocsPageLayout>
     </DocsShell>
   )
 }

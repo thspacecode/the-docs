@@ -33,6 +33,7 @@ import {
   setSearchQualifiers,
   type SearchQualifier,
 } from "../search/document-search"
+import { DocsPageLayout } from "./docs-page-layout"
 import { DocsSearchInput } from "./docs-search-input"
 import { DocumentListFacet } from "./document-list-facet"
 import { DocsShell } from "./document-page"
@@ -406,204 +407,200 @@ export function DocumentListPage({
 
   return (
     <DocsShell>
-      <main className="w-full flex-1">
-        <div className="grid min-h-full xl:grid-cols-[minmax(300px,1fr)_minmax(0,856px)_minmax(300px,1fr)]">
-          <DocumentListFacet
-            tags={tags}
-            types={types}
-            documentTags={tagOptions}
-            documentTypes={typeOptions}
-            qualifiers={parsedQuery.qualifiers}
-            onChange={updateQualifier}
-          />
+      <DocsPageLayout variant="rails" className="min-h-full">
+        <DocumentListFacet
+          tags={tags}
+          types={types}
+          documentTags={tagOptions}
+          documentTypes={typeOptions}
+          qualifiers={parsedQuery.qualifiers}
+          onChange={updateQualifier}
+        />
 
-          <article className="min-w-0">
-            <header className="px-6 py-10 sm:px-11 sm:py-12">
-              <nav
-                className="mx-auto w-full max-w-3xl text-sm text-muted-foreground"
-                aria-label="Breadcrumb"
-              >
-                <Link
-                  to="/"
-                  className="transition-colors hover:text-foreground"
-                >
-                  Docs
-                </Link>{" "}
-                <span aria-hidden="true">/</span>{" "}
-                <span className="text-foreground">List</span>
-              </nav>
-            </header>
+        <article className="docs-layout-main min-w-0">
+          <header className="docs-centered-layout py-10 sm:py-12">
+            <nav
+              className="w-full text-sm text-muted-foreground"
+              aria-label="Breadcrumb"
+            >
+              <Link to="/" className="transition-colors hover:text-foreground">
+                Docs
+              </Link>{" "}
+              <span aria-hidden="true">/</span>{" "}
+              <span className="text-foreground">List</span>
+            </nav>
+          </header>
 
-            <section aria-label="Documents">
-              <div className="border-y bg-grey-3 px-6 sm:px-11">
-                <div className="mx-auto w-full max-w-3xl pt-8 pb-6">
-                  <DocsSearchInput
-                    value={query}
-                    onValueChange={updateQuery}
-                    onSubmit={() => setEffectiveQuery(query)}
-                    showShortcut={false}
+          <section aria-label="Documents">
+            <div className="docs-centered-layout border-y bg-grey-3">
+              <div className="w-full pt-8 pb-6">
+                <DocsSearchInput
+                  value={query}
+                  onValueChange={updateQuery}
+                  onSubmit={() => setEffectiveQuery(query)}
+                  showShortcut={false}
+                />
+
+                <div className="mt-2 flex flex-wrap items-center gap-1">
+                  <FilterCombobox
+                    label="Importance"
+                    qualifier="importance"
+                    values={parsedQuery.qualifiers.importance}
+                    options={importanceOptions}
+                    onChange={updateQualifier}
                   />
-
-                  <div className="mt-2 flex flex-wrap items-center gap-1">
-                    <FilterCombobox
-                      label="Importance"
-                      qualifier="importance"
-                      values={parsedQuery.qualifiers.importance}
-                      options={importanceOptions}
-                      onChange={updateQualifier}
-                    />
-                    <FilterCombobox
-                      label="Types"
-                      qualifier="type"
-                      values={parsedQuery.qualifiers.type}
-                      options={typeOptions}
-                      onChange={updateQualifier}
-                    />
-                    <FilterCombobox
-                      label="Scopes"
-                      qualifier="scope"
-                      values={parsedQuery.qualifiers.scope}
-                      options={scopeOptions}
-                      onChange={updateQualifier}
-                    />
-                    <FilterCombobox
-                      label="Tags"
-                      qualifier="tag"
-                      values={parsedQuery.qualifiers.tag}
-                      options={tagOptions}
-                      onChange={updateQualifier}
-                    />
-                    <SortMenu
-                      sortBy={sortBy}
-                      order={sortOrder}
-                      onSortByChange={(value) =>
-                        updateSorting(value, sortOrder)
-                      }
-                      onOrderChange={(value) => updateSorting(sortBy, value)}
-                    />
-                  </div>
+                  <FilterCombobox
+                    label="Types"
+                    qualifier="type"
+                    values={parsedQuery.qualifiers.type}
+                    options={typeOptions}
+                    onChange={updateQualifier}
+                  />
+                  <FilterCombobox
+                    label="Scopes"
+                    qualifier="scope"
+                    values={parsedQuery.qualifiers.scope}
+                    options={scopeOptions}
+                    onChange={updateQualifier}
+                  />
+                  <FilterCombobox
+                    label="Tags"
+                    qualifier="tag"
+                    values={parsedQuery.qualifiers.tag}
+                    options={tagOptions}
+                    onChange={updateQualifier}
+                  />
+                  <SortMenu
+                    sortBy={sortBy}
+                    order={sortOrder}
+                    onSortByChange={(value) => updateSorting(value, sortOrder)}
+                    onOrderChange={(value) => updateSorting(sortBy, value)}
+                  />
                 </div>
               </div>
+            </div>
 
-              <div className="px-6 sm:px-11">
-                <div className="mx-auto w-full max-w-3xl">
-                  {visibleDocuments.length ? (
-                    <ul className="mt-6">
-                      {visibleDocuments.map((document) => (
-                        <li key={document.slug} className="py-6">
-                          <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
-                            <div className="min-w-0">
-                              <Link
-                                to={`/p/${document.slug}`}
-                                className="group inline-flex items-center gap-2 text-lg font-medium text-secondary-11 transition-colors hover:text-secondary-12"
-                              >
-                                {document.frontmatter.title}
-                                <ArrowUpRight
-                                  className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
-                                  aria-hidden="true"
-                                />
-                              </Link>
-                              {document.frontmatter.description ? (
-                                <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
-                                  {document.frontmatter.description}
-                                </p>
-                              ) : null}
-                            </div>
-                            {document.frontmatter.importance ? (
-                              <Importance
-                                value={document.frontmatter.importance}
-                                className="h-fit justify-self-start sm:justify-self-end"
+            <div className="docs-centered-layout">
+              <div className="w-full">
+                {visibleDocuments.length ? (
+                  <ul className="mt-6">
+                    {visibleDocuments.map((document) => (
+                      <li key={document.slug} className="py-6">
+                        <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+                          <div className="min-w-0">
+                            <Link
+                              to={`/p/${document.slug}`}
+                              className="group inline-flex items-center gap-2 text-lg font-medium text-secondary-11 transition-colors hover:text-secondary-12"
+                            >
+                              {document.frontmatter.title}
+                              <ArrowUpRight
+                                className="size-4 opacity-0 transition-opacity group-hover:opacity-100"
+                                aria-hidden="true"
                               />
+                            </Link>
+                            {document.frontmatter.description ? (
+                              <p className="mt-1 max-w-3xl text-sm leading-6 text-muted-foreground">
+                                {document.frontmatter.description}
+                              </p>
                             ) : null}
                           </div>
-                          <div className="mt-4 flex items-end gap-4">
-                            <ResultTags
-                              tags={document.frontmatter.tags}
-                              onSelect={(tag) =>
-                                updateQualifier("tag", [
-                                  ...parsedQuery.qualifiers.tag,
-                                  tag,
-                                ])
-                              }
+                          {document.frontmatter.importance ? (
+                            <Importance
+                              value={document.frontmatter.importance}
+                              className="h-fit justify-self-start sm:justify-self-end"
                             />
-                            <RelativeModifiedTime
-                              modifiedAt={document.modifiedAt}
-                              now={now}
-                            />
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="py-16 text-center">
-                      <h2 className="font-semibold">No documents found</h2>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        Try another term or remove one of the filters.
-                      </p>
-                      {query ? (
-                        <button
-                          type="button"
-                          onClick={() => updateQuery("")}
-                          className="mt-5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted"
-                        >
-                          Clear search
-                        </button>
-                      ) : null}
-                    </div>
-                  )}
+                          ) : null}
+                        </div>
+                        <div className="mt-4 flex items-end gap-4">
+                          <ResultTags
+                            tags={document.frontmatter.tags}
+                            onSelect={(tag) =>
+                              updateQualifier("tag", [
+                                ...parsedQuery.qualifiers.tag,
+                                tag,
+                              ])
+                            }
+                          />
+                          <RelativeModifiedTime
+                            modifiedAt={document.modifiedAt}
+                            now={now}
+                          />
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <div className="py-16 text-center">
+                    <h2 className="font-semibold">No documents found</h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Try another term or remove one of the filters.
+                    </p>
+                    {query ? (
+                      <button
+                        type="button"
+                        onClick={() => updateQuery("")}
+                        className="mt-5 rounded-lg border px-3 py-2 text-sm font-medium hover:bg-muted"
+                      >
+                        Clear search
+                      </button>
+                    ) : null}
+                  </div>
+                )}
 
-                  {results.length > pageSize ? (
-                    <nav
-                      className="mt-8 flex items-center justify-end gap-4 pt-6"
-                      aria-label="Search result pages"
-                    >
-                      {currentPage > 1 ? (
-                        <Link
-                          to={pageHref(currentPage - 1)}
-                          preventScrollReset
-                          className="rounded-lg border p-2 transition-colors hover:bg-muted"
-                          aria-label="Previous page"
-                        >
-                          <ArrowLeft className="size-4" aria-hidden="true" />
-                        </Link>
-                      ) : (
-                        <span
-                          className="rounded-lg border p-2 opacity-40"
-                          aria-hidden="true"
-                        >
-                          <ArrowLeft className="size-4" />
-                        </span>
-                      )}
-                      <span className="min-w-28 text-center text-sm text-muted-foreground">
-                        Page {currentPage} of {pageCount}
+                {results.length > pageSize ? (
+                  <nav
+                    className="mt-8 flex items-center justify-end gap-4 pt-6"
+                    aria-label="Search result pages"
+                  >
+                    {currentPage > 1 ? (
+                      <Link
+                        to={pageHref(currentPage - 1)}
+                        preventScrollReset
+                        className="rounded-lg border p-2 transition-colors hover:bg-muted"
+                        aria-label="Previous page"
+                      >
+                        <ArrowLeft className="size-4" aria-hidden="true" />
+                      </Link>
+                    ) : (
+                      <span
+                        className="rounded-lg border p-2 opacity-40"
+                        aria-hidden="true"
+                      >
+                        <ArrowLeft className="size-4" />
                       </span>
-                      {currentPage < pageCount ? (
-                        <Link
-                          to={pageHref(currentPage + 1)}
-                          preventScrollReset
-                          className="rounded-lg border p-2 transition-colors hover:bg-muted"
-                          aria-label="Next page"
-                        >
-                          <ArrowRight className="size-4" aria-hidden="true" />
-                        </Link>
-                      ) : (
-                        <span
-                          className="rounded-lg border p-2 opacity-40"
-                          aria-hidden="true"
-                        >
-                          <ArrowRight className="size-4" />
-                        </span>
-                      )}
-                    </nav>
-                  ) : null}
-                </div>
+                    )}
+                    <span className="min-w-28 text-center text-sm text-muted-foreground">
+                      Page {currentPage} of {pageCount}
+                    </span>
+                    {currentPage < pageCount ? (
+                      <Link
+                        to={pageHref(currentPage + 1)}
+                        preventScrollReset
+                        className="rounded-lg border p-2 transition-colors hover:bg-muted"
+                        aria-label="Next page"
+                      >
+                        <ArrowRight className="size-4" aria-hidden="true" />
+                      </Link>
+                    ) : (
+                      <span
+                        className="rounded-lg border p-2 opacity-40"
+                        aria-hidden="true"
+                      >
+                        <ArrowRight className="size-4" />
+                      </span>
+                    )}
+                  </nav>
+                ) : null}
               </div>
-            </section>
-          </article>
+            </div>
+          </section>
+        </article>
 
-          <div className="hidden border-l xl:block" aria-hidden="true" />
-        </div>
-      </main>
+        <div
+          className="docs-layout-right hidden border-l 2xl:block"
+          aria-hidden="true"
+        />
+      </DocsPageLayout>
     </DocsShell>
   )
 }

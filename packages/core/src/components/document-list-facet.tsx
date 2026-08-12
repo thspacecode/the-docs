@@ -188,8 +188,11 @@ export function DocumentListFacet({
   )
 
   return (
-    <aside className="hidden border-r xl:block" aria-label="Document filters">
-      <div className="sticky top-16 max-h-[calc(100svh-4rem)] space-y-6 overflow-y-auto px-6 py-4 sm:px-11">
+    <aside
+      className="docs-layout-left hidden border-r lg:block"
+      aria-label="Document filters"
+    >
+      <div className="sticky top-16 max-h-[calc(100svh-4rem)] space-y-6 overflow-y-auto py-4 pr-4 pl-11">
         <h2 className="sr-only">Filter documents</h2>
         <FacetGroup
           label="Importance"

@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/tabs"
 
 import type { DocumentEntry, TagDefinition } from "../content/types"
+import { DocsPageLayout } from "./docs-page-layout"
 import { DocsSearchInput } from "./docs-search-input"
 import { DocsShell } from "./document-page"
 
@@ -351,10 +352,10 @@ export function TagsPage({
 
   return (
     <DocsShell>
-      <main className="w-full py-8 sm:py-12">
-        <div className="px-6 sm:px-11">
+      <DocsPageLayout>
+        <header className="docs-layout-full docs-centered-layout docs-page-layout-centered py-10 sm:py-12">
           <nav
-            className="mx-auto mb-8 w-full max-w-3xl text-sm text-muted-foreground"
+            className="w-full text-sm text-muted-foreground"
             aria-label="Breadcrumb"
           >
             <Link to="/" className="transition-colors hover:text-foreground">
@@ -363,16 +364,16 @@ export function TagsPage({
             <span aria-hidden="true">/</span>{" "}
             <span className="text-foreground">Tags</span>
           </nav>
-        </div>
+        </header>
 
         <Tabs
           value={view}
           onValueChange={updateView}
-          className="gap-0"
+          className="docs-layout-full gap-0"
           render={<section aria-label="Tags" />}
         >
-          <div className="border-y bg-grey-3 px-6 sm:px-11">
-            <div className="mx-auto w-full max-w-3xl pt-8 pb-6">
+          <div className="docs-centered-layout docs-page-layout-centered border-y bg-grey-3">
+            <div className="w-full pt-8 pb-6">
               <DocsSearchInput
                 value={query}
                 onValueChange={updateQuery}
@@ -401,8 +402,8 @@ export function TagsPage({
             </div>
           </div>
 
-          <div className="px-6 sm:px-11">
-            <div className="mx-auto w-full max-w-3xl">
+          <div className="docs-centered-layout docs-page-layout-centered">
+            <div className="w-full">
               <div className="mt-8 flex items-center justify-end border-b pb-4">
                 <p className="text-sm text-muted-foreground">Documents</p>
               </div>
@@ -416,7 +417,7 @@ export function TagsPage({
             </div>
           </div>
         </Tabs>
-      </main>
+      </DocsPageLayout>
     </DocsShell>
   )
 }

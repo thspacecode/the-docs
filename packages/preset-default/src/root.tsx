@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { DocsPageLayout } from "@workspace/core"
 import {
   Links,
   Meta,
@@ -49,14 +50,16 @@ export function ErrorBoundary({ error }: { error: unknown }) {
   }
 
   return (
-    <main className="container mx-auto p-4 pt-16">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full overflow-x-auto p-4">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <DocsPageLayout className="py-16">
+      <div>
+        <h1>{message}</h1>
+        <p>{details}</p>
+        {stack && (
+          <pre className="w-full overflow-x-auto p-4">
+            <code>{stack}</code>
+          </pre>
+        )}
+      </div>
+    </DocsPageLayout>
   )
 }

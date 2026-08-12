@@ -303,6 +303,88 @@
 }
 
 @layer components {
+  /*
+   * Shared page tracks keep navigation and page content on the same lines.
+   * The rail variant adds contextual navigation at lg and the right rail at
+   * 2xl, while preserving a centered, padded page on smaller screens.
+   */
+  .docs-centered-layout {
+    --docs-content-width: 56rem;
+    --docs-page-padding: 4rem;
+
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--docs-page-padding), 1fr)
+      [content-start] minmax(0, var(--docs-content-width))
+      [content-end] minmax(var(--docs-page-padding), 1fr)
+      [full-end];
+  }
+  .docs-centered-layout > * {
+    grid-column: content;
+    min-width: 0;
+  }
+  .docs-centered-layout > .docs-layout-full {
+    grid-column: full;
+  }
+  .docs-page-layout-centered {
+    align-content: start;
+  }
+  .docs-rail-layout {
+    --docs-main-width: 58rem;
+
+    display: grid;
+    grid-template-columns: [main-start] minmax(0, 1fr) [main-end];
+    min-width: 0;
+  }
+  .docs-layout-main {
+    grid-column: main;
+    min-width: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .docs-rail-layout {
+      grid-template-columns:
+        [left-start] minmax(16rem, 1fr)
+        [left-end main-start] minmax(0, var(--docs-main-width))
+        [main-end];
+    }
+    .docs-layout-left {
+      grid-column: left;
+    }
+    .docs-page-layout-centered {
+      --docs-content-width: 50rem;
+
+      grid-template-columns:
+        [full-start left-start] minmax(16rem, 1fr)
+        [left-end main-start] var(--docs-page-padding)
+        [content-start] minmax(0, var(--docs-content-width))
+        [content-end] var(--docs-page-padding)
+        [main-end full-end];
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .docs-rail-layout {
+      grid-template-columns:
+        [left-start] minmax(16rem, 1fr)
+        [left-end main-start] minmax(0, var(--docs-main-width))
+        [main-end right-start] minmax(16rem, 1fr)
+        [right-end];
+    }
+    .docs-layout-right {
+      grid-column: right;
+    }
+    .docs-page-layout-centered {
+      grid-template-columns:
+        [full-start left-start] minmax(16rem, 1fr)
+        [left-end main-start] var(--docs-page-padding)
+        [content-start] minmax(0, var(--docs-content-width))
+        [content-end] var(--docs-page-padding)
+        [main-end right-start] minmax(16rem, 1fr)
+        [right-end full-end];
+    }
+  }
+
   .docs-content {
     @apply text-base leading-7 text-foreground;
   }
@@ -448,11 +530,12 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
-    }
+  }
 }

@@ -7,6 +7,7 @@ import type {
   ScopeDefinition,
   TagDefinition,
 } from "../content/types"
+import { DocsPageLayout } from "./docs-page-layout"
 import { DocsSearchInput } from "./docs-search-input"
 import { DocsShell } from "./document-page"
 import { ScopeIcon } from "./scope-icon"
@@ -70,7 +71,7 @@ export function HomePage({
 
   return (
     <DocsShell searchOpen={searchOpen} onSearchOpenChange={setSearchOpen}>
-      <main className="mx-auto w-full px-6 py-10 sm:px-11 sm:py-16">
+      <DocsPageLayout className="py-10 sm:py-16">
         <section aria-labelledby="home-heading">
           <p className="text-sm font-medium text-primary">Documentation</p>
           <h1
@@ -82,7 +83,7 @@ export function HomePage({
           <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
             {description}
           </p>
-          <div className="mt-8 max-w-3xl">
+          <div className="mt-8">
             <DocsSearchInput
               value={query}
               onValueChange={setQuery}
@@ -277,7 +278,7 @@ export function HomePage({
             </ul>
           </section>
         ) : null}
-      </main>
+      </DocsPageLayout>
     </DocsShell>
   )
 }

@@ -23,7 +23,7 @@ type: doc
 ## Document content
 ```
 
-Document slugs must contain lowercase letters, numbers, and hyphens. Nested tags use their full slash-delimited slug, and document types are `adr` or `doc`. The home page lists every discovered document and `/p/<slug>` renders its MDX content.
+Document slugs must contain lowercase letters, numbers, and hyphens. Nested tags use their full slash-delimited slug, and document types are `dr` or `doc`. The home page lists every discovered document and `/p/<slug>` renders its MDX content.
 
 ## Scopes
 

@@ -98,10 +98,10 @@ export function MobileTableOfContents({
   return (
     <details
       ref={detailsRef}
-      className="group sticky top-16 z-10 max-h-[calc(100svh-4rem)] overflow-y-auto border-b bg-background/95 backdrop-blur-xl xl:hidden"
+      className="group sticky top-16 z-10 max-h-[calc(100svh-4rem)] overflow-y-auto border-b bg-background/95 backdrop-blur-xl 2xl:hidden"
     >
-      <summary className="cursor-pointer list-none px-6 py-3.5 text-sm font-medium sm:px-11 [&::-webkit-details-marker]:hidden">
-        <span className="mx-auto flex max-w-3xl items-center gap-2.5">
+      <summary className="docs-centered-layout cursor-pointer list-none py-3.5 text-sm font-medium [&::-webkit-details-marker]:hidden">
+        <span className="flex items-center gap-2.5">
           <ListTree
             className="size-4 shrink-0 text-muted-foreground"
             aria-hidden="true"
@@ -113,8 +113,8 @@ export function MobileTableOfContents({
           />
         </span>
       </summary>
-      <nav aria-label="On this page" className="px-6 pb-5 sm:px-11">
-        <div className="mx-auto max-w-3xl">
+      <nav aria-label="On this page" className="docs-centered-layout pb-5">
+        <div>
           <TableOfContentsLinks
             activeId={activeId}
             items={items}
@@ -136,10 +136,10 @@ export function DesktopTableOfContents({
   const activeId = useActiveHeading(items)
 
   return (
-    <aside className="hidden border-l xl:block">
+    <aside className="docs-layout-right hidden border-l 2xl:block">
       <nav
         aria-label="On this page"
-        className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto px-5 py-6"
+        className="sticky top-16 max-h-[calc(100vh-4rem)] overflow-y-auto py-6 pr-11 pl-4"
       >
         <p className="mb-3 text-xs font-medium text-muted-foreground">
           On this page

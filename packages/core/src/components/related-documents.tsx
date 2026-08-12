@@ -47,8 +47,8 @@ function RelatedDocumentsGroup({
       open={expanded}
       onToggle={(event) => setExpanded(event.currentTarget.open)}
     >
-      <summary className="min-h-14 list-none px-6 font-semibold transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none sm:px-11 [&::-webkit-details-marker]:hidden">
-        <span className="mx-auto flex min-h-14 w-full max-w-3xl items-center justify-between gap-4">
+      <summary className="docs-centered-layout min-h-14 list-none font-semibold transition-colors hover:bg-muted/40 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none [&::-webkit-details-marker]:hidden">
+        <span className="flex min-h-14 w-full items-center justify-between gap-4">
           <span>
             {section.title}
             <span className="ml-2 text-sm font-normal text-muted-foreground">
@@ -62,8 +62,8 @@ function RelatedDocumentsGroup({
         </span>
       </summary>
 
-      <div className="border-t px-6 sm:px-11">
-        <div className="mx-auto w-full max-w-3xl">
+      <div className="docs-centered-layout border-t">
+        <div className="w-full">
           <ul>
             {visibleEntries.map(({ document, directlyLinked }) => (
               <li key={document.slug} className="py-5">

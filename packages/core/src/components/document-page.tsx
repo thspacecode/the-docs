@@ -20,6 +20,7 @@ import type {
   ScopeDefinition,
   ScopeDocumentReference,
 } from "../content/types"
+import { DocsPageLayout } from "./docs-page-layout"
 import { GlobalSearch } from "./global-search"
 import { Importance } from "./importance"
 import { RelatedDocuments } from "./related-documents"
@@ -88,7 +89,7 @@ export function DocsShell({
 
   return (
     <div className="min-h-svh bg-grey-2">
-      <div className="mx-auto flex min-h-svh max-w-[1456px] flex-col border-x bg-background">
+      <div className="mx-auto flex min-h-svh max-w-screen-xl flex-col border-x bg-background 2xl:max-w-screen-2xl">
         <header className="sticky top-0 z-20 border-b bg-grey-1 backdrop-blur-xl">
           <div className="mx-auto flex h-16 w-full items-center gap-3 px-6 sm:px-11">
             <Link
@@ -330,7 +331,12 @@ function ScopeDocumentNavigation({
   documents: DocumentEntry[]
 }) {
   if (!scope) {
-    return <div className="hidden border-r xl:block" aria-hidden="true" />
+    return (
+      <div
+        className="docs-layout-left hidden border-r lg:block"
+        aria-hidden="true"
+      />
+    )
   }
 
   const documentsBySlug = new Map(
@@ -340,10 +346,10 @@ function ScopeDocumentNavigation({
 
   return (
     <aside
-      className="hidden border-r xl:block"
+      className="docs-layout-left hidden border-r lg:block"
       aria-label={`${scope.title} scope`}
     >
-      <div className="sticky top-16 max-h-[calc(100svh-4rem)] overflow-y-auto py-4 pr-5 pl-6 sm:pl-11">
+      <div className="sticky top-16 max-h-[calc(100svh-4rem)] overflow-y-auto py-4 pr-4 pl-11">
         <ScopeSelector
           scope={scope}
           scopes={scopes}
@@ -452,7 +458,7 @@ function ScopePreviousNext({
 
   return (
     <nav
-      className="mx-auto grid max-w-3xl gap-3 border-t px-6 py-8 sm:grid-cols-2 sm:px-0"
+      className="grid gap-3 border-t py-8 sm:grid-cols-2"
       aria-label="Scope document navigation"
     >
       {previousDocument ? (
@@ -508,93 +514,94 @@ export function DocumentPage({
 
   return (
     <DocsShell>
-      <main className="w-full flex-1">
-        <div className="grid min-h-full xl:grid-cols-[300px_minmax(0,1fr)_300px]">
-          <ScopeDocumentNavigation
-            scope={scope}
-            scopes={scopes}
-            currentDocumentSlug={document.slug}
-            documents={documents}
-          />
+      <DocsPageLayout variant="rails" className="min-h-full">
+        <ScopeDocumentNavigation
+          scope={scope}
+          scopes={scopes}
+          currentDocumentSlug={document.slug}
+          documents={documents}
+        />
 
-          <article className="min-w-0">
-            <header className="border-b px-6 py-10 sm:px-11 sm:py-12">
-              <div className="mx-auto max-w-3xl">
-                <nav
-                  className="mb-8 text-sm text-muted-foreground"
-                  aria-label="Breadcrumb"
+        <article className="docs-layout-main min-w-0">
+          <header className="docs-centered-layout border-b py-10 sm:py-12">
+            <div>
+              <nav
+                className="mb-8 text-sm text-muted-foreground"
+                aria-label="Breadcrumb"
+              >
+                <Link
+                  to="/"
+                  className="transition-colors hover:text-foreground"
                 >
-                  <Link
-                    to="/"
-                    className="transition-colors hover:text-foreground"
-                  >
-                    Docs
-                  </Link>{" "}
-                  <span aria-hidden="true">/</span>{" "}
-                  <span className="text-foreground">{frontmatter.title}</span>
-                </nav>
+                  Docs
+                </Link>{" "}
+                <span aria-hidden="true">/</span>{" "}
+                <span className="text-foreground">{frontmatter.title}</span>
+              </nav>
 
-                <div className="flex items-start gap-4">
-                  <h1 className="min-w-0 flex-1 text-4xl font-semibold tracking-tight text-balance text-primary sm:text-5xl">
-                    {frontmatter.title}
-                  </h1>
-                  {frontmatter.importance ? (
-                    <Importance
-                      value={frontmatter.importance}
-                      className="mt-2 shrink-0 sm:mt-3"
-                    />
-                  ) : null}
-                </div>
-                {frontmatter.description ? (
-                  <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
-                    {frontmatter.description}
-                  </p>
-                ) : null}
-                <div className="mt-6 flex items-end gap-4">
-                  <Tags tags={frontmatter.tags} />
-                  <RelativeModifiedTime
-                    modifiedAt={document.modifiedAt}
-                    now={now}
+              <div className="flex items-start gap-4">
+                <h1 className="min-w-0 flex-1 text-4xl font-semibold tracking-tight text-balance text-primary sm:text-5xl">
+                  {frontmatter.title}
+                </h1>
+                {frontmatter.importance ? (
+                  <Importance
+                    value={frontmatter.importance}
+                    className="mt-2 shrink-0 sm:mt-3"
                   />
-                </div>
+                ) : null}
               </div>
-            </header>
-
-            {hasTableOfContents ? (
-              <MobileTableOfContents items={tableOfContents} />
-            ) : null}
-
-            <section className="px-6 py-10 sm:px-11 sm:py-12">
-              <div className="docs-content mx-auto max-w-3xl [&>*:first-child]:mt-0">
-                <Component />
-              </div>
-            </section>
-
-            {relatedDocumentSections.length ? (
-              <div className="pb-10 sm:pb-12">
-                <RelatedDocuments
-                  documentSlug={document.slug}
-                  sections={relatedDocumentSections}
+              {frontmatter.description ? (
+                <p className="mt-4 max-w-2xl text-lg leading-8 text-muted-foreground">
+                  {frontmatter.description}
+                </p>
+              ) : null}
+              <div className="mt-6 flex items-end gap-4">
+                <Tags tags={frontmatter.tags} />
+                <RelativeModifiedTime
+                  modifiedAt={document.modifiedAt}
+                  now={now}
                 />
               </div>
-            ) : null}
-
-            <div className="px-6 sm:px-11">
-              <ScopePreviousNext
-                scope={scope}
-                document={document}
-                documents={documents}
-              />
             </div>
-          </article>
+          </header>
 
           {hasTableOfContents ? (
-            <DesktopTableOfContents items={tableOfContents} />
-          ) : (
-            <div className="hidden border-l xl:block" aria-hidden="true" />
-          )}
-        </div>
-      </main>
+            <MobileTableOfContents items={tableOfContents} />
+          ) : null}
+
+          <section className="docs-centered-layout py-10 sm:py-12">
+            <div className="docs-content [&>*:first-child]:mt-0">
+              <Component />
+            </div>
+          </section>
+
+          {relatedDocumentSections.length ? (
+            <div className="pb-10 sm:pb-12">
+              <RelatedDocuments
+                documentSlug={document.slug}
+                sections={relatedDocumentSections}
+              />
+            </div>
+          ) : null}
+
+          <div className="docs-centered-layout">
+            <ScopePreviousNext
+              scope={scope}
+              document={document}
+              documents={documents}
+            />
+          </div>
+        </article>
+
+        {hasTableOfContents ? (
+          <DesktopTableOfContents items={tableOfContents} />
+        ) : (
+          <div
+            className="docs-layout-right hidden border-l 2xl:block"
+            aria-hidden="true"
+          />
+        )}
+      </DocsPageLayout>
     </DocsShell>
   )
 }

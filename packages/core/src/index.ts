@@ -1,5 +1,6 @@
 export { DocumentListFacet } from "./components/document-list-facet"
 export { DocumentListPage } from "./components/document-list-page"
+export { DocsPageLayout } from "./components/docs-page-layout"
 export { DocumentPage, DocsShell } from "./components/document-page"
 export { HomePage } from "./components/home-page"
 export { Importance } from "./components/importance"

@@ -14,7 +14,7 @@ importance: Medium
 ```
 docs/
 ├── _types/
-│   ├── adr/
+│   ├── dr/
 │   │   └── type.json
 │   └── doc/
 │       └── type.json
@@ -52,7 +52,7 @@ docs/
   - title: string
   - description: string
   - tags: string[]
-  - type: `adr` | `doc`
+  - type: `dr` | `doc`
   - priority: number (higher values appear first among related documents)
   - related-docs: string[] (document slugs; relationships are resolved both ways)
   - modified: date (optional; otherwise the file modification time is used)
@@ -83,7 +83,7 @@ Documents opened through a scope use `/p/<document-slug>?scope=<scope-slug>` so 
 ## Types
 
 - Types won't be nested
-- Supported types are `adr` and `doc`
+- Supported types are `dr` and `doc`
 
 Interface:
 
