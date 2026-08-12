@@ -1,0 +1,24 @@
+{
+  "name": "@workspace/plugin-syntax-highlighter",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@shikijs/rehype": "^3.12.2",
+    "@workspace/plugin-contract": "workspace:*",
+    "react": "^19.2.6",
+    "shiki": "^3.12.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./build": "./src/build/index.ts"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@workspace/plugin-data-table",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@workspace/plugin-contract": "workspace:*",
+    "react": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/hast": "^3.0.4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "typescript": "^6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./build": "./src/build/index.ts",
+    "./model": "./src/model.ts",
+    "./runtime": "./src/runtime/data-table.tsx"
+  }
+}

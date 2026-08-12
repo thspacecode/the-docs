@@ -7,7 +7,7 @@ node_modules
 
 # React Router
 .react-router
-build
+.build
 dist
 
 # typescript

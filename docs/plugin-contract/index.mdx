@@ -1,0 +1,133 @@
+---
+title: "Plugin Contract"
+description: "The build-time and runtime contract for MDX plugins."
+tags:
+  - docs/specs
+  - feature/plugin
+type: doc
+importance: Medium
+---
+
+## Plugin Contract
+
+Simplify Code:
+
+```typescript
+import type { ComponentType } from "react"
+
+export type JsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JsonValue[]
+  | { [key: string]: JsonValue }
+
+export type PluginTarget =
+  | {
+      kind: "code-fence"
+      language: string
+    }
+  | {
+      kind: "asset"
+      extensions: readonly string[]
+    }
+
+export type PluginInput =
+  | {
+      kind: "code-fence"
+      language: string
+      content: string
+      documentPath: string
+    }
+  | {
+      kind: "asset"
+      url: string
+      extension: string
+      content: Uint8Array
+      documentPath: string
+    }
+
+export interface MdxPlugin<TModel extends JsonValue> {
+  id: string
+  version: string
+
+  /**
+   * MDX constructs handled by this plugin.
+   */
+  targets: readonly PluginTarget[]
+
+  /**
+   * Validate and convert source content into serializable data.
+   */
+  parse(input: PluginInput, context: PluginParseContext): Promise<TModel>
+
+  /**
+   * Runtime React renderer, loaded lazily.
+   */
+  component: {
+    load(): Promise<{
+      default: ComponentType<PluginComponentProps<TModel>>
+    }>
+  }
+
+  /**
+   * Optional build-time image generation.
+   */
+  build?: {
+    renderToImage(
+      model: TModel,
+      options: ImageRenderOptions
+    ): Promise<GeneratedImage>
+  }
+}
+
+export function defineMdxPlugin<TModel extends JsonValue>(
+  plugin: MdxPlugin<TModel>
+): MdxPlugin<TModel> {
+  return plugin
+}
+```
+
+Example Usage:
+
+```
+interface MermaidModel {
+  source: string;
+}
+
+export function mermaidPlugin() {
+  return defineMdxPlugin<MermaidModel>({
+    id: "mermaid",
+    version: "1.0.0",
+
+    targets: [
+      {
+        kind: "code-fence",
+        language: "mermaid",
+      },
+    ],
+
+    async parse(input) {
+      if (input.kind !== "code-fence") {
+        throw new Error("Mermaid requires a code fence");
+      }
+
+      // Mermaid syntax validation can happen here.
+      return {
+        source: input.content,
+      };
+    },
+
+    component: {
+      load: () => import("./MermaidRenderer"),
+    },
+
+    build: {
+      async renderToImage(model, options) {
+        return renderMermaidToImage(model.source, options);
+      },
+    },
+  });
+}
+```

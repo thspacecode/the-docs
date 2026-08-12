@@ -1,134 +1,541 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/blue-dark.css";
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/yellow.css";
+@import "@radix-ui/colors/yellow-dark.css";
 @import "@fontsource-variable/outfit";
 @import "@fontsource-variable/noto-sans";
 
 @custom-variant dark (&:is(.dark *));
-@source "../../../apps/**/*.{ts,tsx}";
-@source "../../../components/**/*.{ts,tsx}";
+@source "../../../../apps/**/*.{ts,tsx}";
+@source "../../../core/src/**/*.{ts,tsx}";
+@source "../../../plugin-bpmn/src/**/*.{ts,tsx}";
+@source "../../../plugin-data-table/src/**/*.{ts,tsx}";
+@source "../../../plugin-excalidraw/src/**/*.{ts,tsx}";
+@source "../../../plugin-mermaid/src/**/*.{ts,tsx}";
+@source "../../../preset-default/src/**/*.{ts,tsx}";
+@source "../../../../components/**/*.{ts,tsx}";
 @source "../**/*.{ts,tsx}";
 
+/*
+ * Color scales follow Radix's 12-step usage model:
+ * 1–2 backgrounds, 3–5 interactive backgrounds, 6–8 borders,
+ * 9–10 solid fills, and 11–12 accessible text.
+ */
 :root {
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.148 0.004 228.8);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.148 0.004 228.8);
-    --primary: oklch(0.511 0.096 186.391);
-    --primary-foreground: oklch(0.984 0.014 180.72);
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.963 0.002 197.1);
-    --muted-foreground: oklch(0.56 0.021 213.5);
-    --accent: oklch(0.963 0.002 197.1);
-    --accent-foreground: oklch(0.218 0.008 223.9);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.925 0.005 214.3);
-    --input: oklch(0.925 0.005 214.3);
-    --ring: oklch(0.723 0.014 214.4);
-    --chart-1: oklch(0.872 0.007 219.6);
-    --chart-2: oklch(0.56 0.021 213.5);
-    --chart-3: oklch(0.45 0.017 213.2);
-    --chart-4: oklch(0.378 0.015 216);
-    --chart-5: oklch(0.275 0.011 216.9);
-    --radius: 0.45rem;
-    --sidebar: oklch(0.987 0.002 197.1);
-    --sidebar-foreground: oklch(0.148 0.004 228.8);
-    --sidebar-primary: oklch(0.6 0.118 184.704);
-    --sidebar-primary-foreground: oklch(0.984 0.014 180.72);
-    --sidebar-accent: oklch(0.963 0.002 197.1);
-    --sidebar-accent-foreground: oklch(0.218 0.008 223.9);
-    --sidebar-border: oklch(0.925 0.005 214.3);
-    --sidebar-ring: oklch(0.723 0.014 214.4);
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.148 0.004 228.8);
-}
+  --primary-1: var(--green-1);
+  --primary-2: var(--green-2);
+  --primary-3: var(--green-3);
+  --primary-4: var(--green-4);
+  --primary-5: var(--green-5);
+  --primary-6: var(--green-6);
+  --primary-7: var(--green-7);
+  --primary-8: var(--green-8);
+  --primary-9: var(--green-9);
+  --primary-10: var(--green-10);
+  --primary-11: var(--green-11);
+  --primary-12: var(--green-12);
 
-.dark {
-    --background: oklch(0.148 0.004 228.8);
-    --foreground: oklch(0.987 0.002 197.1);
-    --card: oklch(0.218 0.008 223.9);
-    --card-foreground: oklch(0.987 0.002 197.1);
-    --popover: oklch(0.218 0.008 223.9);
-    --popover-foreground: oklch(0.987 0.002 197.1);
-    --primary: oklch(0.437 0.078 188.216);
-    --primary-foreground: oklch(0.984 0.014 180.72);
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.275 0.011 216.9);
-    --muted-foreground: oklch(0.723 0.014 214.4);
-    --accent: oklch(0.275 0.011 216.9);
-    --accent-foreground: oklch(0.987 0.002 197.1);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.56 0.021 213.5);
-    --chart-1: oklch(0.872 0.007 219.6);
-    --chart-2: oklch(0.56 0.021 213.5);
-    --chart-3: oklch(0.45 0.017 213.2);
-    --chart-4: oklch(0.378 0.015 216);
-    --chart-5: oklch(0.275 0.011 216.9);
-    --sidebar: oklch(0.218 0.008 223.9);
-    --sidebar-foreground: oklch(0.987 0.002 197.1);
-    --sidebar-primary: oklch(0.704 0.14 182.503);
-    --sidebar-primary-foreground: oklch(0.277 0.046 192.524);
-    --sidebar-accent: oklch(0.275 0.011 216.9);
-    --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.56 0.021 213.5);
+  --secondary-1: var(--blue-1);
+  --secondary-2: var(--blue-2);
+  --secondary-3: var(--blue-3);
+  --secondary-4: var(--blue-4);
+  --secondary-5: var(--blue-5);
+  --secondary-6: var(--blue-6);
+  --secondary-7: var(--blue-7);
+  --secondary-8: var(--blue-8);
+  --secondary-9: var(--blue-9);
+  --secondary-10: var(--blue-10);
+  --secondary-11: var(--blue-11);
+  --secondary-12: var(--blue-12);
+
+  --grey-1: var(--gray-1);
+  --grey-2: var(--gray-2);
+  --grey-3: var(--gray-3);
+  --grey-4: var(--gray-4);
+  --grey-5: var(--gray-5);
+  --grey-6: var(--gray-6);
+  --grey-7: var(--gray-7);
+  --grey-8: var(--gray-8);
+  --grey-9: var(--gray-9);
+  --grey-10: var(--gray-10);
+  --grey-11: var(--gray-11);
+  --grey-12: var(--gray-12);
+
+  --info-1: var(--blue-1);
+  --info-2: var(--blue-2);
+  --info-3: var(--blue-3);
+  --info-4: var(--blue-4);
+  --info-5: var(--blue-5);
+  --info-6: var(--blue-6);
+  --info-7: var(--blue-7);
+  --info-8: var(--blue-8);
+  --info-9: var(--blue-9);
+  --info-10: var(--blue-10);
+  --info-11: var(--blue-11);
+  --info-12: var(--blue-12);
+
+  --success-1: var(--green-1);
+  --success-2: var(--green-2);
+  --success-3: var(--green-3);
+  --success-4: var(--green-4);
+  --success-5: var(--green-5);
+  --success-6: var(--green-6);
+  --success-7: var(--green-7);
+  --success-8: var(--green-8);
+  --success-9: var(--green-9);
+  --success-10: var(--green-10);
+  --success-11: var(--green-11);
+  --success-12: var(--green-12);
+
+  --danger-1: var(--red-1);
+  --danger-2: var(--red-2);
+  --danger-3: var(--red-3);
+  --danger-4: var(--red-4);
+  --danger-5: var(--red-5);
+  --danger-6: var(--red-6);
+  --danger-7: var(--red-7);
+  --danger-8: var(--red-8);
+  --danger-9: var(--red-9);
+  --danger-10: var(--red-10);
+  --danger-11: var(--red-11);
+  --danger-12: var(--red-12);
+
+  --warning-1: var(--yellow-1);
+  --warning-2: var(--yellow-2);
+  --warning-3: var(--yellow-3);
+  --warning-4: var(--yellow-4);
+  --warning-5: var(--yellow-5);
+  --warning-6: var(--yellow-6);
+  --warning-7: var(--yellow-7);
+  --warning-8: var(--yellow-8);
+  --warning-9: var(--yellow-9);
+  --warning-10: var(--yellow-10);
+  --warning-11: var(--yellow-11);
+  --warning-12: var(--yellow-12);
+
+  --background: var(--grey-1);
+  --foreground: var(--grey-12);
+  --card: var(--grey-1);
+  --card-foreground: var(--grey-12);
+  --popover: var(--grey-1);
+  --popover-foreground: var(--grey-12);
+  --primary: var(--primary-9);
+  --primary-foreground: white;
+  --secondary: var(--secondary-3);
+  --secondary-foreground: var(--secondary-12);
+  --muted: var(--grey-3);
+  --muted-foreground: var(--grey-11);
+  --accent: var(--grey-3);
+  --accent-foreground: var(--grey-12);
+  --info: var(--info-9);
+  --info-foreground: white;
+  --success: var(--success-9);
+  --success-foreground: white;
+  --danger: var(--danger-9);
+  --danger-foreground: white;
+  --warning: var(--warning-9);
+  --warning-foreground: var(--yellow-12);
+  --destructive: var(--danger);
+  --destructive-foreground: var(--danger-foreground);
+  --border: var(--grey-6);
+  --input: var(--grey-7);
+  --ring: var(--primary-8);
+  --chart-1: var(--primary-9);
+  --chart-2: var(--info-9);
+  --chart-3: var(--success-9);
+  --chart-4: var(--warning-9);
+  --chart-5: var(--danger-9);
+  --radius: 0.45rem;
+  --sidebar: var(--grey-2);
+  --sidebar-foreground: var(--grey-12);
+  --sidebar-primary: var(--primary-9);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--grey-3);
+  --sidebar-accent-foreground: var(--grey-12);
+  --sidebar-border: var(--grey-6);
+  --sidebar-ring: var(--primary-8);
 }
 
 @theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
-    --font-sans: 'Outfit', sans-serif;
-    --font-heading: var(--font-sans);
+  --color-primary-1: var(--primary-1);
+  --color-primary-2: var(--primary-2);
+  --color-primary-3: var(--primary-3);
+  --color-primary-4: var(--primary-4);
+  --color-primary-5: var(--primary-5);
+  --color-primary-6: var(--primary-6);
+  --color-primary-7: var(--primary-7);
+  --color-primary-8: var(--primary-8);
+  --color-primary-9: var(--primary-9);
+  --color-primary-10: var(--primary-10);
+  --color-primary-11: var(--primary-11);
+  --color-primary-12: var(--primary-12);
+  --color-secondary-1: var(--secondary-1);
+  --color-secondary-2: var(--secondary-2);
+  --color-secondary-3: var(--secondary-3);
+  --color-secondary-4: var(--secondary-4);
+  --color-secondary-5: var(--secondary-5);
+  --color-secondary-6: var(--secondary-6);
+  --color-secondary-7: var(--secondary-7);
+  --color-secondary-8: var(--secondary-8);
+  --color-secondary-9: var(--secondary-9);
+  --color-secondary-10: var(--secondary-10);
+  --color-secondary-11: var(--secondary-11);
+  --color-secondary-12: var(--secondary-12);
+  --color-grey-1: var(--grey-1);
+  --color-grey-2: var(--grey-2);
+  --color-grey-3: var(--grey-3);
+  --color-grey-4: var(--grey-4);
+  --color-grey-5: var(--grey-5);
+  --color-grey-6: var(--grey-6);
+  --color-grey-7: var(--grey-7);
+  --color-grey-8: var(--grey-8);
+  --color-grey-9: var(--grey-9);
+  --color-grey-10: var(--grey-10);
+  --color-grey-11: var(--grey-11);
+  --color-grey-12: var(--grey-12);
+  --color-info-1: var(--info-1);
+  --color-info-2: var(--info-2);
+  --color-info-3: var(--info-3);
+  --color-info-4: var(--info-4);
+  --color-info-5: var(--info-5);
+  --color-info-6: var(--info-6);
+  --color-info-7: var(--info-7);
+  --color-info-8: var(--info-8);
+  --color-info-9: var(--info-9);
+  --color-info-10: var(--info-10);
+  --color-info-11: var(--info-11);
+  --color-info-12: var(--info-12);
+  --color-success-1: var(--success-1);
+  --color-success-2: var(--success-2);
+  --color-success-3: var(--success-3);
+  --color-success-4: var(--success-4);
+  --color-success-5: var(--success-5);
+  --color-success-6: var(--success-6);
+  --color-success-7: var(--success-7);
+  --color-success-8: var(--success-8);
+  --color-success-9: var(--success-9);
+  --color-success-10: var(--success-10);
+  --color-success-11: var(--success-11);
+  --color-success-12: var(--success-12);
+  --color-danger-1: var(--danger-1);
+  --color-danger-2: var(--danger-2);
+  --color-danger-3: var(--danger-3);
+  --color-danger-4: var(--danger-4);
+  --color-danger-5: var(--danger-5);
+  --color-danger-6: var(--danger-6);
+  --color-danger-7: var(--danger-7);
+  --color-danger-8: var(--danger-8);
+  --color-danger-9: var(--danger-9);
+  --color-danger-10: var(--danger-10);
+  --color-danger-11: var(--danger-11);
+  --color-danger-12: var(--danger-12);
+  --color-warning-1: var(--warning-1);
+  --color-warning-2: var(--warning-2);
+  --color-warning-3: var(--warning-3);
+  --color-warning-4: var(--warning-4);
+  --color-warning-5: var(--warning-5);
+  --color-warning-6: var(--warning-6);
+  --color-warning-7: var(--warning-7);
+  --color-warning-8: var(--warning-8);
+  --color-warning-9: var(--warning-9);
+  --color-warning-10: var(--warning-10);
+  --color-warning-11: var(--warning-11);
+  --color-warning-12: var(--warning-12);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: "Outfit", sans-serif;
+  --font-heading: var(--font-sans);
+}
+
+@layer components {
+  /*
+   * Shared page tracks keep navigation and page content on the same lines.
+   * The rail variant adds contextual navigation at lg and the right rail at
+   * 2xl, while preserving a centered, padded page on smaller screens.
+   */
+  .docs-centered-layout {
+    --docs-content-width: 56rem;
+    --docs-page-padding: 4rem;
+
+    display: grid;
+    grid-template-columns:
+      [full-start] minmax(var(--docs-page-padding), 1fr)
+      [content-start] minmax(0, var(--docs-content-width))
+      [content-end] minmax(var(--docs-page-padding), 1fr)
+      [full-end];
+  }
+  .docs-centered-layout > * {
+    grid-column: content;
+    min-width: 0;
+  }
+  .docs-centered-layout > .docs-layout-full {
+    grid-column: full;
+  }
+  .docs-page-layout-centered {
+    align-content: start;
+  }
+  .docs-rail-layout {
+    --docs-main-width: 58rem;
+
+    display: grid;
+    grid-template-columns: [main-start] minmax(0, 1fr) [main-end];
+    min-width: 0;
+  }
+  .docs-layout-main {
+    grid-column: main;
+    min-width: 0;
+  }
+
+  @media (min-width: 64rem) {
+    .docs-rail-layout {
+      grid-template-columns:
+        [left-start] minmax(16rem, 1fr)
+        [left-end main-start] minmax(0, var(--docs-main-width))
+        [main-end];
+    }
+    .docs-layout-left {
+      grid-column: left;
+    }
+    .docs-page-layout-centered {
+      --docs-content-width: 50rem;
+
+      grid-template-columns:
+        [full-start left-start] minmax(16rem, 1fr)
+        [left-end main-start] var(--docs-page-padding)
+        [content-start] minmax(0, var(--docs-content-width))
+        [content-end] var(--docs-page-padding)
+        [main-end full-end];
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .docs-rail-layout {
+      grid-template-columns:
+        [left-start] minmax(16rem, 1fr)
+        [left-end main-start] minmax(0, var(--docs-main-width))
+        [main-end right-start] minmax(16rem, 1fr)
+        [right-end];
+    }
+    .docs-layout-right {
+      grid-column: right;
+    }
+    .docs-page-layout-centered {
+      grid-template-columns:
+        [full-start left-start] minmax(16rem, 1fr)
+        [left-end main-start] var(--docs-page-padding)
+        [content-start] minmax(0, var(--docs-content-width))
+        [content-end] var(--docs-page-padding)
+        [main-end right-start] minmax(16rem, 1fr)
+        [right-end full-end];
+    }
+  }
+
+  .docs-content {
+    @apply text-base leading-7 text-foreground;
+  }
+  .docs-content > * + * {
+    @apply mt-5;
+  }
+  .docs-content :is(h1, h2, h3, h4) {
+    @apply scroll-mt-32 font-heading font-semibold tracking-tight xl:scroll-mt-24;
+  }
+  .docs-content h1 {
+    @apply mt-10 text-3xl;
+  }
+  .docs-content h2 {
+    @apply mt-10 border-b pb-2 text-2xl;
+  }
+  .docs-content h3 {
+    @apply mt-8 text-xl;
+  }
+  .docs-content :is(ul, ol) {
+    @apply ml-6 space-y-2;
+  }
+  .docs-content ul {
+    @apply list-disc;
+  }
+  .docs-content ol {
+    @apply list-decimal;
+  }
+  .docs-content a {
+    @apply font-medium text-primary underline underline-offset-4;
+  }
+  .docs-content :not(pre) > code {
+    @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm;
+  }
+  .docs-content pre {
+    @apply overflow-x-auto rounded-lg border bg-muted p-4 font-mono text-sm leading-6;
+  }
+  .docs-content .shiki code {
+    @apply font-mono;
+  }
+  .dark .docs-content .shiki,
+  .dark .docs-content .shiki span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+  .docs-content blockquote {
+    @apply border-l-2 pl-4 text-muted-foreground;
+  }
+  .docs-content table {
+    @apply w-full border-collapse text-sm;
+  }
+  .docs-content :is(th, td) {
+    @apply border p-2 text-left align-top;
+  }
+  .docs-content img {
+    @apply max-w-full rounded-lg border;
+  }
+  .docs-content :is(.bpmn-image, .mermaid-image) {
+    @apply mx-auto block max-h-[42rem] w-auto bg-white object-contain;
+  }
+
+  .docs-content .data-table {
+    @apply my-6;
+  }
+  .docs-content .data-table-scroll {
+    @apply overflow-x-auto rounded-lg border bg-background shadow-sm;
+  }
+  .docs-content .data-table table {
+    @apply min-w-max border-0 text-sm;
+  }
+  .docs-content .data-table thead {
+    @apply bg-muted/60;
+  }
+  .docs-content .data-table th {
+    @apply border-x-0 border-t-0 px-3 py-2.5 font-semibold whitespace-nowrap;
+  }
+  .docs-content .data-table td {
+    @apply border-x-0 border-t-0 px-3 py-2.5;
+  }
+  .docs-content .data-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .docs-content .data-table tbody tr:hover {
+    @apply bg-muted/30;
+  }
+  .docs-content .data-table-badge {
+    @apply inline-flex rounded-full border px-2 py-0.5 text-xs font-medium whitespace-nowrap;
+  }
+  .docs-content .data-table-unresolved {
+    @apply font-medium text-danger-11;
+  }
+  .docs-content .data-table-unresolved::after {
+    content: " ⚠";
+  }
+  .docs-content .data-table-empty {
+    @apply py-8 text-center text-muted-foreground;
+  }
+  .docs-content .data-table figcaption {
+    @apply mt-2 flex flex-col items-center text-center text-sm text-muted-foreground;
+  }
+  .docs-content .data-table figcaption small {
+    @apply text-xs;
+  }
+
+  .excalidraw-preview {
+    @apply relative block w-full overflow-hidden rounded-lg border bg-white text-left shadow-sm transition hover:border-primary/50 hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring;
+  }
+  .excalidraw-preview img {
+    @apply mx-auto max-h-[36rem] w-auto border-0 object-contain;
+  }
+  .excalidraw-preview span {
+    @apply absolute right-3 bottom-3 rounded-md border bg-background/90 px-2.5 py-1 text-xs font-medium text-muted-foreground opacity-0 shadow-sm backdrop-blur transition-opacity;
+  }
+  .excalidraw-preview:hover span,
+  .excalidraw-preview:focus-visible span {
+    @apply opacity-100;
+  }
+  .excalidraw-modal {
+    @apply fixed inset-0 z-50 flex flex-col bg-background/95 text-foreground backdrop-blur-sm;
+  }
+  .excalidraw-modal-toolbar {
+    @apply relative z-10 flex min-h-16 flex-wrap items-center justify-between gap-3 border-b bg-background px-4 py-3 shadow-sm;
+  }
+  .excalidraw-modal-toolbar p {
+    @apply m-0 truncate font-medium;
+  }
+  .excalidraw-modal-toolbar button {
+    @apply flex h-9 items-center justify-center rounded-md border bg-background px-3 text-sm font-medium hover:bg-muted;
+  }
+  .excalidraw-modal-canvas {
+    @apply relative min-h-0 flex-1 overflow-hidden;
+  }
+  .excalidraw-modal-canvas .excalidraw {
+    @apply size-full;
+  }
+  .excalidraw-modal-loading {
+    @apply flex size-full items-center justify-center text-sm text-muted-foreground;
+  }
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
-    }
+  }
 }

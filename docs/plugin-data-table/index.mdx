@@ -1,0 +1,28 @@
+---
+title: "Data Table Plugin"
+description: "Render CSV-backed data tables with column metadata, badges, and linked data."
+tags:
+  - feature/plugin
+type: doc
+importance: High
+---
+
+## Data table
+
+The data table plugin turns a `data-<name>.csv` Markdown image into an accessible, read-only table. A companion `data-<name>.meta.json` file defines labels, widths, column types, badge presentation, and relationships while the CSV stays portable.
+
+## Sample data table
+
+This delivery plan demonstrates primary keys, status badges, links that display customer names, and a derived region column.
+
+![Delivery plan](./assets/data-delivery.csv)
+
+## Asset format
+
+Store both files in the document's `assets` directory and reference only the CSV:
+
+```md
+![Delivery plan](./assets/data-delivery.csv)
+```
+
+The CSV contains source values. For example, the `status` column stores `in-progress`, while metadata presents it as a blue **In progress** badge. The `customer_id` column similarly stores a stable customer key while displaying the linked customer's name.

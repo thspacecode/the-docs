@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "name": "delivery",
+  "title": "Delivery plan",
+  "description": "Current work items, delivery status, and customer region.",
+  "columns": [
+    {
+      "name": "id",
+      "title": "ID",
+      "type": "primaryKey",
+      "width": 110
+    },
+    {
+      "name": "work_item",
+      "title": "Work item",
+      "type": "text",
+      "width": 250
+    },
+    {
+      "name": "status",
+      "title": "Status",
+      "type": "badgeColor",
+      "width": 150,
+      "options": [
+        {
+          "value": "ready",
+          "label": "Ready",
+          "color": "green"
+        },
+        {
+          "value": "in-progress",
+          "label": "In progress",
+          "color": "blue"
+        },
+        {
+          "value": "blocked",
+          "label": "Blocked",
+          "color": "red"
+        }
+      ]
+    },
+    {
+      "name": "customer_id",
+      "title": "Customer",
+      "type": "link",
+      "width": 190,
+      "linkTable": "./assets/data-customers.csv",
+      "linkColumn": "id",
+      "displayColumn": "name"
+    },
+    {
+      "name": "region",
+      "title": "Region",
+      "type": "linkedData",
+      "width": 130,
+      "sourceColumn": "customer_id",
+      "linkedDataColumn": "region"
+    }
+  ]
+}

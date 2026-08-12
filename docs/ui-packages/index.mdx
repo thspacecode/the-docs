@@ -1,0 +1,63 @@
+---
+title: "UI Packages"
+description: "Notes about the shared user-interface package."
+tags:
+  - docs/ui-ux
+  - docs/architecture
+type: doc
+importance: Medium
+---
+
+# UI Packages
+
+The shared `@workspace/ui` package owns the global design tokens and reusable
+interface components. Import `@workspace/ui/globals.css` once from the
+application root to make the tokens available as Tailwind utilities.
+
+## Color scales
+
+The design system maps its 12-step, light- and dark-mode scales directly to
+[`@radix-ui/colors`](https://www.radix-ui.com/colors):
+
+- `primary`: Radix Green
+- `secondary`: Radix Blue
+- `grey`: Radix Gray
+- `info`: Radix Blue
+- `success`: Radix Green
+- `danger`: Radix Red
+- `warning`: Radix Yellow
+
+The steps follow the Radix usage model:
+
+| Steps | Intended use |
+| --- | --- |
+| 1–2 | App and subtle backgrounds |
+| 3–5 | Component, hover, and selected backgrounds |
+| 6–8 | Subtle, component, and focused borders |
+| 9–10 | Solid fills and solid hover states |
+| 11–12 | Accessible low- and high-contrast text |
+
+Every scale is available through Tailwind. Prefer adjacent steps for interaction
+states rather than adding opacity to a single color:
+
+```tsx
+<button className="bg-primary-9 text-primary-foreground hover:bg-primary-10">
+  Save
+</button>
+
+<div className="border border-info-7 bg-info-3 text-info-11">
+  A new version is available.
+</div>
+```
+
+Semantic aliases remain available for page-level styling, including
+`background`, `foreground`, `card`, `muted`, `accent`, `border`, `input`, and
+`ring`. The status aliases `info`, `success`, `danger`, and `warning` represent
+the solid step of their respective scales and include matching `*-foreground`
+tokens.
+
+`destructive` remains as a compatibility alias for `danger`.
+
+Radix's dark palettes activate under `.dark`, so consumers do not need separate
+`dark:` utilities when they use these tokens. Radix's Display P3 enhancements
+are also preserved on supported displays.

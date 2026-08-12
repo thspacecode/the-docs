@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "name": "customers",
+  "title": "Customers",
+  "columns": [
+    {
+      "name": "id",
+      "title": "Customer ID",
+      "type": "primaryKey",
+      "width": 160
+    },
+    {
+      "name": "name",
+      "title": "Customer",
+      "type": "text",
+      "width": 220
+    },
+    {
+      "name": "region",
+      "title": "Region",
+      "type": "text",
+      "width": 140
+    }
+  ]
+}
