@@ -12,6 +12,7 @@ concurrency:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   publish:
@@ -29,9 +30,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: 22.14.0
           registry-url: https://registry.npmjs.org
+
+      - name: Install npm with trusted publishing support
+        run: npm install --global npm@latest
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -45,7 +48,13 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Publish public packages
-        run: pnpm -r --filter './packages/**' publish --no-git-checks --tag alpha
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Pack public packages
+        run: |
+          mkdir release-packages
+          pnpm -r --filter './packages/**' pack --pack-destination "$GITHUB_WORKSPACE/release-packages"
+
+      - name: Publish public packages with OIDC
+        run: |
+          for package in release-packages/*.tgz; do
+            npm publish "$package" --access public --tag alpha
+          done
