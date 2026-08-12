@@ -56,5 +56,5 @@ jobs:
       - name: Publish public packages with OIDC
         run: |
           for package in release-packages/*.tgz; do
-            npm publish "$package" --access public --tag alpha
+            npm publish "./$package" --access public --tag alpha
           done
