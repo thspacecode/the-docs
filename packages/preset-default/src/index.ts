@@ -23,11 +23,14 @@ export interface DefaultPresetPluginOptions {
 export interface DefaultPresetOptions {
   /** Directory containing one <slug>/index.mdx directory per document. */
   contentRoot: string | URL
+  /** URL path where the application is mounted. Defaults to "/". */
+  basePath?: string
   plugins?: DefaultPresetPluginOptions
 }
 
 export interface DefaultPresetConfig {
   readonly contentRoot: string
+  readonly basePath: string
   readonly plugins: Readonly<{
     syntaxHighlighter: SyntaxHighlighterOptions | false
     mermaid: MermaidPluginOptions | false
@@ -43,12 +46,20 @@ function resolveContentRoot(contentRoot: string | URL) {
     : resolve(contentRoot)
 }
 
+function normalizeBasePath(basePath: string | undefined) {
+  if (!basePath || basePath === "/") return "/"
+
+  const normalized = `/${basePath}`.replace(/\/{2,}/g, "/").replace(/\/$/, "")
+  return normalized || "/"
+}
+
 /** Resolves the small set of project inputs against the default docs preset. */
 export function defineConfig(
   options: DefaultPresetOptions
 ): DefaultPresetConfig {
   return Object.freeze({
     contentRoot: resolveContentRoot(options.contentRoot),
+    basePath: normalizeBasePath(options.basePath),
     plugins: Object.freeze({
       syntaxHighlighter: options.plugins?.syntaxHighlighter ?? {},
       mermaid: options.plugins?.mermaid ?? {},
