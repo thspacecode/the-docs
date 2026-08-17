@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
 
 concurrency:
   group: publish-npm
@@ -18,6 +17,7 @@ jobs:
   publish:
     name: Build and publish
     runs-on: ubuntu-latest
+    environment: npm
     timeout-minutes: 20
 
     steps:
@@ -52,29 +52,8 @@ jobs:
           mkdir release-packages
           pnpm -r --filter './packages/**' pack --pack-destination "$GITHUB_WORKSPACE/release-packages"
 
-      - name: Publish public packages
-        env:
-          NPM_BOOTSTRAP_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish public packages with provenance
         run: |
-          token_config="$RUNNER_TEMP/npm-bootstrap.npmrc"
-          trap 'rm -f "$token_config"' EXIT
-
           for package in release-packages/*.tgz; do
-            name="$(tar -xOf "$package" package/package.json | node -e 'const fs = require("node:fs"); console.log(JSON.parse(fs.readFileSync(0, "utf8")).name)')"
-
-            if npm view "$name" name >/dev/null 2>&1; then
-              npm publish "./$package" --access public --tag alpha
-              continue
-            fi
-
-            if [ -z "$NPM_BOOTSTRAP_TOKEN" ]; then
-              echo "::error::Cannot publish new package $name with OIDC. Add a granular NPM_TOKEN secret for its first publish."
-              exit 1
-            fi
-
-            printf '%s\n' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$token_config"
-            NPM_CONFIG_USERCONFIG="$token_config" NODE_AUTH_TOKEN="$NPM_BOOTSTRAP_TOKEN" \
-              npm publish "./$package" --access public --tag alpha
-            rm -f "$token_config"
-            echo "::notice::Configure publish-npm.yml as the trusted publisher for $name before its next release."
+            npm publish "./$package" --access public --tag alpha --provenance
           done
