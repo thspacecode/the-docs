@@ -9,6 +9,7 @@ import type { DefaultPresetConfig } from "./index.js"
 /** Creates the React Router framework configuration and all prerender paths. */
 export function createReactRouterConfig(config: DefaultPresetConfig): Config {
   return {
+    basename: config.basePath,
     buildDirectory: ".build",
     routeDiscovery: { mode: "initial" },
     ssr: true,

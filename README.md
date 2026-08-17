@@ -88,6 +88,17 @@ pnpm --filter docs-of-the-docs build
 
 The production build prerenders the document list and every discovered document route.
 
+## GitHub Pages deployment
+
+Enable GitHub Pages under **Settings → Pages** and select **GitHub Actions** as the
+source. `.github/workflows/deploy-docs-of-the-docs-to-github-pages.yml` builds and
+deploys the site on every push to `main`, and can also be started manually.
+
+The workflow gets the site's base path from `actions/configure-pages`, passes it to
+the application as `THE_DOCS_BASE_PATH`, and publishes the static files from
+`apps/docs-of-the-docs/.build/client`. This supports both repository Pages URLs such
+as `https://thspacecode.github.io/the-docs/` and sites served at the domain root.
+
 ## Cloudflare deployment
 
 The documentation app is configured as a static Cloudflare Worker. Install dependencies,
@@ -112,8 +123,8 @@ can then be attached in **Workers & Pages → the-docs → Settings → Domains 
 
 ### GitHub Actions
 
-`.github/workflows/deploy-cloudflare.yml` deploys on every push to `main` and can also
-be started manually. Add these repository secrets under **Settings → Secrets and
+`.github/workflows/deploy-docs-of-the-docs-to-cloudflare.yml` deploys on every push
+to `main` and can also be started manually. Add these repository secrets under **Settings → Secrets and
 variables → Actions**:
 
 - `CLOUDFLARE_API_TOKEN`: a Cloudflare API token with **Workers Scripts: Edit** access

@@ -19,6 +19,7 @@ export function createViteConfig(config: DefaultPresetConfig) {
   const dataTable = config.plugins.dataTable
 
   return defineConfig({
+    base: config.basePath === "/" ? "/" : `${config.basePath}/`,
     resolve: { tsconfigPaths: true },
     ssr: { noExternal: [/^@the-docs\//] },
     plugins: [

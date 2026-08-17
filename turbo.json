@@ -4,6 +4,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "env": ["THE_DOCS_BASE_PATH"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".build/**", "dist/**"]
     },
