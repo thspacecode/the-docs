@@ -14,10 +14,21 @@ pnpm dev
 ```
 
 The package family is published under `@the-docs/*`. Publishing requires membership
-in the `the-docs` npm organization. Configure each package's npm trusted publisher
-for GitHub repository `thspacecode/the-docs`, workflow `publish-npm.yml`, and the
-`npm publish` action; the workflow uses short-lived OIDC credentials instead of an
-`NPM_TOKEN` secret.
+in the `the-docs` npm organization. For every package, open its **Publishing access**
+page on npm and add a GitHub Actions trusted publisher with:
+
+- Organization or user: `thspacecode`
+- Repository: `the-docs`
+- Workflow filename: `publish-npm.yml`
+- Environment: `npm`
+
+The release workflow runs only for `v*` tags and uses short-lived OIDC credentials
+plus npm provenance; it does not use an `NPM_TOKEN`. Protect the GitHub `npm`
+environment so only release tags may deploy to it. Once all trusted publishers are
+configured and a release succeeds, delete the repository's `NPM_TOKEN` secret,
+revoke its token on npm, and set every package's publishing access to **Require
+two-factor authentication and disallow tokens**. Trusted publishing continues to
+work with that setting.
 
 ## Monorepo development
 
