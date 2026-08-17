@@ -98,38 +98,3 @@ The workflow gets the site's base path from `actions/configure-pages`, passes it
 the application as `THE_DOCS_BASE_PATH`, and publishes the static files from
 `apps/docs-of-the-docs/.build/client`. This supports both repository Pages URLs such
 as `https://thspacecode.github.io/the-docs/` and sites served at the domain root.
-
-## Cloudflare deployment
-
-The documentation app is configured as a static Cloudflare Worker. Install dependencies,
-authenticate Wrangler, and deploy from the repository root:
-
-```bash
-pnpm install
-pnpm --filter docs-of-the-docs exec wrangler login
-pnpm --filter docs-of-the-docs deploy
-```
-
-To test the Cloudflare deployment locally first:
-
-```bash
-pnpm --filter docs-of-the-docs preview:cloudflare
-```
-
-The Worker name defaults to `the-docs`. Change `name` in
-`apps/docs-of-the-docs/wrangler.jsonc` before the first deployment if needed.
-Cloudflare will print the generated `workers.dev` URL after deployment; a custom domain
-can then be attached in **Workers & Pages → the-docs → Settings → Domains & Routes**.
-
-### GitHub Actions
-
-`.github/workflows/deploy-docs-of-the-docs-to-cloudflare.yml` deploys on every push
-to `main` and can also be started manually. Add these repository secrets under **Settings → Secrets and
-variables → Actions**:
-
-- `CLOUDFLARE_API_TOKEN`: a Cloudflare API token with **Workers Scripts: Edit** access
-  for the target account.
-- `CLOUDFLARE_ACCOUNT_ID`: the account ID shown in the Cloudflare dashboard.
-
-Use either this workflow or Cloudflare's Git integration, not both, to avoid duplicate
-deployments.
