@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
 
 concurrency:
   group: publish-npm
@@ -16,6 +17,7 @@ permissions:
 jobs:
   publish:
     name: Build and publish
+    if: github.event_name == 'push' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: npm
     timeout-minutes: 20
@@ -55,5 +57,13 @@ jobs:
       - name: Publish public packages with provenance
         run: |
           for package in release-packages/*.tgz; do
+            metadata="$(tar -xOf "$package" package/package.json | node -e 'const fs = require("node:fs"); const { name, version } = JSON.parse(fs.readFileSync(0, "utf8")); console.log(`${name}\t${version}`)')"
+            IFS=$'\t' read -r name version <<< "$metadata"
+
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "::notice::Skipping $name@$version because it is already published."
+              continue
+            fi
+
             npm publish "./$package" --access public --tag alpha --provenance
           done
