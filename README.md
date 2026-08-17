@@ -22,10 +22,11 @@ page on npm and add a GitHub Actions trusted publisher with:
 - Workflow filename: `publish-npm.yml`
 - Environment: `npm`
 
-The release workflow runs only for `v*` tags and uses short-lived OIDC credentials
-plus npm provenance; it does not use an `NPM_TOKEN`. Protect the GitHub `npm`
-environment so only release tags may deploy to it. Once all trusted publishers are
-configured and a release succeeds, delete the repository's `NPM_TOKEN` secret,
+The release workflow runs for `v*` tags and supports retries dispatched from the
+`main` branch. It uses short-lived OIDC credentials plus npm provenance; it does not
+use an `NPM_TOKEN`. Protect the GitHub `npm` environment so only release tags and the
+`main` branch may deploy to it. Once all trusted publishers are configured and a
+release succeeds, delete the repository's `NPM_TOKEN` secret,
 revoke its token on npm, and set every package's publishing access to **Require
 two-factor authentication and disallow tokens**. Trusted publishing continues to
 work with that setting.
