@@ -20,6 +20,7 @@ import {
   discoverTags,
   discoverTypes,
 } from "./discovery.js"
+import { localImagesRehypePlugin } from "./local-images.js"
 
 const virtualModuleId = "virtual:docs-content"
 const resolvedVirtualModuleId = `\0${virtualModuleId}`
@@ -446,6 +447,7 @@ export function createDocsVitePlugins({
       rehypePlugins: [
         rehypeTableOfContentsHeadings,
         ...(mdxOptions.rehypePlugins ?? []),
+        localImagesRehypePlugin(),
       ],
     }),
   ]
