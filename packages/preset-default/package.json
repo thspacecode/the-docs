@@ -6,6 +6,7 @@
     "build": "rm -rf dist && tsc -p tsconfig.json --noEmit false --declaration --declarationMap --sourceMap --outDir dist --rootDir src --allowImportingTsExtensions false && node ../../scripts/copy-package-assets.mjs",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.mjs",
     "prepack": "pnpm build"
   },
   "dependencies": {
