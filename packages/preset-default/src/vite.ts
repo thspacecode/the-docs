@@ -20,8 +20,19 @@ export function createViteConfig(config: DefaultPresetConfig) {
 
   return defineConfig({
     base: config.basePath === "/" ? "/" : `${config.basePath}/`,
-    resolve: { tsconfigPaths: true },
+    resolve: {
+      tsconfigPaths: true,
+      dedupe: ["react", "react-dom", "react-router"],
+    },
     ssr: { noExternal: [/^@the-docs\//] },
+    optimizeDeps: {
+      include: [
+        "react",
+        "react-dom/client",
+        "react/jsx-runtime",
+        "react-router",
+      ],
+    },
     plugins: [
       tailwindcss(),
       ...createDocsVitePlugins({

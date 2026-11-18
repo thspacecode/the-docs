@@ -22,6 +22,7 @@ import type {
 } from "../content/types.js"
 import { DocsPageLayout } from "./docs-page-layout.js"
 import { GlobalSearch } from "./global-search.js"
+import { MarkdownBlockquote } from "./markdown-blockquote.js"
 import { Importance } from "./importance.js"
 import { RelatedDocuments } from "./related-documents.js"
 import { RelativeModifiedTime } from "./relative-modified-time.js"
@@ -571,7 +572,7 @@ export function DocumentPage({
 
           <section className="docs-centered-layout py-10 sm:py-12">
             <div className="docs-content [&>*:first-child]:mt-0">
-              <Component />
+              <Component components={{ blockquote: MarkdownBlockquote }} />
             </div>
           </section>
 
