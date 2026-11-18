@@ -27,6 +27,7 @@ export function createViteConfig(config: DefaultPresetConfig) {
       ...createDocsVitePlugins({
         contentRoot: config.contentRoot,
         mdx: {
+          ...config.mdx,
           rehypePlugins: [
             ...(mermaid === false ? [] : [mermaidRehypePlugin(mermaid)]),
             ...(syntaxHighlighter === false
@@ -37,6 +38,7 @@ export function createViteConfig(config: DefaultPresetConfig) {
               : [excalidrawRehypePlugin(excalidraw)]),
             ...(bpmn === false ? [] : [bpmnRehypePlugin(bpmn)]),
             ...(dataTable === false ? [] : [dataTableRehypePlugin(dataTable)]),
+            ...(config.mdx?.rehypePlugins ?? []),
           ],
         },
       }),

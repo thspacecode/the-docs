@@ -1,6 +1,7 @@
 import { resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import type { DocsViteOptions } from "@the-docs/core/build"
 import type { BpmnPluginOptions } from "@the-docs/plugin-bpmn"
 import type { DataTablePluginOptions } from "@the-docs/plugin-data-table"
 import type { ExcalidrawPluginOptions } from "@the-docs/plugin-excalidraw"
@@ -25,12 +26,15 @@ export interface DefaultPresetOptions {
   contentRoot: string | URL
   /** URL path where the application is mounted. Defaults to "/". */
   basePath?: string
+  /** Additional MDX options. Custom plugins run after the preset plugins. */
+  mdx?: DocsViteOptions["mdx"]
   plugins?: DefaultPresetPluginOptions
 }
 
 export interface DefaultPresetConfig {
   readonly contentRoot: string
   readonly basePath: string
+  readonly mdx?: DocsViteOptions["mdx"]
   readonly plugins: Readonly<{
     syntaxHighlighter: SyntaxHighlighterOptions | false
     mermaid: MermaidPluginOptions | false
@@ -60,6 +64,7 @@ export function defineConfig(
   return Object.freeze({
     contentRoot: resolveContentRoot(options.contentRoot),
     basePath: normalizeBasePath(options.basePath),
+    mdx: options.mdx,
     plugins: Object.freeze({
       syntaxHighlighter: options.plugins?.syntaxHighlighter ?? {},
       mermaid: options.plugins?.mermaid ?? {},
