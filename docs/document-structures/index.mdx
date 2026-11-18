@@ -96,3 +96,49 @@ interface TypeDefinition {
   "separate-related-docs-section"?: boolean
 }
 ```
+
+## Custom components
+
+Use `mdx.providerImportSource` to make React components available in every document without imports.
+
+```ts
+// docs.config.ts
+import { fileURLToPath } from "node:url"
+import { defineConfig } from "@the-docs/preset-default"
+
+export default defineConfig({
+  contentRoot: new URL("./docs", import.meta.url),
+  mdx: {
+    providerImportSource: fileURLToPath(
+      new URL("./app/mdx-components.tsx", import.meta.url)
+    ),
+  },
+})
+```
+
+Export a component map from the provider:
+
+```tsx
+// app/mdx-components.tsx
+import type { ReactNode } from "react"
+
+function Notice({ children }: { children: ReactNode }) {
+  return <aside role="note">{children}</aside>
+}
+
+export function useMDXComponents() {
+  return { Notice }
+}
+```
+
+Then use the component in any document:
+
+```mdx
+<Notice>Back up your site before installation.</Notice>
+```
+
+The preset keeps its built-in plugins. Add custom compiler plugins through
+`mdx.remarkPlugins` or `mdx.rehypePlugins`. Custom Rehype plugins run after the preset plugins.
+
+The upstream preset does not discover `_components/index.ts` automatically.
+That convention belongs to `the_frappe_docs`. Treat MDX and provider modules as trusted code.
