@@ -8,6 +8,7 @@ import matter from "gray-matter"
 import dynamicIconImports from "lucide-react/dynamicIconImports.mjs"
 import remarkFrontmatter from "remark-frontmatter"
 import remarkGfm from "remark-gfm"
+import { rehypeAlerts } from "./alerts.js"
 import type { Plugin, PluginOption } from "vite"
 
 import {
@@ -446,6 +447,7 @@ export function createDocsVitePlugins({
       ],
       rehypePlugins: [
         rehypeTableOfContentsHeadings,
+        rehypeAlerts,
         ...(mdxOptions.rehypePlugins ?? []),
         localImagesRehypePlugin(),
       ],

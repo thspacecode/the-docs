@@ -1,0 +1,64 @@
+---
+title: "GFM Examples"
+description: "GitHub-style alerts, links, and collapsible details."
+type: doc
+---
+
+References: https://gist.github.com/Myndex/5140d6fe98519bb15c503c490e713233
+
+## Notes
+
+> [!NOTE]  
+> Highlights information that users should take into account, even when skimming.
+
+> [!TIP]
+> Optional information to help a user be more successful.
+
+> [!IMPORTANT]  
+> Crucial information necessary for users to succeed.
+
+> [!WARNING]  
+> Critical content demanding immediate user attention due to potential risks.
+
+> [!CAUTION]
+> Negative potential consequences of an action.
+
+## Links
+
+[I'm an inline-style link](https://www.google.com)
+
+[I'm a reference-style link][Arbitrary case-insensitive reference text]
+
+[You can use numbers][1] for reference-style link definitions
+
+Or leave it empty and use the [link text itself][]
+
+This is useful when you are doing lots of cites [[2],[3]].
+
+Some text to show that the reference links can follow later.
+But while we're at it, might as well point out we can use
+<a href="#links" className="dismissed">html links</a> too—this is
+useful if you need to add a class for use with pages/Jeckyl/whatever.
+
+The actual links for the above examples are below this line, but hidden in the final html output.
+
+[arbitrary case-insensitive reference text]: https://git.myndex.com
+[1]: http://apcacontrast.com
+[link text itself]: http://tangledweb.xyz
+[2]: http://apcacontrast.com
+[3]: https://linktr.ee/Myndex
+
+## Details/Summary
+
+But perhaps the most useful add is that of details/summary
+
+<details>
+<summary><b>Click here</b> for a surprise!</summary>
+
+**I'm hidden till I'm not, then**
+
+### Sir, Prize!
+
+I can use markdown **here in details**, but no markdown in the **summary**.
+
+</details>
