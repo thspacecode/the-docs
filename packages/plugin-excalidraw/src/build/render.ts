@@ -26,7 +26,9 @@ function parseScene(content: Uint8Array): ExcalidrawScene {
   try {
     value = JSON.parse(new TextDecoder().decode(content))
   } catch (error) {
-    throw new TypeError("The Excalidraw asset is not valid JSON", { cause: error })
+    throw new TypeError("The Excalidraw asset is not valid JSON", {
+      cause: error,
+    })
   }
 
   if (
@@ -103,7 +105,8 @@ export async function renderExcalidrawToSvg(
     ;
     ${utilsSource}
     ;
-    const scene = JSON.parse(atob(${JSON.stringify(encodedScene)}))
+    const scene = JSON.parse(decodeURIComponent(Array.from(atob(${JSON.stringify(encodedScene)}),
+      (byte) => "%" + byte.charCodeAt(0).toString(16).padStart(2, "0")).join("")))
     Promise.resolve()
       .then(() => ExcalidrawUtils.exportToSvg({
         elements: scene.elements,
@@ -136,12 +139,13 @@ export async function renderExcalidrawToSvg(
           return
         }
 
-        const renderError =
-          dom.window.document.body.dataset.excalidrawError
+        const renderError = dom.window.document.body.dataset.excalidrawError
         if (renderError) {
           finished = true
           clearTimeout(timeout)
-          reject(new Error(`Unable to render the Excalidraw asset: ${renderError}`))
+          reject(
+            new Error(`Unable to render the Excalidraw asset: ${renderError}`)
+          )
           return
         }
 
@@ -165,7 +169,9 @@ export async function renderExcalidrawToSvg(
 
     return {
       svg: svg.outerHTML,
-      width: Math.ceil(dimension(svg.getAttribute("width"), fallbackWidth ?? 1)),
+      width: Math.ceil(
+        dimension(svg.getAttribute("width"), fallbackWidth ?? 1)
+      ),
       height: Math.ceil(
         dimension(svg.getAttribute("height"), fallbackHeight ?? 1)
       ),

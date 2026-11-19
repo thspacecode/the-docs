@@ -1,4 +1,6 @@
 export type ExcalidrawModel = {
+  /** Padding used by the browser preview. Older models use 16 pixels. */
+  padding?: number
   dataUrl: string
   width: number
   height: number
