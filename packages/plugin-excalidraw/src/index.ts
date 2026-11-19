@@ -8,9 +8,8 @@ import { resolveExcalidrawPluginOptions } from "./types.js"
 export type { ExcalidrawModel, ExcalidrawPluginOptions } from "./types.js"
 
 /**
- * Renders .excalidraw assets to SVG while MDX is compiled. The browser only
- * receives the generated image; the source scene and renderer stay out of the
- * client bundle.
+ * Renders .excalidraw assets to SVG while MDX is compiled. The runtime refreshes
+ * the preview with browser font metrics and opens the source scene in a viewer.
  */
 export function excalidrawPlugin(options: ExcalidrawPluginOptions = {}) {
   const resolvedOptions = resolveExcalidrawPluginOptions(options)
@@ -36,6 +35,7 @@ export function excalidrawPlugin(options: ExcalidrawPluginOptions = {}) {
 
       return {
         dataUrl: `data:image/svg+xml;base64,${Buffer.from(image.svg).toString("base64")}`,
+        padding: resolvedOptions.padding,
         width: image.width,
         height: image.height,
         title: basename(input.url, input.extension),
