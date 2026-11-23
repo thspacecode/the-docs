@@ -1,12 +1,17 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react"
+import { lazy, Suspense, useContext, useEffect, useMemo, useState } from "react"
 import { createPortal } from "react-dom"
 
 import type { ExcalidrawImperativeAPI } from "@excalidraw/excalidraw/types"
 import type { PluginComponentProps } from "@the-docs/plugin-contract"
 
+import { ExcalidrawPortalContainer } from "./portal.js"
+import { useExcalidrawPreview } from "./preview.js"
+
 import type { ExcalidrawModel } from "../types.js"
 
 import "@excalidraw/excalidraw/index.css"
+
+export { ExcalidrawPortalContainer } from "./portal.js"
 
 interface ExcalidrawImageProps extends PluginComponentProps<ExcalidrawModel> {
   alt?: string
@@ -21,9 +26,11 @@ export default function ExcalidrawImage({
   model,
   alt = model.title,
 }: ExcalidrawImageProps) {
+  const portalContainer = useContext(ExcalidrawPortalContainer)
   const [open, setOpen] = useState(false)
   const [excalidrawApi, setExcalidrawApi] =
     useState<ExcalidrawImperativeAPI | null>(null)
+  const preview = useExcalidrawPreview(model)
   const initialData = useMemo(() => JSON.parse(model.scene), [model.scene])
 
   useEffect(() => {
@@ -67,7 +74,7 @@ export default function ExcalidrawImage({
         onClick={() => setOpen(true)}
       >
         <img
-          src={model.dataUrl}
+          src={preview}
           alt={alt}
           width={model.width}
           height={model.height}
@@ -113,7 +120,7 @@ export default function ExcalidrawImage({
                 </Suspense>
               </div>
             </div>,
-            document.body
+            portalContainer ?? document.body
           )
         : null}
     </>
