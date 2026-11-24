@@ -12,6 +12,7 @@ export interface DocumentFrontmatter {
   scope?: string
   importance?: string
   priority?: number
+  relations: import("./relations.js").DocumentRelation[]
   relatedDocs: string[]
 }
 

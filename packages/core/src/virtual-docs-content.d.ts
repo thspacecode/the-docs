@@ -8,6 +8,7 @@ declare module "virtual:docs-content" {
     VirtualTypeDefinition,
   } from "./content/types.js"
 
+  export const relations: import("./content/relations.js").RelationDefinition[]
   export const documents: VirtualDocumentEntry[]
   export const scopes: VirtualScopeDefinition[]
   export const scopeIcons: Record<string, LucideIcon>

@@ -1,6 +1,7 @@
 /// <reference path="../virtual-docs-content.d.ts" />
 
 import {
+  relations as virtualRelations,
   documents as virtualDocuments,
   scopeIcons as virtualScopeIcons,
   scopes as virtualScopes,
@@ -88,6 +89,8 @@ function normalizeFrontmatter(
     scope: optionalString(value.scope),
     importance: optionalString(value.importance),
     priority: optionalNumber(value.priority),
+    relations: (value.relations ??
+      []) as import("./relations.js").DocumentRelation[],
     relatedDocs: stringArray(value["related-docs"] ?? value.relatedDocs),
   }
 }
@@ -351,6 +354,10 @@ export function getRelatedDocumentSections(
 
 export function getDocument(slug: string) {
   return documentsBySlug.get(slug)
+}
+
+export function getRelationDefinitions() {
+  return virtualRelations
 }
 
 export function getDocuments() {
