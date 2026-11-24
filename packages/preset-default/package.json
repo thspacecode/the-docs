@@ -16,6 +16,7 @@
     "@the-docs/plugin-bpmn": "workspace:^",
     "@the-docs/plugin-data-table": "workspace:^",
     "@the-docs/plugin-excalidraw": "workspace:^",
+    "@the-docs/plugin-ontology": "workspace:^",
     "@the-docs/plugin-mermaid": "workspace:^",
     "@the-docs/plugin-syntax-highlighter": "workspace:^",
     "@the-docs/ui": "workspace:^",

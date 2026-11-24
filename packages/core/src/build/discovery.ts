@@ -109,6 +109,16 @@ export function discoverTypes(contentRoot: string): DiscoveredType[] {
     .sort((left, right) => left.slug.localeCompare(right.slug))
 }
 
+export function discoverRelations(contentRoot: string): DiscoveredType[] {
+  const root = join(contentRoot, "_relations")
+  if (!existsSync(root)) return []
+  return readdirSync(root, { withFileTypes: true })
+    .filter(entry => entry.isDirectory() && slugPattern.test(entry.name))
+    .map(entry => ({ slug: entry.name, filePath: join(root, entry.name, "relation.json") }))
+    .filter(entry => existsSync(entry.filePath))
+    .sort((a, b) => a.slug.localeCompare(b.slug))
+}
+
 export function discoverTags(contentRoot: string): DiscoveredTag[] {
   const tagsRoot = join(contentRoot, "_tags")
   const tags: DiscoveredTag[] = []

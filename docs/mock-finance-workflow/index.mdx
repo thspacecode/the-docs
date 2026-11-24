@@ -1,0 +1,43 @@
+---
+title: Mock Finance Workflow
+description: Mock sales, purchase, asset, payment, and cheque graph based on the reference chart.
+type: doc
+tags:
+  - ontology-demo
+  - feature/plugin
+---
+
+## Full workflow
+
+- Mock data only. Not a production process specification.
+- 14 document nodes. 18 declared relations.
+- Asset is the subject, matching the thicker box in the reference chart.
+- Eight hops include the whole connected example. Extension filter excludes unrelated site documents.
+- Hover nodes for document descriptions. Hover relations for execution notes.
+- Mermaid chooses layout. Reference positions and AL badges are not reproduced.
+- Unlabelled arrows use `relates-to`; their business meaning is unspecified.
+- Manual, automatic, and conditional notes stay in relation descriptions.
+
+<Ontology
+  subjectFilter={{ slugs: ["mock-asset"] }}
+  extensionMaxHops={8}
+  extensionFilter={{ documentType: "doctype", tags: { any: ["ontology-demo"] } }}
+/>
+
+## Cheque neighborhood
+
+- Two-hop expansion starts at the cheque documents.
+- Includes Payment Entry and both payment receipts.
+
+<Ontology
+  subjectFilter={{ slugs: ["mock-cheque-received", "mock-cheque-activity"] }}
+  extensionMaxHops={2}
+  extensionFilter={{ documentType: "doctype", tags: { any: ["ontology-demo"] } }}
+/>
+
+## Source data
+
+- Each node is a separate `mock-*` document.
+- Each relation is declared once in its source document frontmatter.
+- Parallel invoice/receipt relations remain separate.
+- Master relations live under `_relations`.

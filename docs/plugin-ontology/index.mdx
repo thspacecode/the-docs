@@ -1,0 +1,105 @@
+---
+title: Ontology Plugin
+description: Site-wide document graphs from typed frontmatter relations.
+type: doc
+tags:
+  - feature/plugin
+relations:
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: extends
+    relatedDoc: plugin-contract
+    description: Adds a live document graph.
+---
+
+## Preview
+
+<Ontology
+  subjectFilter={{ slugs: ["plugin-ontology"] }}
+  extensionMaxHops={2}
+  extensionFilter={{ tags: { any: ["feature/plugin"] } }}
+/>
+
+- Start at Ontology. Two hops through Plugin Contract reveal sibling plugins.
+- Every edge comes from plugin document frontmatter.
+
+## Finance workflow example
+
+- View [mock finance workflow](/p/mock-finance-workflow) for a larger graph with sales, purchases, assets, payments, and cheques.
+
+## Setup
+
+- Default preset registers `<Ontology />` automatically. No MDX import needed.
+- Disable automatic registration with `plugins: { ontology: false }` in site config.
+- Custom sites: install `@the-docs/plugin-ontology` and add `ontologyRehypePlugin` from `@the-docs/plugin-ontology/build` to MDX `rehypePlugins`.
+- Explicit MDX imports remain supported.
+- Edit frontmatter directly. No authoring UI.
+
+## Relation master data
+
+- Store at `<contentRoot>/_relations/<relation-slug>/relation.json`.
+- Use lowercase kebab-case directory slugs.
+- Require non-empty `title`. Optional `description` must be a string.
+
+```json
+{
+  "title": "Pull from",
+  "description": "Reads data from another document."
+}
+```
+
+## Document relations
+
+- Store on declaring document only.
+- `subjectEnd` refers to current document.
+- `relatedEnd` refers to target document.
+- Each endpoint accepts `none` or `arrow`.
+- Incoming relations derived automatically.
+- Parallel relations allowed. Exact duplicates and self-relations rejected.
+- Unknown document/relation slugs fail build with source filename.
+- Separate from existing `related-docs`.
+
+```yaml
+relations:
+  - subjectEnd: arrow
+    relatedEnd: none
+    relationSlug: pull-from
+    relatedDoc: sales-payment-receipt
+    description: Reads payment details.
+```
+
+## Widget
+
+```tsx
+<Ontology
+  subjectFilter={{
+    or: [
+      { documentType: "doctype", slugs: ["cheque-received", "cheque-activity"] },
+      { documentType: "workflow", tags: { any: ["cheque"] } },
+    ],
+  }}
+  extensionMaxHops={2}
+  extensionFilter={{ documentType: ["doctype"] }}
+/>
+```
+
+- `subjectFilter` required. Empty object matches every document site-wide.
+- Match document, type, and tag slugs. Matching exact and case-sensitive.
+- Fields combine with AND. Type/slug list values combine with OR.
+- Tags accept non-empty `any` and `all` lists.
+- Nested `and` / `or` accept non-empty filter lists.
+- `extensionMaxHops` defaults to zero. Require non-negative integer.
+- Each relation counts as one hop. Traverse both directions regardless of arrowheads.
+- Extension nodes must match `extensionFilter` before traversal continues through them.
+- Rejected node blocks that path. Another valid path may still reach descendants.
+- Subjects always visible. Cycles terminate.
+- Show all declared edges between visible documents.
+- No matches shows empty-state message.
+- Mermaid renders inline SVG with automatic left-to-right layout.
+- Pan, zoom, fit-to-view use a lightweight SVG wrapper. No React Flow dependency.
+- Thicker border marks subjects. Black document titles link to document pages without underlines.
+- Hover relation label or line for a Hover Card with relation title, connected documents, and description.
+- Hover or keyboard-focus a document node for its title, type, and description.
+- Cards stay open when pointer moves onto them. Escape closes cards.
+- Native browser description tooltips are disabled. Only relation title stays visible on line.
+- No saved manual positions or graph editing.

@@ -17,10 +17,12 @@ import {
 } from "../content/table-of-contents.js"
 import {
   discoverDocuments,
+  discoverRelations,
   discoverScopes,
   discoverTags,
   discoverTypes,
 } from "./discovery.js"
+import { validateRelations } from "../content/relations.js"
 import { localImagesRehypePlugin } from "./local-images.js"
 
 const virtualModuleId = "virtual:docs-content"
@@ -302,8 +304,18 @@ function readJson(filePath: string) {
 function createContentModule(contentRoot: string) {
   const documents = discoverDocuments(contentRoot)
   const documentSlugs = new Set(documents.map(({ slug }) => slug))
+  const relations = discoverRelations(contentRoot).map(({ filePath, slug }) => {
+    const definition = objectDefinition(readJson(filePath), filePath, "relation")
+    requiredString(definition.title, filePath, "relation.title")
+    if (definition.description !== undefined && typeof definition.description !== "string") {
+      throw new Error(`${filePath}: relation.description must be a string`)
+    }
+    return { slug, title: definition.title, description: definition.description }
+  })
+  const relationSlugs = new Set(relations.map(r => r.slug))
   const documentSources = documents.map(({ filePath, slug }) => {
     const { content, data } = matter(readFileSync(filePath, "utf8"))
+    validateRelations(data.relations, slug, documentSlugs, relationSlugs, filePath)
     const relatedDocs = data["related-docs"]
 
     if (relatedDocs !== undefined) {
@@ -368,7 +380,7 @@ function createContentModule(contentRoot: string) {
       `{ slug: ${JSON.stringify(slug)}, definition: ${JSON.stringify(readJson(filePath))} }`
   )
 
-  return `${[...imports, ...scopeIconImports].join("\n")}\nexport const documents = [${entries.join(",\n")}];\nexport const scopes = [${scopes.join(",\n")}];\nexport const scopeIcons = {${scopeIconEntries.join(",\n")}};\nexport const tags = [${tags.join(",\n")}];\nexport const types = [${types.join(",\n")}];\n`
+  return `${[...imports, ...scopeIconImports].join("\n")}\nexport const documents = [${entries.join(",\n")}];\nexport const scopes = [${scopes.join(",\n")}];\nexport const scopeIcons = {${scopeIconEntries.join(",\n")}};\nexport const tags = [${tags.join(",\n")}];\nexport const types = [${types.join(",\n")}];\nexport const relations = ${JSON.stringify(relations)};\n`
 }
 
 function isContentFile(filePath: string, contentRoot: string) {
@@ -385,7 +397,8 @@ function isContentFile(filePath: string, contentRoot: string) {
     basename(filePath) === "type.json" &&
     resolve(filePath).startsWith(resolve(contentRoot, "_types") + "/")
 
-  return isDocument || isTag || isScope || isType
+  const isRelation = basename(filePath) === "relation.json" && resolve(filePath).startsWith(resolve(contentRoot, "_relations") + "/")
+  return isDocument || isTag || isScope || isType || isRelation
 }
 
 function docsContentPlugin(contentRoot: string): Plugin {

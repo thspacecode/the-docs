@@ -8,6 +8,7 @@ export { DocsSearchInput } from "./components/docs-search-input.js"
 export { ScopePage, ScopesPage } from "./components/scopes-page.js"
 export { TagsPage } from "./components/tags-page.js"
 export {
+  getRelationDefinitions,
   getDocument,
   getDocuments,
   getRelatedDocumentSections,
@@ -31,4 +32,8 @@ export type {
   TagDefinition,
   TypeDefinition,
 } from "./content/types.js"
+export type {
+  DocumentRelation,
+  RelationDefinition,
+} from "./content/relations.js"
 export type { TableOfContentsItem } from "./content/table-of-contents.js"

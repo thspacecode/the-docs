@@ -1,0 +1,21 @@
+---
+title: Purchase Invoice
+description: "Mock supplier invoice. The reference chart marks this document AL."
+type: doctype
+tags:
+  - ontology-demo
+relations:
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: update
+    relatedDoc: mock-asset
+    description: "Update the asset from the purchase invoice."
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: create
+    relatedDoc: mock-purchase-payment-receipt
+    description: "Conditional automatic or manual."
+---
+
+- Mock data only. Not a production process specification.
+- View [finance workflow graph](/p/mock-finance-workflow).
