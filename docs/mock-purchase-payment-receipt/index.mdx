@@ -1,0 +1,21 @@
+---
+title: Purchase Payment Receipt
+description: "Mock receipt for supplier payments."
+type: doctype
+tags:
+  - ontology-demo
+relations:
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: pull-from
+    relatedDoc: mock-purchase-invoice
+    description: "Pull invoice information into the receipt."
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: create
+    relatedDoc: mock-payment-entry
+    description: "Automatic."
+---
+
+- Mock data only. Not a production process specification.
+- View [finance workflow graph](/p/mock-finance-workflow).

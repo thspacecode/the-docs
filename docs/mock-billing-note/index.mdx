@@ -1,0 +1,21 @@
+---
+title: Billing Note
+description: "Mock billing note that groups invoice information."
+type: doctype
+tags:
+  - ontology-demo
+relations:
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: pull-from
+    relatedDoc: mock-sales-invoice
+    description: "Pull invoice information into the billing note."
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: create
+    relatedDoc: mock-sales-payment-receipt
+    description: "Manual."
+---
+
+- Mock data only. Not a production process specification.
+- View [finance workflow graph](/p/mock-finance-workflow).
