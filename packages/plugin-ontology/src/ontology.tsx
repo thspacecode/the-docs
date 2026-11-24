@@ -1,188 +1,192 @@
-import { useMemo } from "react"
-import { Link } from "react-router"
-import dagre from "@dagrejs/dagre"
-import {
-  ReactFlow,
-  Background,
-  Controls,
-  Handle,
-  Position,
-  MarkerType,
-  BaseEdge,
-  EdgeLabelRenderer,
-  getSmoothStepPath,
-  type EdgeProps,
-  type NodeProps,
-} from "@xyflow/react"
-import "@xyflow/react/dist/style.css"
+import { useEffect, useId, useMemo, useRef, useState } from "react"
+import { useNavigate } from "react-router"
 import { getDocuments, getRelationDefinitions } from "@the-docs/core"
 import { selectGraph, type OntologyProps } from "./graph.js"
+import { graphToMermaid } from "./mermaid.js"
 
-function DocumentNode({ data }: NodeProps) {
-  return (
-    <div
-      style={{
-        width: 200,
-        minHeight: 70,
-        padding: 12,
-        borderRadius: 12,
-        border: data.subject ? "2px solid #333" : "1px solid #333",
-        background: "white",
-        color: "black",
-        textAlign: "center",
-      }}
-    >
-      <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
-      <Link
-        className="nodrag"
-        style={{ color: "black", textDecoration: "none" }}
-        to={`/p/${encodeURIComponent(String(data.slug))}`}
-      >
-        {String(data.label)}
-      </Link>
-      <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
-    </div>
-  )
-}
-const nodeTypes = { document: DocumentNode }
-
-function RelationEdge(props: EdgeProps) {
-  const [path, labelX, labelY] = getSmoothStepPath({
-    sourceX: props.sourceX,
-    sourceY: props.sourceY,
-    targetX: props.targetX,
-    targetY: props.targetY,
-    sourcePosition: props.sourcePosition,
-    targetPosition: props.targetPosition,
-    offset: Number(props.data?.offset ?? 25),
-  })
-  return (
-    <>
-      <BaseEdge
-        id={props.id}
-        path={path}
-        markerStart={props.markerStart}
-        markerEnd={props.markerEnd}
-        style={{ stroke: "#333" }}
-      />
-      <EdgeLabelRenderer>
-        <div
-          className="nodrag nopan"
-          title={
-            typeof props.data?.description === "string"
-              ? props.data.description
-              : undefined
-          }
-          style={{
-            pointerEvents: "all",
-            position: "absolute",
-            transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-            background: "white",
-            color: "black",
-            padding: "3px 6px",
-            maxWidth: 180,
-            whiteSpace: "pre-wrap",
-            textAlign: "center",
-            fontSize: 12,
-          }}
-        >
-          {props.label}
-        </div>
-      </EdgeLabelRenderer>
-    </>
-  )
-}
-const edgeTypes = { relation: RelationEdge }
+// Mermaid owns shared rendering state. Serialize renders across widget instances.
+let renderQueue: Promise<unknown> = Promise.resolve()
 
 export function Ontology(props: OntologyProps) {
-  const { nodes, edges } = useMemo(() => {
-    const selected = selectGraph(getDocuments(), props)
-    const titles = new Map(
-      getRelationDefinitions().map((r) => [r.slug, r.title])
-    )
-    const layout = new dagre.graphlib.Graph({ multigraph: true })
-    layout.setGraph({ rankdir: "LR", nodesep: 70, ranksep: 180 })
-    layout.setDefaultEdgeLabel(() => ({}))
-    for (const doc of selected.documents)
-      layout.setNode(doc.slug, { width: 224, height: 98 })
-    for (const edge of selected.edges)
-      layout.setEdge(
-        edge.subject,
-        edge.relatedDoc,
-        { width: 160, height: 25 },
-        edge.id
-      )
-    dagre.layout(layout)
-    return {
-      nodes: selected.documents.map((doc) => {
-        const point = layout.node(doc.slug)
-        return {
-          id: doc.slug,
-          type: "document",
-          position: { x: point.x - 112, y: point.y - 49 },
-          data: {
-            label: doc.frontmatter.title,
-            slug: doc.slug,
-            subject: selected.subjects.has(doc.slug),
+  const id = useId().replace(/[^a-zA-Z0-9]/g, "")
+  const host = useRef<HTMLDivElement>(null)
+  const panZoom = useRef<ReturnType<typeof import("svg-pan-zoom")> | null>(null)
+  const navigate = useNavigate()
+  const [error, setError] = useState<string>()
+  const graph = useMemo(
+    () => selectGraph(getDocuments(), props),
+    [props.subjectFilter, props.extensionFilter, props.extensionMaxHops]
+  )
+  const diagram = useMemo(
+    () =>
+      graphToMermaid(
+        graph,
+        new Map(getRelationDefinitions().map((r) => [r.slug, r.title]))
+      ),
+    [graph]
+  )
+
+  useEffect(() => {
+    let cancelled = false
+    let observer: ResizeObserver | undefined
+    setError(undefined)
+    if (!graph.documents.length) return
+    const task = renderQueue
+      .catch(() => {})
+      .then(async () => {
+        const { default: mermaid } = await import("mermaid")
+        if (cancelled) return
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "base",
+          themeVariables: {
+            primaryColor: "#fff",
+            primaryTextColor: "#000",
+            lineColor: "#333",
+            edgeLabelBackground: "#fff",
           },
+          flowchart: { htmlLabels: false, useMaxWidth: false },
+        })
+        const { svg } = await mermaid.render(`ontology${id}`, diagram.source)
+        if (cancelled || !host.current) return
+        host.current.innerHTML = svg
+        const element = host.current.querySelector("svg")!
+        element.style.width = "100%"
+        element.style.height = "100%"
+        element.style.maxWidth = "none"
+        element.setAttribute("role", "img")
+        element.setAttribute("aria-label", "Document ontology graph")
+        for (const [slug, nodeId] of diagram.ids) {
+          const node = element.querySelector<SVGGElement>(
+            `g.node[id^="flowchart-${nodeId}-"]`
+          )
+          if (!node) continue
+          const link = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "a"
+          )
+          const href = `/p/${encodeURIComponent(slug)}`
+          link.setAttribute("href", href)
+          link.style.color = "black"
+          link.style.textDecoration = "none"
+          node.parentNode!.insertBefore(link, node)
+          link.appendChild(node)
+          link.addEventListener("click", (event) => {
+            if (
+              event.button !== 0 ||
+              event.ctrlKey ||
+              event.metaKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return
+            event.preventDefault()
+            navigate(href)
+          })
         }
-      }),
-      edges: selected.edges.map((edge, index) => ({
-        id: edge.id,
-        source: edge.subject,
-        target: edge.relatedDoc,
-        type: "relation",
-        data: { offset: 25 + index * 8, description: edge.description },
-        label: (
-          <div
-            style={{
-              maxWidth: 180,
-              whiteSpace: "pre-wrap",
-              textAlign: "center",
-              fontSize: 12,
-            }}
-          >
-            {titles.get(edge.relationSlug) ?? edge.relationSlug}
-          </div>
-        ),
-        markerStart:
-          edge.subjectEnd === "arrow"
-            ? { type: MarkerType.ArrowClosed }
-            : undefined,
-        markerEnd:
-          edge.relatedEnd === "arrow"
-            ? { type: MarkerType.ArrowClosed }
-            : undefined,
-      })),
+        for (const [index, edge] of graph.edges.entries()) {
+          if (!edge.description) continue
+          const label = element.querySelector(
+            `g.edgeLabel g.label[data-id="e${index}"]`
+          )
+          const path = element.querySelector(`path[id="e${index}"]`)
+          for (const target of [label, path]) {
+            if (!target) continue
+            const title = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "title"
+            )
+            title.textContent = edge.description
+            target.prepend(title)
+          }
+        }
+        const { default: svgPanZoom } = await import("svg-pan-zoom")
+        if (cancelled) return
+        const instance = svgPanZoom(element, {
+          zoomEnabled: true,
+          controlIconsEnabled: false,
+          fit: true,
+          center: true,
+          minZoom: 0.1,
+          maxZoom: 10,
+          preventMouseEventsDefault: false,
+        })
+        panZoom.current = instance
+        observer = new ResizeObserver(() => {
+          instance.resize()
+          instance.fit()
+          instance.center()
+        })
+        observer.observe(host.current)
+      })
+    renderQueue = task
+    task.catch((reason) => {
+      if (!cancelled)
+        setError(reason instanceof Error ? reason.message : String(reason))
+    })
+    return () => {
+      cancelled = true
+      observer?.disconnect()
+      panZoom.current?.destroy()
+      panZoom.current = null
+      host.current?.replaceChildren()
     }
-  }, [props.subjectFilter, props.extensionFilter, props.extensionMaxHops])
-  if (!nodes.length)
+  }, [diagram, graph, id, navigate])
+
+  if (!graph.documents.length)
     return <p role="status">No documents match this ontology filter.</p>
   return (
     <div
+      aria-label="Document ontology graph"
       style={{
+        position: "relative",
         height: 560,
         width: "100%",
         border: "1px solid #94a3b8",
         borderRadius: 12,
+        background: "white",
+        color: "black",
+        overflow: "hidden",
       }}
-      aria-label="Document ontology graph"
     >
-      <ReactFlow
-        key={JSON.stringify(nodes.map((n) => n.id))}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        fitView
-        nodesDraggable={false}
-        nodesConnectable={false}
-        minZoom={0.1}
-        maxZoom={2}
+      {error ? <p role="alert">Unable to render ontology: {error}</p> : null}
+      <div ref={host} style={{ width: "100%", height: "100%" }} />
+      <div
+        role="group"
+        aria-label="Graph controls"
+        style={{
+          position: "absolute",
+          bottom: 12,
+          left: 12,
+          display: "flex",
+          gap: 4,
+        }}
       >
-        <Background />
-        <Controls showInteractive={false} />
-      </ReactFlow>
+        <button
+          type="button"
+          aria-label="Zoom in"
+          onClick={() => panZoom.current?.zoomIn()}
+        >
+          +
+        </button>
+        <button
+          type="button"
+          aria-label="Zoom out"
+          onClick={() => panZoom.current?.zoomOut()}
+        >
+          −
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            panZoom.current?.fit()
+            panZoom.current?.center()
+          }}
+        >
+          Fit
+        </button>
+      </div>
     </div>
   )
 }
