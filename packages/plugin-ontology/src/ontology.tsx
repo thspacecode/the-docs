@@ -46,6 +46,8 @@ export function Ontology(props: OntologyProps) {
             lineColor: "#333",
             edgeLabelBackground: "#fff",
           },
+          themeCSS:
+            ".edgeLabel text, .edgeLabel tspan { font-size: 12px !important; }",
           flowchart: { htmlLabels: false, useMaxWidth: false },
         })
         const { svg } = await mermaid.render(`ontology${id}`, diagram.source)
@@ -84,6 +86,23 @@ export function Ontology(props: OntologyProps) {
             event.preventDefault()
             navigate(href)
           })
+        }
+        // SVG text labels need an explicit opaque backdrop to hide the edge.
+        for (const label of element.querySelectorAll<SVGGElement>(
+          "g.edgeLabel g.label"
+        )) {
+          const bounds = label.getBBox()
+          const background = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          )
+          background.setAttribute("x", String(bounds.x - 5))
+          background.setAttribute("y", String(bounds.y - 3))
+          background.setAttribute("width", String(bounds.width + 10))
+          background.setAttribute("height", String(bounds.height + 6))
+          background.style.fill = "white"
+          background.style.fillOpacity = "1"
+          label.prepend(background)
         }
         for (const [index, edge] of graph.edges.entries()) {
           if (!edge.description) continue
