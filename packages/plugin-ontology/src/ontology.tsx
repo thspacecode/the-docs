@@ -68,7 +68,13 @@ function RelationEdge(props: EdgeProps) {
       <EdgeLabelRenderer>
         <div
           className="nodrag nopan"
+          title={
+            typeof props.data?.description === "string"
+              ? props.data.description
+              : undefined
+          }
           style={{
+            pointerEvents: "all",
             position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             background: "white",
@@ -103,7 +109,7 @@ export function Ontology(props: OntologyProps) {
       layout.setEdge(
         edge.subject,
         edge.relatedDoc,
-        { width: 160, height: edge.description ? 45 : 25 },
+        { width: 160, height: 25 },
         edge.id
       )
     dagre.layout(layout)
@@ -126,7 +132,7 @@ export function Ontology(props: OntologyProps) {
         source: edge.subject,
         target: edge.relatedDoc,
         type: "relation",
-        data: { offset: 25 + index * 8 },
+        data: { offset: 25 + index * 8, description: edge.description },
         label: (
           <div
             style={{
@@ -137,9 +143,6 @@ export function Ontology(props: OntologyProps) {
             }}
           >
             {titles.get(edge.relationSlug) ?? edge.relationSlug}
-            {edge.description ? (
-              <div style={{ fontSize: 10 }}>{edge.description}</div>
-            ) : null}
           </div>
         ),
         markerStart:
