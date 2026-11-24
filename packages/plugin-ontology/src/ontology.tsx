@@ -3,6 +3,8 @@ import { useNavigate } from "react-router"
 import { getDocuments, getRelationDefinitions } from "@the-docs/core"
 import { selectGraph, type OntologyProps } from "./graph.js"
 import { graphToMermaid } from "./mermaid.js"
+import { HoverCard, HoverCardContent } from "@the-docs/ui/components/hover-card"
+import { useGraphHoverCard } from "./use-graph-hover-card.js"
 
 // Mermaid owns shared rendering state. Serialize renders across widget instances.
 let renderQueue: Promise<unknown> = Promise.resolve()
@@ -13,6 +15,7 @@ export function Ontology(props: OntologyProps) {
   const panZoom = useRef<ReturnType<typeof import("svg-pan-zoom")> | null>(null)
   const navigate = useNavigate()
   const [error, setError] = useState<string>()
+  const { card, bind, dismiss, keepOpen, closeSoon } = useGraphHoverCard()
   const graph = useMemo(
     () => selectGraph(getDocuments(), props),
     [props.subjectFilter, props.extensionFilter, props.extensionMaxHops]
@@ -57,11 +60,11 @@ export function Ontology(props: OntologyProps) {
         element.style.width = "100%"
         element.style.height = "100%"
         element.style.maxWidth = "none"
-        element.setAttribute("role", "img")
+        element.setAttribute("role", "group")
         element.setAttribute("aria-label", "Document ontology graph")
-        const descriptions = new Map(
-          graph.documents.map((doc) => [doc.slug, doc.frontmatter.description])
-        )
+        // Native SVG titles would compete with the React hover cards.
+        element.querySelectorAll("title").forEach((title) => title.remove())
+        const documents = new Map(graph.documents.map((doc) => [doc.slug, doc]))
         for (const [slug, nodeId] of diagram.ids) {
           const node = element.querySelector<SVGGElement>(
             `g.node[id*="flowchart-${nodeId}-"]`
@@ -77,19 +80,12 @@ export function Ontology(props: OntologyProps) {
           link.style.textDecoration = "none"
           node.parentNode!.insertBefore(link, node)
           link.appendChild(node)
-          const description = descriptions.get(slug)
-          if (description) {
-            const title = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "title"
-            )
-            title.textContent = description
-            node.prepend(title)
-            link.setAttribute(
-              "aria-label",
-              `${node.textContent?.replace(description, "").trim()}: ${description}`
-            )
-          }
+          const doc = documents.get(slug)!
+          bind(link, {
+            title: doc.frontmatter.title,
+            description: doc.frontmatter.description,
+            context: doc.frontmatter.type,
+          })
           link.addEventListener("click", (event) => {
             if (
               event.button !== 0 ||
@@ -124,21 +120,20 @@ export function Ontology(props: OntologyProps) {
           label.prepend(background)
         }
         for (const [index, edge] of graph.edges.entries()) {
-          if (!edge.description) continue
           const label = element.querySelector<SVGGElement>(
             `g.edgeLabel g.label[data-id="e${index}"]`
           )
           if (label) label.style.pointerEvents = "all"
           const path = element.querySelector(`path[id="e${index}"]`)
-          for (const target of [label, path]) {
-            if (!target) continue
-            const title = document.createElementNS(
-              "http://www.w3.org/2000/svg",
-              "title"
-            )
-            title.textContent = edge.description
-            target.prepend(title)
+          const info = {
+            title:
+              getRelationDefinitions().find((r) => r.slug === edge.relationSlug)
+                ?.title ?? edge.relationSlug,
+            description: edge.description,
+            context: `${documents.get(edge.subject)?.frontmatter.title} / ${documents.get(edge.relatedDoc)?.frontmatter.title}`,
           }
+          if (label) bind(label, info)
+          if (path) bind(path, info, false)
         }
         const { default: svgPanZoom } = await import("svg-pan-zoom")
         if (cancelled) return
@@ -166,12 +161,13 @@ export function Ontology(props: OntologyProps) {
     })
     return () => {
       cancelled = true
+      dismiss()
       observer?.disconnect()
       panZoom.current?.destroy()
       panZoom.current = null
       host.current?.replaceChildren()
     }
-  }, [diagram, graph, id, navigate])
+  }, [diagram, graph, id, navigate, bind, dismiss])
 
   if (!graph.documents.length)
     return <p role="status">No documents match this ontology filter.</p>
@@ -189,6 +185,32 @@ export function Ontology(props: OntologyProps) {
         overflow: "hidden",
       }}
     >
+      <HoverCard
+        open={Boolean(card)}
+        onOpenChange={(open) => {
+          if (!open) dismiss()
+        }}
+      >
+        {card ? (
+          <HoverCardContent
+            anchor={card.anchor}
+            onPointerEnter={keepOpen}
+            onPointerLeave={closeSoon}
+            onFocusCapture={keepOpen}
+            onBlurCapture={closeSoon}
+          >
+            <p className="font-medium">{card.title}</p>
+            {card.context ? (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {card.context}
+              </p>
+            ) : null}
+            <p className="mt-2 whitespace-pre-wrap">
+              {card.description || "No description provided."}
+            </p>
+          </HoverCardContent>
+        ) : null}
+      </HoverCard>
       {error ? <p role="alert">Unable to render ontology: {error}</p> : null}
       <div ref={host} style={{ width: "100%", height: "100%" }} />
       <div

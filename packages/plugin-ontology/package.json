@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@the-docs/core": "workspace:^",
+    "@the-docs/ui": "workspace:^",
     "mermaid": "^11.16.1",
     "svg-pan-zoom": "^3.6.2",
     "react": "^19.2.6",

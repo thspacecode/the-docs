@@ -272,6 +272,9 @@ importers:
       '@the-docs/core':
         specifier: workspace:^
         version: link:../core
+      '@the-docs/ui':
+        specifier: workspace:^
+        version: link:../ui
       mermaid:
         specifier: ^11.16.1
         version: 11.16.1
