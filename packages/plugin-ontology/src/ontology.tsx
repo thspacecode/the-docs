@@ -91,15 +91,17 @@ export function Ontology(props: OntologyProps) {
         for (const label of element.querySelectorAll<SVGGElement>(
           "g.edgeLabel g.label"
         )) {
+          // Measure text only; Mermaid's original backdrop retains larger padding.
+          label.querySelectorAll("rect").forEach((rect) => rect.remove())
           const bounds = label.getBBox()
           const background = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "rect"
           )
-          background.setAttribute("x", String(bounds.x - 5))
-          background.setAttribute("y", String(bounds.y - 3))
-          background.setAttribute("width", String(bounds.width + 10))
-          background.setAttribute("height", String(bounds.height + 6))
+          background.setAttribute("x", String(bounds.x - 2))
+          background.setAttribute("y", String(bounds.y - 1))
+          background.setAttribute("width", String(bounds.width + 4))
+          background.setAttribute("height", String(bounds.height + 2))
           background.style.fill = "white"
           background.style.fillOpacity = "1"
           background.style.opacity = "1"
