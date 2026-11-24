@@ -137,6 +137,11 @@ export function Ontology(props: OntologyProps) {
         }
         const { default: svgPanZoom } = await import("svg-pan-zoom")
         if (cancelled) return
+        // Consume wheel scrolling only; keep native mouse/link focus behavior.
+        // svg-pan-zoom's wheel listener is passive when mouse defaults are allowed.
+        element.addEventListener("wheel", (event) => event.preventDefault(), {
+          passive: false,
+        })
         const instance = svgPanZoom(element, {
           zoomEnabled: true,
           controlIconsEnabled: false,
