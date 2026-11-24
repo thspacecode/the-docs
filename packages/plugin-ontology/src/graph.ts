@@ -15,6 +15,7 @@ export interface GraphDocument {
   slug: string
   frontmatter: {
     title: string
+    description?: string
     type?: string
     tags: readonly string[]
     relations?: readonly {

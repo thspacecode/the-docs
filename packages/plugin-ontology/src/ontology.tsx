@@ -59,9 +59,12 @@ export function Ontology(props: OntologyProps) {
         element.style.maxWidth = "none"
         element.setAttribute("role", "img")
         element.setAttribute("aria-label", "Document ontology graph")
+        const descriptions = new Map(
+          graph.documents.map((doc) => [doc.slug, doc.frontmatter.description])
+        )
         for (const [slug, nodeId] of diagram.ids) {
           const node = element.querySelector<SVGGElement>(
-            `g.node[id^="flowchart-${nodeId}-"]`
+            `g.node[id*="flowchart-${nodeId}-"]`
           )
           if (!node) continue
           const link = document.createElementNS(
@@ -74,6 +77,19 @@ export function Ontology(props: OntologyProps) {
           link.style.textDecoration = "none"
           node.parentNode!.insertBefore(link, node)
           link.appendChild(node)
+          const description = descriptions.get(slug)
+          if (description) {
+            const title = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "title"
+            )
+            title.textContent = description
+            node.prepend(title)
+            link.setAttribute(
+              "aria-label",
+              `${node.textContent?.replace(description, "").trim()}: ${description}`
+            )
+          }
           link.addEventListener("click", (event) => {
             if (
               event.button !== 0 ||
@@ -109,9 +125,10 @@ export function Ontology(props: OntologyProps) {
         }
         for (const [index, edge] of graph.edges.entries()) {
           if (!edge.description) continue
-          const label = element.querySelector(
+          const label = element.querySelector<SVGGElement>(
             `g.edgeLabel g.label[data-id="e${index}"]`
           )
+          if (label) label.style.pointerEvents = "all"
           const path = element.querySelector(`path[id="e${index}"]`)
           for (const target of [label, path]) {
             if (!target) continue
