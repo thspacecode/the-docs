@@ -18,8 +18,12 @@ import { Ontology } from "@the-docs/plugin-ontology"
 
 <Ontology
   subjectFilter={{ slugs: ["plugin-ontology"] }}
-  extensionMaxHops={1}
+  extensionMaxHops={2}
+  extensionFilter={{ tags: { any: ["feature/plugin"] } }}
 />
+
+- Start at Ontology. Two hops through Plugin Contract reveal sibling plugins.
+- Every edge comes from plugin document frontmatter.
 
 ## Setup
 

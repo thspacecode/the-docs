@@ -1,0 +1,25 @@
+---
+title: BPMN Plugin
+description: Render BPMN process diagrams from document-local assets.
+type: doc
+tags:
+  - feature/plugin
+relations:
+  - subjectEnd: none
+    relatedEnd: arrow
+    relationSlug: extends
+    relatedDoc: plugin-contract
+    description: Adds BPMN process diagram rendering.
+---
+
+## Overview
+
+- Package: `@the-docs/plugin-bpmn`.
+- Factory: `bpmnPlugin()`.
+- Target: `.bpmn` assets.
+- Reference document-local BPMN files with Markdown image syntax.
+
+## Ontology
+
+- Extends [Plugin Contract](/p/plugin-contract).
+- Appears in [Ontology preview](/p/plugin-ontology) through the shared contract.
