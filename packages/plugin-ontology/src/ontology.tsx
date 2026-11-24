@@ -47,7 +47,7 @@ export function Ontology(props: OntologyProps) {
             edgeLabelBackground: "#fff",
           },
           themeCSS:
-            ".edgeLabel text, .edgeLabel tspan { font-size: 12px !important; }",
+            ".edgeLabel text, .edgeLabel tspan { font-size: 12px !important; } .edgeLabel rect { fill: #fff !important; fill-opacity: 1 !important; opacity: 1 !important; } .labelBkg { background: #fff !important; }",
           flowchart: { htmlLabels: false, useMaxWidth: false },
         })
         const { svg } = await mermaid.render(`ontology${id}`, diagram.source)
@@ -102,6 +102,7 @@ export function Ontology(props: OntologyProps) {
           background.setAttribute("height", String(bounds.height + 6))
           background.style.fill = "white"
           background.style.fillOpacity = "1"
+          background.style.opacity = "1"
           label.prepend(background)
         }
         for (const [index, edge] of graph.edges.entries()) {
