@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@the-docs/plugin-ontology':
-        specifier: workspace:*
-        version: link:packages/plugin-ontology
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
@@ -32,9 +29,6 @@ importers:
       '@react-router/serve':
         specifier: 7.15.1
         version: 7.15.1(react-router@7.15.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(typescript@6.0.3)
-      '@the-docs/plugin-ontology':
-        specifier: workspace:*
-        version: link:../../packages/plugin-ontology
       '@the-docs/preset-default':
         specifier: workspace:*
         version: link:../../packages/preset-default
@@ -291,6 +285,9 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2
     devDependencies:
+      '@types/estree':
+        specifier: ^1.0.8
+        version: 1.0.8
       '@types/node':
         specifier: ^24
         version: 24.13.3
@@ -349,6 +346,9 @@ importers:
       '@the-docs/plugin-mermaid':
         specifier: workspace:^
         version: link:../plugin-mermaid
+      '@the-docs/plugin-ontology':
+        specifier: workspace:^
+        version: link:../plugin-ontology
       '@the-docs/plugin-syntax-highlighter':
         specifier: workspace:^
         version: link:../plugin-syntax-highlighter

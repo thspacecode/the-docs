@@ -12,8 +12,6 @@ relations:
     description: Adds a live document graph.
 ---
 
-import { Ontology } from "@the-docs/plugin-ontology"
-
 ## Preview
 
 <Ontology
@@ -31,9 +29,10 @@ import { Ontology } from "@the-docs/plugin-ontology"
 
 ## Setup
 
-- Add `@the-docs/plugin-ontology` to site dependencies.
-- Import `Ontology` directly in MDX.
-- No Vite renderer registration needed.
+- Default preset registers `<Ontology />` automatically. No MDX import needed.
+- Disable automatic registration with `plugins: { ontology: false }` in site config.
+- Custom sites: install `@the-docs/plugin-ontology` and add `ontologyRehypePlugin` from `@the-docs/plugin-ontology/build` to MDX `rehypePlugins`.
+- Explicit MDX imports remain supported.
 - Edit frontmatter directly. No authoring UI.
 
 ## Relation master data

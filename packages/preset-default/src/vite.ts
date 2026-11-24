@@ -6,6 +6,7 @@ import { dataTableRehypePlugin } from "@the-docs/plugin-data-table/build"
 import { excalidrawRehypePlugin } from "@the-docs/plugin-excalidraw/build"
 import { mermaidRehypePlugin } from "@the-docs/plugin-mermaid/build"
 import { syntaxHighlighterRehypePlugin } from "@the-docs/plugin-syntax-highlighter/build"
+import { ontologyRehypePlugin } from "@the-docs/plugin-ontology/build"
 import { defineConfig } from "vite"
 
 import type { DefaultPresetConfig } from "./index.js"
@@ -49,6 +50,9 @@ export function createViteConfig(config: DefaultPresetConfig) {
               : [excalidrawRehypePlugin(excalidraw)]),
             ...(bpmn === false ? [] : [bpmnRehypePlugin(bpmn)]),
             ...(dataTable === false ? [] : [dataTableRehypePlugin(dataTable)]),
+            ...(config.plugins.ontology === false
+              ? []
+              : [ontologyRehypePlugin]),
             ...(config.mdx?.rehypePlugins ?? []),
           ],
         },

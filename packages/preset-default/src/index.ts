@@ -9,6 +9,8 @@ import type { MermaidPluginOptions } from "@the-docs/plugin-mermaid"
 import type { SyntaxHighlighterOptions } from "@the-docs/plugin-syntax-highlighter"
 
 export interface DefaultPresetPluginOptions {
+  /** Set to false to disable automatic <Ontology /> imports in MDX. */
+  ontology?: boolean
   /** Set to false to leave fenced code blocks unhighlighted. */
   syntaxHighlighter?: SyntaxHighlighterOptions | false
   /** Set to false to leave Mermaid code fences as code. */
@@ -40,6 +42,7 @@ export interface DefaultPresetConfig {
     mermaid: MermaidPluginOptions | false
     excalidraw: ExcalidrawPluginOptions | false
     bpmn: BpmnPluginOptions | false
+    ontology: boolean
     dataTable: DataTablePluginOptions | false
   }>
 }
@@ -71,6 +74,7 @@ export function defineConfig(
       excalidraw: options.plugins?.excalidraw ?? {},
       bpmn: options.plugins?.bpmn ?? {},
       dataTable: options.plugins?.dataTable ?? {},
+      ontology: options.plugins?.ontology ?? true,
     }),
   })
 }
